@@ -47,15 +47,6 @@ export default class GameSlot{
         }
     }
 
-    public playSlotViewMiss(slotArr:Array<number>,cb:Function){
-        this._slotView1.play(Number(slotArr[0]),0.6);
-        this._slotView2.play(Number(slotArr[1]),0.8);
-        this._slotView3.play(Number(slotArr[2]),1);
-        this._scene.scheduleOnce(()=>{
-            cb && cb();
-        },1)
-    }
-
     public playSlotViewResult(slotArr:Array<number> ,anim:SlotResultAnim,cb:Function){
         this._slotView1.play(Number(slotArr[0]),0.6);
         this._slotView2.play(Number(slotArr[1]),0.8);

@@ -4,7 +4,7 @@ import GameEvent from "../GameEvent";
 import { EVENT } from "./EventController";
 import { Global, ResConst } from "../GlobalData";
 import { AlertBtnType } from "../view/AlertPanel";
-import { SlotResultAnim } from "../view/AnimUi";
+import AnimUi, { SlotResultAnim } from "../view/AnimUi";
 
 /**
  * 管理各种界面单例,层级
@@ -43,6 +43,7 @@ export default class UIManager{
         this.TopLayer = root.getChildByName("TopLayer");
 
         this.initMaskLayer();
+        this.initAnimLayer();
     }
 
     public adjustHeight(){
@@ -225,8 +226,16 @@ export default class UIManager{
         this.createPopUp(ResConst.AlertPanel,data);
     }
 
+    private _animui:AnimUi;
+    private initAnimLayer(){
+        this.loadUI(ResConst.WinAnim,{},this.AnimLayer,(ui:UIBase)=>{
+            this._animui = ui as AnimUi;
+        })
+    }
     public showWinAnim(anim:SlotResultAnim){
-        this.loadUI(ResConst.WinAnim,{anim:anim},this.AnimLayer);
+        if(this._animui){
+            this._animui.showAnim(anim);
+        }
     }
 }
 

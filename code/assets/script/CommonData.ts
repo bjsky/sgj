@@ -1,7 +1,10 @@
-import { SCLoginData } from "./message/MsgLogin";
+import { SCLoginData, SUserInfo } from "./message/MsgLogin";
 import UserInfo from "./UserInfo";
 import { CFG } from "./core/ConfigManager";
-import { ConfigConst } from "./GlobalData";
+import { ConfigConst, ResConst } from "./GlobalData";
+import { EVENT } from "./core/EventController";
+import GameEvent from "./GameEvent";
+import { UI } from "./core/UIManager";
 
 export default class CommonData {
     private static _instance: CommonData = null;
@@ -67,6 +70,30 @@ export default class CommonData {
             }
         })
         return retArr;
+    }
+    
+
+    public updateUserInfo(data:SUserInfo){
+        var levelPrev = this.userInfo.level;
+        this.userInfo.updateInfo(data);
+        var levelup = this.userInfo.level - levelPrev>0;
+        if(levelup){
+            this.onUserLevelUp();
+            //升级
+            EVENT.emit(GameEvent.User_Level_UP,{});
+        }
+    }
+
+    private _levelUpChange:boolean = false;
+    private onUserLevelUp(){
+        this._levelUpChange = true;
+    }
+
+    public checkShowLevelup(){
+        if(this._levelUpChange){
+            this._levelUpChange = false;
+            UI.createPopUp(ResConst.UpgradeUI,{});
+        }
     }
 }
 

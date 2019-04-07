@@ -17,4 +17,6 @@ export default class GameEvent {
     public static Show_Exp_Fly:string ="Show_Exp_Fly";
     public static Show_Exp_FlyEnd:string = "Show_Exp_FlyEnd";
     public static Show_Gold_Fly:string ="Show_Gold_Fly";
+    //升级
+    public static User_Level_UP:string = "User_Level_UP";
 }

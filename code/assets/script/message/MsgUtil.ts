@@ -2,6 +2,8 @@ import MessageBase from "../core/net/MessageBase";
 import NetConst from "../NetConst";
 import MsgLogin from "./MsgLogin";
 import MsgHeartBeat from "./MsgHeartBeat";
+import MsgSlot from "./MsgSlot";
+import MsgSlotWin from "./MsgSlotWin";
 
 /**
  * 太特么坑了，父类中还不能导入子类
@@ -17,6 +19,12 @@ export default class MsgUtil{
             }break;
             case NetConst.Heart:
                 message = new MsgHeartBeat();
+            break;
+            case NetConst.Slot:
+                message = new MsgSlot();
+            break;
+            case NetConst.SlotWin:
+                message = new MsgSlotWin();
             break;
             default:
             message = null;

@@ -46,7 +46,7 @@ export default class NormalState extends SlotState{
     
             NET.send(MsgSlot.create(startIn.cost,startIn.cost),(msg:MsgSlot)=>{
                 if(msg && msg.resp){
-                    Common.userInfo.updateInfo(msg.resp.userInfo);
+                    Common.updateUserInfo(msg.resp.userInfo);
                     Common.gold = msg.resp.gold;
                     EVENT.emit(GameEvent.Show_Exp_Fly);
                 }

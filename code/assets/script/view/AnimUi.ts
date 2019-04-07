@@ -54,33 +54,25 @@ export default class AnimUi extends UIBase {
 
     onLoad () {
 
-        this.showNothing();
+        this.hideAll();
     }
-
-    private _anim:SlotResultAnim = null;
-    public setData(data:any){
-        super.setData(data);
-        this._anim = data.anim;
-    }
-
     start () {
 
     }
 
-    onEnable(){
 
-        this.showNothing();
-        if(this._anim.type == SlotResultAniEnum.Repeat){
+    public showAnim(anim:SlotResultAnim){
+        if(anim.type == SlotResultAniEnum.Repeat){
             this.sprRepeat.node.active = true;
-            this.showAnim();
-        }else if(this._anim.type == SlotResultAniEnum.Hevart){
+            this.showNotice(this.sprRepeat.node,anim);
+        }else if(anim.type == SlotResultAniEnum.Hevart){
             this.nodeMuti.active = true;
-            this.labelMuti.string = this._anim.muti.toString();
-            this.showAnim();
-        }else if(this._anim.type == SlotResultAniEnum.Expfly){
+            this.labelMuti.string = anim.muti.toString();
+            this.showNotice(this.nodeMuti,anim);
+        }else if(anim.type == SlotResultAniEnum.Expfly){
             this.msStar.active = true;
-            var moveFrom:cc.Vec2 = this.msStar.parent.convertToNodeSpaceAR(this._anim.starFrom);
-            var moveTo:cc.Vec2 = this.msStar.parent.convertToNodeSpaceAR(this._anim.starTo);
+            var moveFrom:cc.Vec2 = this.msStar.parent.convertToNodeSpaceAR(anim.starFrom);
+            var moveTo:cc.Vec2 = this.msStar.parent.convertToNodeSpaceAR(anim.starTo);
 
             var moveCenter:cc.Vec2 = cc.v2(moveFrom.x+100,moveFrom.y+100);
             this.msStar.position = moveFrom;
@@ -92,65 +84,65 @@ export default class AnimUi extends UIBase {
             this.msStar.runAction(move);
         }
     }
-    onDisable(){
-
-    }
-
-    private showNothing(){
+    private hideAll(){
         this.sprRepeat.node.active = false;
         this.nodeMuti.active = false;
         this.msStar.active = false;
     }
 
-    private showAnim(){
-        this.sprNode.scale = 0.7;
-        this.sprNode.opacity = 255;
+    private showNotice(spr:cc.Node,anim:SlotResultAnim){
+        spr.scale = 0.7;
+        spr.opacity = 255;
         var seqOut = cc.sequence(cc.scaleTo(0.15,1).easing(cc.easeBackOut()),
             cc.delayTime(0.6),
             cc.callFunc(()=>{
-                if(this._anim.type == SlotResultAniEnum.Hevart){
-                    this.showCoinFly(this._anim.flyCoin);
+                if(anim.type == SlotResultAniEnum.Hevart){
+                    this.showCoinFly(anim);
                 }
             }),
             cc.fadeOut(0.5),
             cc.callFunc(()=>{
-                if(this._anim.type == SlotResultAniEnum.Repeat){
-                    UI.removeUI(this.node)
+                if(anim.type == SlotResultAniEnum.Repeat){
+                    spr.active = false;
                 }
             }));
-        this.sprNode.runAction(seqOut);
+        spr.runAction(seqOut);
 
-        NET.send(MsgSlotWin.create(this._anim.addGold),(msg:MsgSlotWin)=>{
+        NET.send(MsgSlotWin.create(anim.addGold),(msg:MsgSlotWin)=>{
             if(msg && msg.resp){
                 Common.gold = msg.resp.gold;
             }
         },this)
     }
 
-    private showCoinFly(flycount:number){
+    private _delay:number = 0.06;
+    private showCoinFly(anim:SlotResultAnim){
         this.clearCoins();
-        for(var i:number = 0;i<flycount;i++){
+        for(var i:number = 0;i<anim.flyCoin;i++){
             var coin:cc.Node = this._coinPool.get();
             if(!coin){
                 coin = new cc.Node();
                 var spr:LoadSprite = coin.addComponent(LoadSprite);
                 spr.load(PathUtil.getCoinUrl());
             }
-            
-            var req = cc.sequence(cc.scaleTo(0.1,-1,1),cc.scaleTo(0.2,1,1)).repeatForever();
-            coin.runAction(req);
             coin.parent = this.coinNode;
             coin.position = this.randomPos();
-            var moveTo:cc.Vec2 = coin.parent.convertToNodeSpaceAR(this._anim.coinTo);
-            var flyMotion = cc.sequence(cc.fadeIn(0.1),cc.moveTo(0.4,moveTo).easing(cc.easeIn(1.5)));
+            coin.opacity = 0;
+            var moveTo:cc.Vec2 = coin.parent.convertToNodeSpaceAR(anim.coinTo);
+            var flyMotion = cc.sequence(cc.fadeIn(0.1),cc.delayTime(this._delay*i),
+                cc.spawn(
+                    cc.sequence(cc.scaleTo(0.07,-1,1),cc.scaleTo(0.07,1,1)).repeatForever(),
+                    cc.moveTo(0.4,moveTo).easing(cc.easeIn(1.5))
+                )
+            );
             coin.runAction(flyMotion);
             this._coins.push(coin);
         }
+        var delay:number = anim.flyCoin*this._delay+0.5;
         this.scheduleOnce(()=>{
             this.clearCoins();
-            UI.removeUI(this.node)
             EVENT.emit(GameEvent.Show_Gold_Fly);
-        },0.5)
+        },delay)
     }
     private randomPos():cc.Vec2{
         var center:cc.Vec2 = cc.v2(0,0);

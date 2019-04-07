@@ -12,6 +12,7 @@ import { SlotInputStart, SlotInputEnum } from "../game/SlotInput";
 import SlotWin from "../game/SlotWin";
 import GameSlot from "./GameSlot";
 import { SlotResultAnim, SlotResultAniEnum } from "../view/AnimUi";
+import { ResConst } from "../GlobalData";
 
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
@@ -60,7 +61,6 @@ export default class GameScene extends cc.Component {
     onLoad () {
 
         UI.registerLayer(this.uicanvas)
-
         this.showNothing();
     }
 
@@ -145,6 +145,7 @@ export default class GameScene extends cc.Component {
 
     private playEnd(){
         this._isSlotLocked = false;
+        Common.checkShowLevelup();
     }
 
     private showNothing(){
