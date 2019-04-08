@@ -12,7 +12,9 @@ import { SlotInputStart, SlotInputEnum } from "../game/SlotInput";
 import SlotWin from "../game/SlotWin";
 import GameSlot from "./GameSlot";
 import { SlotResultAnim, SlotResultAniEnum } from "../view/AnimUi";
-import { ResConst } from "../GlobalData";
+import { ResConst, ConfigConst } from "../GlobalData";
+import { GetGoldViewType } from "../view/GetGold";
+import { CFG } from "../core/ConfigManager";
 
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
@@ -35,7 +37,7 @@ export default class GameScene extends cc.Component {
     @property(SlotView) slot3: SlotView = null;
     @property(cc.Button) btnOn: cc.Button = null;
 
-
+    @property(cc.Label) lblTitle: cc.Label = null;
     @property(cc.Label) lblName: cc.Label = null;
     @property(cc.Label) lblScore: cc.Label = null;
     @property(cc.Label) lblAddExp: cc.Label = null;
@@ -77,6 +79,7 @@ export default class GameScene extends cc.Component {
         EVENT.on(GameEvent.Show_Exp_Fly,this.onShowExpfly,this);
         EVENT.on(GameEvent.Show_Exp_FlyEnd,this.onShowExpflyEnd,this);
         EVENT.on(GameEvent.Show_Gold_Fly,this.onShowGoldfly,this);
+        EVENT.on(GameEvent.UpgreadUI_Closed,this.onUpgradeUIClose,this);
     }
 
     onDisable(){
@@ -86,6 +89,7 @@ export default class GameScene extends cc.Component {
         EVENT.off(GameEvent.Show_Exp_Fly,this.onShowExpfly,this);
         EVENT.off(GameEvent.Show_Exp_FlyEnd,this.onShowExpflyEnd,this);
         EVENT.off(GameEvent.Show_Gold_Fly,this.onShowGoldfly,this);
+        EVENT.off(GameEvent.UpgreadUI_Closed,this.onUpgradeUIClose,this);
     }
 
     private _gameSlot:GameSlot;
@@ -99,8 +103,8 @@ export default class GameScene extends cc.Component {
 
     private addEventListener(){
         this.btnOn.node.on(ButtonEffect.CLICK_END,this.onSlot,this);
-        this.btnCostAdd.node.on(ButtonEffect.CLICK_END,this.onCostAdd,this)
-        this.btnCostSub.node.on(ButtonEffect.CLICK_END,this.onCostSub,this)
+        // this.btnCostAdd.node.on(ButtonEffect.CLICK_END,this.onCostAdd,this)
+        // this.btnCostSub.node.on(ButtonEffect.CLICK_END,this.onCostSub,this)
         this.btnMutiAdd.node.on(ButtonEffect.CLICK_END,this.onMutiAdd,this)
         this.btnMutiSub.node.on(ButtonEffect.CLICK_END,this.onMutiSub,this)
 
@@ -128,7 +132,7 @@ export default class GameScene extends cc.Component {
     private onSlot(e){
 
         if(Common.gold< this.CurCost){
-            console.log("金币不足");
+            UI.createPopUp(ResConst.GetGold,{type:GetGoldViewType.getGold});
             return;
         }
         if(this._isSlotLocked)
@@ -155,11 +159,18 @@ export default class GameScene extends cc.Component {
         this.lblMuti.string ="1";
         this.proExp.progress =0;
         this.lblAddExp.string = "";
+        this.lblTitle.string ="";
+    }
+    private onUpgradeUIClose(e){
+        this.lblTitle.string = Common.userInfo.title;
+        this.updateCostView();
+        this.lblAddExp.string ="获得种植经验："+this.CurCost;
     }
 
     private initView(){
         this.explevelEffect.initProgress(Common.userInfo.exp,Common.userInfo.levelExp,Common.userInfo.level);
         this.lblName.string = Common.userInfo.name;
+        this.lblTitle.string = Common.userInfo.title;
         this.lblScore.string = "种植经验："+Common.userInfo.totalExp;
 
         this.goldEffect.setValue(Common.gold,false);
@@ -169,16 +180,14 @@ export default class GameScene extends cc.Component {
         this.lblAddExp.string ="获得种植经验："+this.CurCost;
     }
 
-    private _curCostIndex:number = -1;
-    private _costArr:Array<number> = null;
+    private _curPlantCost:number = -1;
     private updateCostView(){
-        this._costArr = Common.getCostArr();
-        this._curCostIndex = this._costArr.length-1;
-        this.lblCost.string = this._costArr[this._curCostIndex].toString();
+        this._curPlantCost = Number(CFG.getCfgDataById(ConfigConst.Level,Common.userInfo.level).cost);
+        this.lblCost.string = this._curPlantCost.toString();
 
     }
     public get CurCost(){
-        return this._costArr[this._curCostIndex] *this._mutiArr[this._curMutiIndex];
+        return this._curPlantCost *this._mutiArr[this._curMutiIndex];
     }
 
     private _curMutiIndex:number = -1;
@@ -189,22 +198,22 @@ export default class GameScene extends cc.Component {
         this.lblMuti.string = this._mutiArr[this._curMutiIndex].toString();
     }
 
-    private onCostAdd(e){
-        this._curCostIndex++;
-        if(this._curCostIndex>= this._costArr.length){
-            this._curCostIndex = 0;
-        }
-        this.lblCost.string = this._costArr[this._curCostIndex].toString();
-        this.lblAddExp.string ="获得种植经验："+this.CurCost;
-    }
-    private onCostSub(e){
-        this._curCostIndex--;
-        if(this._curCostIndex<0){
-            this._curCostIndex = this._costArr.length-1;
-        }
-        this.lblCost.string = this._costArr[this._curCostIndex].toString();
-        this.lblAddExp.string ="获得种植经验："+this.CurCost;
-    }
+    // private onCostAdd(e){
+    //     this._curCostIndex++;
+    //     if(this._curCostIndex>= this._costArr.length){
+    //         this._curCostIndex = 0;
+    //     }
+    //     this.lblCost.string = this._costArr[this._curCostIndex].toString();
+    //     this.lblAddExp.string ="获得种植经验："+this.CurCost;
+    // }
+    // private onCostSub(e){
+    //     this._curCostIndex--;
+    //     if(this._curCostIndex<0){
+    //         this._curCostIndex = this._costArr.length-1;
+    //     }
+    //     this.lblCost.string = this._costArr[this._curCostIndex].toString();
+    //     this.lblAddExp.string ="获得种植经验："+this.CurCost;
+    // }
     private onMutiAdd(e){
         this._curMutiIndex++;
         if(this._curMutiIndex>= this._mutiArr.length){

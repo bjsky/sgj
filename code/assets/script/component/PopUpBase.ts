@@ -68,7 +68,7 @@ export default class PopUpBase extends UIBase {
     }
     public onShow(){
         this.node.opacity = this._nodeOpactiy;
-        this.node.scale = 0.8;
+        this.node.scale = 0.4;
         var seq = cc.sequence(
             cc.spawn(
                 cc.scaleTo(0.2,1).easing(cc.easeBackOut())
@@ -85,7 +85,7 @@ export default class PopUpBase extends UIBase {
     public onClose(e){
         var seq = cc.sequence(
             cc.spawn(
-                cc.scaleTo(0.2,0.8).easing(cc.easeBackIn())
+                cc.scaleTo(0.2,0.4).easing(cc.easeBackIn())
                 ,cc.fadeOut(0.2)
             ),
             cc.callFunc(()=>{

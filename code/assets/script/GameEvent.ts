@@ -19,4 +19,6 @@ export default class GameEvent {
     public static Show_Gold_Fly:string ="Show_Gold_Fly";
     //升级
     public static User_Level_UP:string = "User_Level_UP";
+    //关闭升级界面
+    public static UpgreadUI_Closed:string ="UpgreadUI_Closed";
 }

@@ -33,6 +33,8 @@ export default class UserInfo {
     public totalExp:number = 0;
     //当前等级
     public level:number = 1;
+    //称号
+    public title:string = "";
     
 
     public initFromServer(data:SUserInfo){
@@ -45,11 +47,11 @@ export default class UserInfo {
         
         var levelCfg = CFG.getCfgDataById(ConfigConst.Level,this.level);
         this.levelExp = levelCfg.exp;
+        this.title = levelCfg.title;
     }
     public updateInfo(data:SUserInfo){
         this.initFromServer(data);
     }
-
     public cloneServerInfo():SUserInfo{
         var clone:SUserInfo = new SUserInfo();
         clone.name = this.name;

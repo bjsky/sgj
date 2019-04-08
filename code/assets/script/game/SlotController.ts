@@ -2,12 +2,12 @@ import SlotMachine, { SlotMachineState } from "./SlotMachine";
 import SlotInput from "./SlotInput";
 
 export enum SlotFruit{
-    xigua = 1,      //西瓜
-    lanmei  =2,        //蓝莓
-    ningmeng =3,       //柠檬
-    xiangjiao =4,      //香蕉
-    yingtao =5,        //樱桃
-    chengzi =6,        //橙子
+    chengzi = 1,      //西瓜
+    xigua  =2,        //蓝莓
+    xiangjiao =3,       //柠檬
+    ningmeng =4,      //香蕉
+    lanmei =5,        //樱桃
+    yingtao =6,        //橙子
     guopan =7,         //果盘
     guolan=8,         //果篮
     shoutao=9,        //手套
