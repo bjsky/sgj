@@ -59,7 +59,7 @@ export default class NormalState extends SlotState{
         var result:SlotWin;
         var isWin:boolean = false;
         var winRate :number = Number(CFG.getCfgByKey(ConfigConst.Constant,"key","fruitWin")[0].value);
-        if(Math.random()<winRate){
+        if(true){
             isWin = true;
         }
         var fruitIdArr:Array<number> = []

@@ -6,6 +6,7 @@ import { SlotFruit } from "../game/SlotController";
 import { CFG } from "../core/ConfigManager";
 import { ConfigConst } from "../GlobalData";
 import { UI } from "../core/UIManager";
+import SlotNode from "../game/SlotNode";
 
 export default class GameSlot{
 
@@ -18,13 +19,19 @@ export default class GameSlot{
     private _slotView2:SlotView;
     private _slotView3:SlotView;
 
+    private _slot:SlotNode;
+
     public initSlotView(slot1:SlotView,slot2:SlotView,slot3:SlotView){
         this._slotView1 = slot1;
-        this._slotView1.initFruit();
+        // this._slotView1.initFruit();
         this._slotView2 = slot2;
-        this._slotView2.initFruit();
+        // this._slotView2.initFruit();
         this._slotView3 = slot3;
-        this._slotView3.initFruit();
+        // this._slotView3.initFruit();
+    }
+    public initSlotView2(slotNode:SlotNode){
+        this._slot = slotNode;
+        this._slot.initFruit();
     }
 
     public playSlotView(result:SlotWin,cb:Function){
@@ -48,36 +55,57 @@ export default class GameSlot{
     }
 
     public playSlotViewResult(slotArr:Array<number> ,anim:SlotResultAnim,cb:Function){
-        this._slotView1.play(Number(slotArr[0]),0.6);
-        this._slotView2.play(Number(slotArr[1]),0.8);
-        this._slotView3.play(Number(slotArr[2]),1);
+        // this._slotView1.play(Number(slotArr[0]),0.6);
+        // this._slotView2.play(Number(slotArr[1]),0.8);
+        // this._slotView3.play(Number(slotArr[2]),1);
+        // if(anim!=null){
+        //     this._scene.scheduleOnce(()=>{
+        //         UI.showWinAnim(anim);
+        //     },1);
+        //     this._scene.scheduleOnce(()=>{
+        //         cb && cb();
+        //     },1.5)
+        // }else{
+        //     this._scene.scheduleOnce(()=>{
+        //         cb && cb();
+        //     },1)
+        // }
+        var id:number = slotArr[0];
+        this._slot.play(id);
         if(anim!=null){
-            this._scene.scheduleOnce(()=>{
-                UI.showWinAnim(anim);
-            },1);
-            this._scene.scheduleOnce(()=>{
-                cb && cb();
-            },1.5)
-        }else{
-            this._scene.scheduleOnce(()=>{
-                cb && cb();
-            },1)
+                this._scene.scheduleOnce(()=>{
+                    UI.showWinAnim(anim);
+                },2);
+                this._scene.scheduleOnce(()=>{
+                    cb && cb();
+                },2.5)
+            }else{
+                this._scene.scheduleOnce(()=>{
+                    cb && cb();
+                },2)
         }
-        
     }
 
     public playSlotViewRepeat(result:SlotWin,cb:Function){
         var slotArr:Array<number> = result.slotArr;
-        this._slotView1.play(SlotFruit.shoutao,0.6);
-        this._slotView2.play(SlotFruit.shoutao,0.8);
-        this._slotView3.play(SlotFruit.shoutao,1);
+        // this._slotView1.play(SlotFruit.shoutao,0.6);
+        // this._slotView2.play(SlotFruit.shoutao,0.8);
+        // this._slotView3.play(SlotFruit.shoutao,1);
+        // this._scene.scheduleOnce(()=>{
+        //     UI.showWinAnim(new SlotResultAnim(SlotResultAniEnum.Repeat));
+        // },1);
+        // this._scene.scheduleOnce(()=>{
+        //     result.type = SlotWinEnum.Normal;
+        //     this.playSlotView(result,cb);
+        // },1.5)
+        this._slot.play(SlotFruit.shoutao);
         this._scene.scheduleOnce(()=>{
             UI.showWinAnim(new SlotResultAnim(SlotResultAniEnum.Repeat));
-        },1);
+        },2);
         this._scene.scheduleOnce(()=>{
             result.type = SlotWinEnum.Normal;
             this.playSlotView(result,cb);
-        },1.5)
+        },2.5)
     }
 
 }

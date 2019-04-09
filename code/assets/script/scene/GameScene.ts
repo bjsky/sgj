@@ -15,6 +15,7 @@ import { SlotResultAnim, SlotResultAniEnum } from "../view/AnimUi";
 import { ResConst, ConfigConst } from "../GlobalData";
 import { GetGoldViewType } from "../view/GetGold";
 import { CFG } from "../core/ConfigManager";
+import SlotNode from "../game/SlotNode";
 
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
@@ -64,6 +65,8 @@ export default class GameScene extends cc.Component {
 
     @property(cc.Label) lblTotalLife: cc.Label = null;
     @property(cc.Label) lblcostLife: cc.Label = null;
+
+    @property(SlotNode) slotNode: SlotNode = null;
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
@@ -106,6 +109,7 @@ export default class GameScene extends cc.Component {
 
         this._gameSlot = new GameSlot(this);
         this._gameSlot.initSlotView(this.slot1,this.slot2,this.slot3);
+        this._gameSlot.initSlotView2(this.slotNode)
         this.initView();
         this.addEventListener();
         this.schedule(this.lifeReturnFly,this._addLifeFlyInterval,cc.macro.REPEAT_FOREVER);
