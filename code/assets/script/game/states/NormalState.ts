@@ -11,6 +11,7 @@ import { NET } from "../../core/net/NetController";
 import MsgSlot from "../../message/MsgSlot";
 import { Common } from "../../CommonData";
 import SlotWin, { SlotWinEnum } from "../SlotWin";
+import { SResInfo } from "../../message/MsgLogin";
 
 export default class NormalState extends SlotState{
 
@@ -47,8 +48,8 @@ export default class NormalState extends SlotState{
             NET.send(MsgSlot.create(startIn.cost,startIn.cost),(msg:MsgSlot)=>{
                 if(msg && msg.resp){
                     Common.updateUserInfo(msg.resp.userInfo);
-                    Common.gold = msg.resp.gold;
-                    EVENT.emit(GameEvent.Show_Exp_Fly);
+                    Common.resInfo.initFormServer( msg.resp.resInfo);
+                    EVENT.emit(GameEvent.Show_Life_cost);
                 }
             },this);
         }

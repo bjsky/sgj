@@ -11,41 +11,18 @@ import PopUpBase from "../component/PopUpBase";
 //  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
 
 const {ccclass, property} = cc._decorator;
-export enum GetGoldViewType{
-    getGold = 1,
-    share = 2,
-}
 
 @ccclass
-export default class GetGold extends PopUpBase {
+export default class BuyLifeUI extends PopUpBase {
 
-    @property(cc.RichText)
-    content: cc.RichText = null;
-    @property(cc.Button)
-    btnSeevideo: cc.Button = null;
+    @property(cc.Label)
+    label: cc.Label = null;
+
 
     // LIFE-CYCLE CALLBACKS:
 
-    onLoad () {
-        this.content.string ='';
-    }
+    // onLoad () {}
 
-    private _type:GetGoldViewType = 0;
-    public setData(data:any){
-        this._type = data.type;
-    }
-
-    onEnable(){
-        super.onEnable();
-    }
-    onDisable(){
-        super.onDisable();
-    }
-    protected onShowComplete(){
-        if(this._type == GetGoldViewType.getGold){
-            this.content.string = "<color=#ffffff>精力不足，请一会再来</c>";
-        }
-    }
     start () {
 
     }

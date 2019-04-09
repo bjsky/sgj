@@ -40,10 +40,9 @@ export default class UpgradeUI extends PopUpBase{
         if(levelCfg){
             this.lblLv.string = level.toString();
             
-            var unlcokCostStr:string = "";
-            if(Number(levelCfg.unlcokCost)!=0){
-                unlcokCostStr = "种子投入解锁：<color= #00ff00><b>"+levelCfg.cost+"</b><c/>";
-            }
+            var unlcokCostStr:string = "每分钟精力恢复：<color= #00ff00><b>"+levelCfg.lifeReturn+"</b></c><br />"+
+                "精力恢复上限：<color= #00ff00><b>"+levelCfg.lifeMax+"</b></c><br />"+
+                "种植精力消耗：<color= #00ff00><b>"+levelCfg.cost+"</b></c>";
             var unlocktitle:string ="";
             if(Number(levelCfg.unlcokTitle)==1){
                 unlocktitle = "获得称号：<color = #00ff00><b>"+levelCfg.title+"</b></c>";

@@ -1,7 +1,7 @@
 [
     {"id":"1","key":"coinCost","name":"金币投入","value":"1;100|5;200|10;300|15;400|20;500"},
     {"id":"2","key":"coinMutiple","name":"金币倍数","value":"1;2;3;4;5"},
-    {"id":"3","key":"fruitWin","name":"水果中奖率","value":"0.25"},
+    {"id":"3","key":"fruitWin","name":"水果中奖率","value":"0.5"},
     {"id":"4","key":"bumperWin","name":"丰收中奖率","value":"0.5"},
     {"id":"5","key":"bumperTrigger","name":"丰收触发率","value":"0.05"},
     {"id":"6","key":"bumperRound","name":"丰收轮次","value":"10"},

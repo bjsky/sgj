@@ -19,7 +19,8 @@ export const ResConst = {
     TipPanel:"prefabs/tipPanel",
     WinAnim:"prefabs/animUi",
     UpgradeUI:"prefabs/upgradeUI",
-    GetGold:"prefabs/getGold"
+    GetGold:"prefabs/getGold",
+    BuyLife:"prefabs/buyLifeUI"
 }
 export default class GlobalData{
 

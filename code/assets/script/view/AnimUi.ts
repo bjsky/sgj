@@ -110,7 +110,7 @@ export default class AnimUi extends UIBase {
 
         NET.send(MsgSlotWin.create(anim.addGold),(msg:MsgSlotWin)=>{
             if(msg && msg.resp){
-                Common.gold = msg.resp.gold;
+                Common.resInfo.initFormServer(msg.resp.resInfo);
             }
         },this)
     }

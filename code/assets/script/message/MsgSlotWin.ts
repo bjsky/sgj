@@ -1,6 +1,6 @@
 import MessageBase from "../core/net/MessageBase";
 import NetConst from "../NetConst";
-import { SUserInfo } from "./MsgLogin";
+import { SUserInfo, SResInfo } from "./MsgLogin";
 import { Common } from "../CommonData";
 
 export class CSSlotWin{
@@ -8,11 +8,11 @@ export class CSSlotWin{
 }
 
 export class SCSlotWin{
-    public gold:number = 0;
+    public resInfo:SResInfo = null;
 
     public static parse(obj:any):SCSlotWin{
         var info:SCSlotWin = new SCSlotWin();
-        info.gold = Number(obj.gold);
+        info.resInfo = SResInfo.parse(obj.resInfo);
         return info;
     }
 }
@@ -33,9 +33,10 @@ export default class MsgSlotWin extends MessageBase {
         return msg;
     }
     public respFromLocal(){
-        var gold:number = Common.gold + this.param.addGold;
+        var resInfo:SResInfo = Common.resInfo.cloneServerInfo()
+        resInfo.gold+=this.param.addGold;
         var json:any = {
-            gold:gold
+            resInfo:resInfo
         };
         return this.parse(json);
     }

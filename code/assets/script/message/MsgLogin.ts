@@ -75,9 +75,12 @@ export class SResInfo{
     //金币
     public gold:number = 0;
 
+    public life:number = 0;
+
     public static parse(obj:any):SResInfo{
         var info:SResInfo = new SResInfo();
         info.gold = obj.gold;
+        info.life = obj.life;
         return info;
     }
 }
@@ -114,7 +117,7 @@ export default class MsgLogin
             newUser:0,
             serverTime:new Date().getTime(),
             userInfo:{name:"开心农场",icon:"",gender:1,exp:0,totalExp:0,level:1},
-            resInfo:{gold:1000},
+            resInfo:{gold:0,life:4500},
         };
         return this.parse(json);
     }

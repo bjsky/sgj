@@ -5,6 +5,7 @@ import { ConfigConst, ResConst } from "./GlobalData";
 import { EVENT } from "./core/EventController";
 import GameEvent from "./GameEvent";
 import { UI } from "./core/UIManager";
+import ResInfo from "./ResInfo";
 
 export default class CommonData {
     private static _instance: CommonData = null;
@@ -22,8 +23,8 @@ export default class CommonData {
     public accountId:string ="";
     //用户数据
     public userInfo:UserInfo = new UserInfo();
-    //金币
-    public gold:number = 0;
+    //资源
+    public resInfo:ResInfo = new ResInfo();
     //分享好友数
     public shareFriendNum:number = 0;
 
@@ -44,7 +45,7 @@ export default class CommonData {
         this.newUser = data.newUser;
         this._serverTime = data.serverTime;
         this.userInfo.initFromServer(data.userInfo);
-        this.gold = data.resInfo.gold;
+        this.resInfo.initFormServer(data.resInfo);
     }
 
     public getCostArr():Array<number>{
