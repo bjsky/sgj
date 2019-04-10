@@ -4,6 +4,7 @@ import { CFG } from "../core/ConfigManager";
 import { ConfigConst } from "../GlobalData";
 import { EVENT } from "../core/EventController";
 import GameEvent from "../GameEvent";
+import { SOUND } from "../component/SoundManager";
 
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
@@ -32,6 +33,7 @@ export default class UpgradeUI extends PopUpBase{
     onEnable(){
         super.onEnable();
         this.initView();
+        SOUND.playLevelupSound();
     }
 
     private initView(){

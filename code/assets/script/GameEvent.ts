@@ -21,6 +21,4 @@ export default class GameEvent {
     public static User_Level_UP:string = "User_Level_UP";
     //关闭升级界面
     public static UpgreadUI_Closed:string ="UpgreadUI_Closed";
-
-    public static Show_Life_cost:string ="Show_Life_cost";
 }

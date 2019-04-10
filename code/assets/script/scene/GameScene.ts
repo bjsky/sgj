@@ -16,6 +16,7 @@ import { ResConst, ConfigConst } from "../GlobalData";
 import { GetGoldViewType } from "../view/GetGold";
 import { CFG } from "../core/ConfigManager";
 import SlotNode from "../game/SlotNode";
+import { SOUND } from "../component/SoundManager";
 
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
@@ -48,13 +49,6 @@ export default class GameScene extends cc.Component {
 
     @property(cc.ProgressBar) proExp: cc.ProgressBar = null;
 
-    @property(cc.Label) lblCost: cc.Label = null;
-    @property(cc.Label) lblMuti: cc.Label = null;
-
-    @property(cc.Button) btnCostAdd: cc.Button = null;
-    @property(cc.Button) btnCostSub: cc.Button = null;
-    @property(cc.Button) btnMutiAdd: cc.Button = null;
-    @property(cc.Button) btnMutiSub: cc.Button = null;
 
     @property(ExpLevelEffect) explevelEffect:ExpLevelEffect = null;
     @property(NumberEffect) goldEffect:NumberEffect = null;
@@ -89,7 +83,6 @@ export default class GameScene extends cc.Component {
         EVENT.on(GameEvent.Show_Exp_FlyEnd,this.onShowExpflyEnd,this);
         EVENT.on(GameEvent.Show_Gold_Fly,this.onShowGoldfly,this);
         EVENT.on(GameEvent.UpgreadUI_Closed,this.onUpgradeUIClose,this);
-        EVENT.on(GameEvent.Show_Life_cost,this.onShowLifeCost,this);
     }
 
     onDisable(){
@@ -100,7 +93,6 @@ export default class GameScene extends cc.Component {
         EVENT.off(GameEvent.Show_Exp_FlyEnd,this.onShowExpflyEnd,this);
         EVENT.off(GameEvent.Show_Gold_Fly,this.onShowGoldfly,this);
         EVENT.off(GameEvent.UpgreadUI_Closed,this.onUpgradeUIClose,this);
-        EVENT.off(GameEvent.Show_Life_cost,this.onShowLifeCost,this);
     }
 
     private _gameSlot:GameSlot;
@@ -113,34 +105,28 @@ export default class GameScene extends cc.Component {
         this.initView();
         this.addEventListener();
         this.schedule(this.lifeReturnFly,this._addLifeFlyInterval,cc.macro.REPEAT_FOREVER);
+
+        SOUND.playBgSound();
     }
 
     private addEventListener(){
         this.btnOn.node.on(ButtonEffect.CLICK_END,this.onSlot,this);
-        // this.btnCostAdd.node.on(ButtonEffect.CLICK_END,this.onCostAdd,this)
-        // this.btnCostSub.node.on(ButtonEffect.CLICK_END,this.onCostSub,this)
-        this.btnMutiAdd.node.on(ButtonEffect.CLICK_END,this.onMutiAdd,this)
-        this.btnMutiSub.node.on(ButtonEffect.CLICK_END,this.onMutiSub,this)
         this.btnBuyLife.node.on(ButtonEffect.CLICK_END,this.onBuyLife,this);
     }
 
     private onShowExpfly(e){
         var anim:SlotResultAnim = new SlotResultAnim(SlotResultAniEnum.Expfly);
         anim.starTo = this.sprStar.node.parent.convertToWorldSpaceAR(this.sprStar.node.position);
-        anim.starFrom = this.houseNode.parent.convertToWorldSpaceAR(this.houseNode.position);
+        anim.starFrom = this.btnOn.node.parent.convertToWorldSpaceAR(this.btnOn.node.position);
         UI.showWinAnim(anim);
-    }
-    private onShowLifeCost(e){
+
         this.lblTotalLife.string = Common.resInfo.life.toString();
-        this.lblScore.string = "种植经验："+Common.userInfo.totalExp;
-        this.explevelEffect.playProgressAnim(Common.userInfo.exp,Common.userInfo.levelExp,Common.userInfo.level);
     }
 
     private onShowExpflyEnd(e){
 
-        var addLifeFly:number = Number((this._curLifeReturn*this._addLifeFlyInterval/60).toFixed(0));
-        Common.resInfo.life += addLifeFly;
-        this.lblTotalLife.string = Common.resInfo.life.toString();
+        this.lblScore.string = "种植经验："+Common.userInfo.totalExp;
+        this.explevelEffect.playProgressAnim(Common.userInfo.exp,Common.userInfo.levelExp,Common.userInfo.level);
     }
 
     private onShowGoldfly(e){
@@ -157,6 +143,7 @@ export default class GameScene extends cc.Component {
         if(this._isSlotLocked)
             return;
         this._isSlotLocked = true;
+        this.btnOn.getComponent(ButtonEffect).enabled = false;
         var input:SlotInputStart = new SlotInputStart(SlotInputEnum.startPlay,this.CurCost);
         Slot.excute(input);
     }
@@ -168,14 +155,13 @@ export default class GameScene extends cc.Component {
 
     private playEnd(){
         this._isSlotLocked = false;
+        this.btnOn.getComponent(ButtonEffect).enabled = true;
         Common.checkShowLevelup();
     }
 
     private showNothing(){
         this.lblName.string ="";
         this.lblScore.string ="";
-        this.lblCost.string = "";
-        this.lblMuti.string ="1";
         this.proExp.progress =0;
         this.lblAddExp.string = "";
         this.lblTitle.string ="";
@@ -197,7 +183,6 @@ export default class GameScene extends cc.Component {
 
         this.goldEffect.setValue(Common.resInfo.gold,false);
         this.updateCostView();
-        this.updateMutiView();
     }
 
     private _curPlantCost:number = -1;
@@ -218,52 +203,13 @@ export default class GameScene extends cc.Component {
     public get CurCost(){
         return this._curPlantCost;
     }
-
-    private _curMutiIndex:number = -1;
-    private _mutiArr:Array<number> = null;
-    private updateMutiView(){
-        this._mutiArr = Common.getMutiArr();
-        this._curMutiIndex = this._mutiArr.length-1;
-        this.lblMuti.string = this._mutiArr[this._curMutiIndex].toString();
-    }
-
-    // private onCostAdd(e){
-    //     this._curCostIndex++;
-    //     if(this._curCostIndex>= this._costArr.length){
-    //         this._curCostIndex = 0;
-    //     }
-    //     this.lblCost.string = this._costArr[this._curCostIndex].toString();
-    //     this.lblAddExp.string ="获得种植经验："+this.CurCost;
-    // }
-    // private onCostSub(e){
-    //     this._curCostIndex--;
-    //     if(this._curCostIndex<0){
-    //         this._curCostIndex = this._costArr.length-1;
-    //     }
-    //     this.lblCost.string = this._costArr[this._curCostIndex].toString();
-    //     this.lblAddExp.string ="获得种植经验："+this.CurCost;
-    // }
-    private onMutiAdd(e){
-        this._curMutiIndex++;
-        if(this._curMutiIndex>= this._mutiArr.length){
-            this._curMutiIndex = 0;
-        }
-        this.lblMuti.string = this._mutiArr[this._curMutiIndex].toString();
-        // this.lblAddExp.string ="获得种植经验："+this.CurCost;
-    }
-    private onMutiSub(e){
-        this._curMutiIndex--;
-        if(this._curMutiIndex<0){
-            this._curMutiIndex = this._mutiArr.length-1;
-        }
-        this.lblMuti.string = this._mutiArr[this._curMutiIndex].toString();
-        // this.lblAddExp.string ="获得种植经验："+this.CurCost;
-    }
     // update (dt) {}
 
     private lifeReturnFly(){
         if(Common.resInfo.life<this._curLifeReturnMax){
-            this.onShowExpfly(null);
+            var addLifeFly:number = Number((this._curLifeReturn*this._addLifeFlyInterval/60).toFixed(0));
+            Common.resInfo.life += addLifeFly;
+            this.lblTotalLife.string = Common.resInfo.life.toString();
         }
     }
 

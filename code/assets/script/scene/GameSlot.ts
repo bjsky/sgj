@@ -37,20 +37,23 @@ export default class GameSlot{
     public playSlotView(result:SlotWin,cb:Function){
         var slotArr:Array<number> = result.slotArr;
         var winAnim:SlotResultAnim = null;
-        if(slotArr[0] == slotArr[1] && slotArr[1] == slotArr[2]){
-            if(slotArr[0]!= SlotFruit.guolan){
-                winAnim = new SlotResultAnim(SlotResultAniEnum.Hevart);
-                winAnim.coinTo = this._scene.coinIcon.parent.convertToWorldSpaceAR(this._scene.coinIcon.position);
-                var fruitCfg:any = CFG.getCfgDataById(ConfigConst.Fruit,slotArr[0]);
-                winAnim.muti = Number(fruitCfg.winMuti);
-                winAnim.flyCoin = Number(fruitCfg.flyCoin);
-                winAnim.addGold = winAnim.muti * result.cost;
-            }
+        if(result.type == SlotWinEnum.Normal){
+            winAnim = new SlotResultAnim(SlotResultAniEnum.Hevart);
+            winAnim.coinTo = this._scene.coinIcon.parent.convertToWorldSpaceAR(this._scene.coinIcon.position);
+            var fruitCfg:any = CFG.getCfgDataById(ConfigConst.Fruit,slotArr[0]);
+            winAnim.muti = Number(fruitCfg.winMuti);
+            winAnim.flyCoin = Number(fruitCfg.flyCoin);
+            winAnim.addGold = winAnim.muti * result.cost;
         }
         if(result.type == SlotWinEnum.Normal){
             this.playSlotViewResult(result.slotArr,winAnim,cb);
         }else if(result.type== SlotWinEnum.Repeat){
             this.playSlotViewRepeat(result,cb);
+        }else if(result.type == SlotWinEnum.BigWin){
+            this.playSlotViewBigWin(result,cb);
+        }
+        else{
+            cb && cb();
         }
     }
 
@@ -105,6 +108,16 @@ export default class GameSlot{
         this._scene.scheduleOnce(()=>{
             result.type = SlotWinEnum.Normal;
             this.playSlotView(result,cb);
+        },2.5)
+    }
+
+    public playSlotViewBigWin(result:SlotWin,cb:Function){
+        this._slot.play(SlotFruit.guolan);
+        this._scene.scheduleOnce(()=>{
+            UI.showWinAnim(new SlotResultAnim(SlotResultAniEnum.BigWin));
+        },2);
+        this._scene.scheduleOnce(()=>{
+            cb && cb();
         },2.5)
     }
 

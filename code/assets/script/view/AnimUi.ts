@@ -7,6 +7,7 @@ import { EVENT } from "../core/EventController";
 import GameEvent from "../GameEvent";
 import LoadSprite from "../component/LoadSprite";
 import PathUtil from "../utils/PathUtil";
+import { SOUND } from "../component/SoundManager";
 
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
@@ -25,6 +26,7 @@ export enum SlotResultAniEnum{
     Repeat = 2,
     Hevart,
     Expfly,
+    BigWin,
 }
 export class SlotResultAnim{
 
@@ -44,6 +46,7 @@ export class SlotResultAnim{
 export default class AnimUi extends UIBase {
 
     @property(cc.Sprite)  sprRepeat: cc.Sprite = null;
+    @property(cc.Sprite)  sprBigWin: cc.Sprite = null;
     @property(cc.Node)  sprNode: cc.Node = null;
     @property(cc.Node)  nodeMuti: cc.Node = null;
     @property(cc.Label)  labelMuti: cc.Label = null;
@@ -65,16 +68,25 @@ export default class AnimUi extends UIBase {
         if(anim.type == SlotResultAniEnum.Repeat){
             this.sprRepeat.node.active = true;
             this.showNotice(this.sprRepeat.node,anim);
+        }else if(anim.type == SlotResultAniEnum.BigWin){
+            this.sprBigWin.node.active = true;
+            this.showNotice(this.sprBigWin.node,anim);
         }else if(anim.type == SlotResultAniEnum.Hevart){
             this.nodeMuti.active = true;
             this.labelMuti.string = anim.muti.toString();
             this.showNotice(this.nodeMuti,anim);
+
+            NET.send(MsgSlotWin.create(anim.addGold),(msg:MsgSlotWin)=>{
+                if(msg && msg.resp){
+                    Common.resInfo.initFormServer(msg.resp.resInfo);
+                }
+            },this)
         }else if(anim.type == SlotResultAniEnum.Expfly){
             this.msStar.active = true;
             var moveFrom:cc.Vec2 = this.msStar.parent.convertToNodeSpaceAR(anim.starFrom);
             var moveTo:cc.Vec2 = this.msStar.parent.convertToNodeSpaceAR(anim.starTo);
 
-            var moveCenter:cc.Vec2 = cc.v2(moveFrom.x+100,moveFrom.y+100);
+            var moveCenter:cc.Vec2 = cc.v2(moveFrom.x-200,moveFrom.y+100);
             this.msStar.position = moveFrom;
             var move = cc.sequence(cc.bezierTo(0.6,[moveFrom,moveCenter,moveTo]).easing(cc.easeIn(1.5)),
                 cc.callFunc(()=>{
@@ -88,6 +100,7 @@ export default class AnimUi extends UIBase {
         this.sprRepeat.node.active = false;
         this.nodeMuti.active = false;
         this.msStar.active = false;
+        this.sprBigWin.node.active = false;
     }
 
     private showNotice(spr:cc.Node,anim:SlotResultAnim){
@@ -107,17 +120,13 @@ export default class AnimUi extends UIBase {
                 }
             }));
         spr.runAction(seqOut);
-
-        NET.send(MsgSlotWin.create(anim.addGold),(msg:MsgSlotWin)=>{
-            if(msg && msg.resp){
-                Common.resInfo.initFormServer(msg.resp.resInfo);
-            }
-        },this)
     }
 
     private _delay:number = 0.06;
     private showCoinFly(anim:SlotResultAnim){
         this.clearCoins();
+
+        SOUND.playCoinflySound(anim.flyCoin);
         for(var i:number = 0;i<anim.flyCoin;i++){
             var coin:cc.Node = this._coinPool.get();
             if(!coin){
@@ -141,6 +150,7 @@ export default class AnimUi extends UIBase {
         var delay:number = anim.flyCoin*this._delay+0.5;
         this.scheduleOnce(()=>{
             this.clearCoins();
+
             EVENT.emit(GameEvent.Show_Gold_Fly);
         },delay)
     }

@@ -1,11 +1,14 @@
 [
-    {"id":"1","name":"橙子","icon":"ui/fruit/cz","isBigWin":"0","winMuti":"2","flyCoin":"5","weight":"0.2","weightsum":"0.4"},
-    {"id":"2","name":"西瓜","icon":"ui/fruit/xg","isBigWin":"0","winMuti":"3","flyCoin":"5","weight":"0.15","weightsum":"0.45"},
-    {"id":"3","name":"香蕉","icon":"ui/fruit/xj","isBigWin":"0","winMuti":"5","flyCoin":"5","weight":"0.1","weightsum":"0.5"},
-    {"id":"4","name":"柠檬","icon":"ui/fruit/nm","isBigWin":"0","winMuti":"10","flyCoin":"10","weight":"0.05","weightsum":"0.5"},
-    {"id":"5","name":"蓝莓","icon":"ui/fruit/lm","isBigWin":"0","winMuti":"15","flyCoin":"10","weight":"0.04","weightsum":"0.6"},
-    {"id":"6","name":"樱桃","icon":"ui/fruit/yt","isBigWin":"0","winMuti":"20","flyCoin":"10","weight":"0.03","weightsum":"0.6"},
-    {"id":"7","name":"果盘","icon":"ui/fruit/gp","isBigWin":"0","winMuti":"30","flyCoin":"20","weight":"0.02","weightsum":"0.6"},
-    {"id":"8","name":"果篮","icon":"ui/fruit/gl","isBigWin":"1","winMuti":"100","flyCoin":"20","weight":"0.1","weightsum":"10"},
-    {"id":"9","name":"手套","icon":"ui/fruit/st","isBigWin":"0","winMuti":"0","flyCoin":"0","weight":"0.2","weightsum":"0"}
+    {"id":"1","name":"橙子","icon":"ui/fruit/cz","use":"1","winMuti":"2","flyCoin":"5","weight":"0.2","weightsum":"0.4"},
+    {"id":"2","name":"西瓜","icon":"ui/fruit/xg","use":"1","winMuti":"3","flyCoin":"5","weight":"0.15","weightsum":"0.45"},
+    {"id":"3","name":"香蕉","icon":"ui/fruit/xj","use":"1","winMuti":"5","flyCoin":"10","weight":"0.1","weightsum":"0.5"},
+    {"id":"4","name":"柠檬","icon":"ui/fruit/nm","use":"1","winMuti":"10","flyCoin":"10","weight":"0.05","weightsum":"0.5"},
+    {"id":"5","name":"蓝莓","icon":"ui/fruit/lm","use":"1","winMuti":"15","flyCoin":"20","weight":"0.04","weightsum":"0.6"},
+    {"id":"6","name":"樱桃","icon":"ui/fruit/yt","use":"1","winMuti":"20","flyCoin":"20","weight":"0.03","weightsum":"0.6"},
+    {"id":"7","name":"分享","icon":"ui/fruit/gp","use":"0","winMuti":"0","flyCoin":"0","weight":"0.2","weightsum":"0"},
+    {"id":"8","name":"果篮","icon":"ui/fruit/gl","use":"1","winMuti":"100","flyCoin":"0","weight":"0.01","weightsum":"1"},
+    {"id":"9","name":"repeat","icon":"ui/fruit/st","use":"1","winMuti":"0","flyCoin":"0","weight":"0.2","weightsum":"0"},
+    {"id":"10","name":"种植","icon":"","use":"0","winMuti":"0","flyCoin":"0","weight":"0.05","weightsum":"0"},
+    {"id":"11","name":"采摘","icon":"","use":"0","winMuti":"0","flyCoin":"0","weight":"0.05","weightsum":"0"},
+    {"id":"12","name":"偷取","icon":"","use":"0","winMuti":"0","flyCoin":"0","weight":"0.1","weightsum":"0"}
     ]

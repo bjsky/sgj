@@ -22,10 +22,9 @@ export default class NormalState extends SlotState{
         var fruitCfg:any = CFG.getCfgGroup(ConfigConst.Fruit);
         for(var key in fruitCfg){
             var fruit:any = fruitCfg[key];
-            if(fruit.isBigWin == "1"){
-                continue;
+            if(fruit.use == "1"){
+                this._normalFruitArr.push(fruit);
             }
-            this._normalFruitArr.push(fruit);
         }
     }
 
@@ -49,7 +48,7 @@ export default class NormalState extends SlotState{
                 if(msg && msg.resp){
                     Common.updateUserInfo(msg.resp.userInfo);
                     Common.resInfo.initFormServer( msg.resp.resInfo);
-                    EVENT.emit(GameEvent.Show_Life_cost);
+                    EVENT.emit(GameEvent.Show_Exp_Fly);
                 }
             },this);
         }
@@ -67,7 +66,11 @@ export default class NormalState extends SlotState{
             var winFruitId:number = NumUtil.getRandomFruit(fruitArr);
             if(winFruitId == SlotFruit.shoutao){
                 result = new SlotWin(SlotWinEnum.Repeat);
-            }else{
+            }else if(winFruitId == SlotFruit.guolan){
+                result = new SlotWin(SlotWinEnum.BigWin);
+                result.slotArr = [winFruitId,winFruitId,winFruitId];
+            }
+            else{
                 fruitIdArr =[winFruitId,winFruitId,winFruitId];
                 result = new SlotWin(SlotWinEnum.Normal);
                 result.slotArr = fruitIdArr;

@@ -1,3 +1,5 @@
+import { SOUND } from "../component/SoundManager";
+
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/typescript.html
@@ -43,7 +45,7 @@ export default class SlotNode extends cc.Component {
         this.scheduleOnce(()=>{
             this._state = SlotStateEnum.SlowBegin;
         },1.4);
-
+        SOUND.playSlotSound();
     }
 
     private _speed:number = 800;
