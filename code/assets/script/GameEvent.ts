@@ -21,4 +21,11 @@ export default class GameEvent {
     public static User_Level_UP:string = "User_Level_UP";
     //关闭升级界面
     public static UpgreadUI_Closed:string ="UpgreadUI_Closed";
+
+    //大奖开始
+    public static BigWin_Start:string ="BigWin_Start";
+    //大奖更新轮次
+    public static BigWin_updateTurn:string = "BigWin_updateTurn";
+    //大奖结束
+    public static BigWin_End:string ="BigWin_End";
 }

@@ -49,6 +49,7 @@ export default class AnimUi extends UIBase {
     @property(cc.Sprite)  sprBigWin: cc.Sprite = null;
     @property(cc.Node)  sprNode: cc.Node = null;
     @property(cc.Node)  nodeMuti: cc.Node = null;
+    @property(cc.Sprite)  sprMuti: cc.Sprite = null;
     @property(cc.Label)  labelMuti: cc.Label = null;
     @property(cc.Node)  msStar: cc.Node = null;
     @property(cc.Node)  coinNode: cc.Node = null;
@@ -70,10 +71,14 @@ export default class AnimUi extends UIBase {
             this.showNotice(this.sprRepeat.node,anim);
         }else if(anim.type == SlotResultAniEnum.BigWin){
             this.sprBigWin.node.active = true;
-            this.showNotice(this.sprBigWin.node,anim);
+            this.showBigWinNotice(this.sprBigWin.node);
         }else if(anim.type == SlotResultAniEnum.Hevart){
             this.nodeMuti.active = true;
-            this.labelMuti.string = anim.muti.toString();
+            this.labelMuti.string = anim.addGold.toString();
+            this.labelMuti["_updateRenderData"](true);
+            var totalw:number = this.sprMuti.node.width+7+this.labelMuti.node.width;
+            this.sprMuti.node.x = -totalw/2;
+            this.labelMuti.node.x = totalw/2-this.labelMuti.node.width;
             this.showNotice(this.nodeMuti,anim);
 
             NET.send(MsgSlotWin.create(anim.addGold),(msg:MsgSlotWin)=>{
@@ -122,6 +127,22 @@ export default class AnimUi extends UIBase {
         spr.runAction(seqOut);
     }
 
+    private showBigWinNotice(spr:cc.Node){
+        spr.scale = 0.7;
+        spr.opacity = 255;
+        SOUND.playBigWinLockSound();
+        var seqOut = cc.sequence(cc.scaleTo(0.2,1.3).easing(cc.easeBackOut()),
+            cc.delayTime(1),
+            cc.callFunc(()=>{
+                SOUND.playBigWinBgSound();
+            }),
+            cc.fadeOut(0.5),
+            cc.callFunc(()=>{
+                spr.active = false;
+            }));
+        spr.runAction(seqOut);
+    }
+
     private _delay:number = 0.06;
     private showCoinFly(anim:SlotResultAnim){
         this.clearCoins();
@@ -147,9 +168,9 @@ export default class AnimUi extends UIBase {
             coin.runAction(flyMotion);
             this._coins.push(coin);
         }
-        var delay:number = anim.flyCoin*this._delay+0.5;
+        var delay:number = 0.5;
         this.scheduleOnce(()=>{
-            this.clearCoins();
+            // this.clearCoins();
 
             EVENT.emit(GameEvent.Show_Gold_Fly);
         },delay)

@@ -61,12 +61,18 @@ export default class GameScene extends cc.Component {
     @property(cc.Label) lblcostLife: cc.Label = null;
 
     @property(SlotNode) slotNode: SlotNode = null;
+
+    @property(cc.Node) lightLeft: cc.Node = null;
+    @property(cc.Node) lightRight: cc.Node = null;
+    @property(cc.Label) bigwinTimes: cc.Label = null;
+    
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
 
         UI.registerLayer(this.uicanvas)
         this.showNothing();
+
     }
 
 
@@ -83,6 +89,9 @@ export default class GameScene extends cc.Component {
         EVENT.on(GameEvent.Show_Exp_FlyEnd,this.onShowExpflyEnd,this);
         EVENT.on(GameEvent.Show_Gold_Fly,this.onShowGoldfly,this);
         EVENT.on(GameEvent.UpgreadUI_Closed,this.onUpgradeUIClose,this);
+        EVENT.on(GameEvent.BigWin_Start,this.onBigwinStart,this);
+        EVENT.on(GameEvent.BigWin_updateTurn,this.onBigwinTurn,this);
+        EVENT.on(GameEvent.BigWin_End,this.onBigwinEnd,this);
     }
 
     onDisable(){
@@ -93,6 +102,9 @@ export default class GameScene extends cc.Component {
         EVENT.off(GameEvent.Show_Exp_FlyEnd,this.onShowExpflyEnd,this);
         EVENT.off(GameEvent.Show_Gold_Fly,this.onShowGoldfly,this);
         EVENT.off(GameEvent.UpgreadUI_Closed,this.onUpgradeUIClose,this);
+        EVENT.off(GameEvent.BigWin_Start,this.onBigwinStart,this);
+        EVENT.off(GameEvent.BigWin_updateTurn,this.onBigwinTurn,this);
+        EVENT.off(GameEvent.BigWin_End,this.onBigwinEnd,this);
     }
 
     private _gameSlot:GameSlot;
@@ -168,6 +180,9 @@ export default class GameScene extends cc.Component {
         this.lblTotalLife.string = "";
         this.lblcostLife.string = "";
         this.lblLifeDesc.string ="";
+
+        this.lightLeft.opacity = 0;
+        this.lightRight.opacity = 0;
     }
     private onUpgradeUIClose(e){
         this.lblTitle.string = Common.userInfo.title;
@@ -215,5 +230,32 @@ export default class GameScene extends cc.Component {
 
     private onBuyLife(e){
         UI.createPopUp(ResConst.BuyLife,{});
+    }
+
+    private _bigwinTiems:number = 0;
+    private onBigwinStart(e){
+        var seq = cc.sequence(cc.fadeIn(0.3),cc.fadeOut(0.3)).repeatForever();
+        this.lightLeft.runAction(seq);
+        var seq1 = cc.sequence(cc.fadeIn(0.3),cc.fadeOut(0.3)).repeatForever();
+        this.lightRight.runAction(seq1);
+        this._bigwinTiems = Number(CFG.getCfgByKey(ConfigConst.Constant,"key","bigWinRound")[0].value);
+        this.bigwinTimes.string = this._bigwinTiems.toString();
+        this.bigwinTimes.node.runAction(cc.sequence(cc.scaleTo(0.1,1.3),cc.scaleTo(0.15,1)));
+    }
+
+    private onBigwinTurn(e){
+        this._bigwinTiems--;
+        if(this._bigwinTiems<0){
+            this._bigwinTiems = 0;
+        }
+        this.bigwinTimes.string = this._bigwinTiems.toString();
+        this.bigwinTimes.node.runAction(cc.sequence(cc.scaleTo(0.1,1.3),cc.scaleTo(0.15,1)));
+    }
+
+    private onBigwinEnd(e){
+        this.lightLeft.stopAllActions();
+        this.lightLeft.opacity = 0;
+        this.lightRight.stopAllActions();
+        this.lightRight.opacity = 0;
     }
 }

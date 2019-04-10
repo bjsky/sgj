@@ -121,6 +121,9 @@ export default class SoundManager{
     public playLevelupSound(){
         this.playEffectSound(SoundConst.Levelup_sound);
     }
+    public playBigWinLockSound(){
+        this.playEffectSound(SoundConst.bigWinLock_sound);
+    }
 }
 
 export class SoundConst {
@@ -132,6 +135,7 @@ export class SoundConst {
     public static Coinfly_sound_10:string ="sounds/coinfly_2";
     public static Coinfly_sound_20:string ="sounds/coinfly_3";
     public static Levelup_sound:string ="sounds/levelup";
+    public static bigWinLock_sound:string ="sounds/bigwinlock";
 }
 
 export var SOUND = SoundManager.getInstance();

@@ -15,4 +15,6 @@ export default class SlotWin{
     public type:SlotWinEnum = 0;
     public slotArr:Array<number> = [];
     public cost:number = 0;
+    public bigwinSlotWin:Array<SlotWin> =[];
+    public repeatSlotWin:SlotWin = null;
 }

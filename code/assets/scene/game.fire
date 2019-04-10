@@ -6176,6 +6176,15 @@
     "slotNode": {
       "__id__": 33
     },
+    "lightLeft": {
+      "__id__": 7
+    },
+    "lightRight": {
+      "__id__": 9
+    },
+    "bigwinTimes": {
+      "__id__": 72
+    },
     "_id": "93Got7RA9MqJHfILhIoTWR"
   },
   {

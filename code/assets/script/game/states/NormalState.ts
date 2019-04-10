@@ -19,11 +19,15 @@ export default class NormalState extends SlotState{
         super(state,machine);
 
         this._normalFruitArr = [];
+        this._bigwinFruitArr = [];
         var fruitCfg:any = CFG.getCfgGroup(ConfigConst.Fruit);
         for(var key in fruitCfg){
             var fruit:any = fruitCfg[key];
             if(fruit.use == "1"){
                 this._normalFruitArr.push(fruit);
+                if(fruit.isBig == "1"){
+                    this._bigwinFruitArr.push(fruit);
+                }
             }
         }
     }
@@ -33,14 +37,6 @@ export default class NormalState extends SlotState{
             var startIn:SlotInputStart = input as SlotInputStart;
 
             var result = this.getNormalResult(this._normalFruitArr);
-            if(result.type == SlotWinEnum.Repeat){
-                var reslut2:SlotWin;
-                do{
-                    reslut2 = this.getNormalResult(this._normalFruitArr);
-                }while(reslut2.type== SlotWinEnum.Repeat);
-                result.type = SlotWinEnum.Repeat;
-                result.slotArr = reslut2.slotArr;
-            }
             result.cost = startIn.cost;
             EVENT.emit(GameEvent.Play_Slot,result);
     
@@ -54,6 +50,7 @@ export default class NormalState extends SlotState{
         }
     }
     private _normalFruitArr:Array<any> = [];
+    private _bigwinFruitArr:Array<number> = [];
     private getNormalResult(fruitArr:Array<any>):SlotWin{
         var result:SlotWin;
         var isWin:boolean = false;
@@ -64,11 +61,24 @@ export default class NormalState extends SlotState{
         var fruitIdArr:Array<number> = []
         if(isWin){  //赢
             var winFruitId:number = NumUtil.getRandomFruit(fruitArr);
+            console.log("____"+winFruitId);
             if(winFruitId == SlotFruit.shoutao){
                 result = new SlotWin(SlotWinEnum.Repeat);
+                var reslut2:SlotWin;
+                do{
+                    reslut2 = this.getNormalResult(this._normalFruitArr);
+                }while(reslut2.type== SlotWinEnum.Repeat);
+                result.repeatSlotWin = reslut2;
+                
             }else if(winFruitId == SlotFruit.guolan){
                 result = new SlotWin(SlotWinEnum.BigWin);
                 result.slotArr = [winFruitId,winFruitId,winFruitId];
+                result.bigwinSlotWin =[];
+                var turn:number = Number(CFG.getCfgByKey(ConfigConst.Constant,"key","bigWinRound")[0].value);
+                for(var i:number = 0;i<turn;i++){
+                    var bigwin = this.getBigwinReslut(this._bigwinFruitArr);
+                    result.bigwinSlotWin.push(bigwin);
+                }
             }
             else{
                 fruitIdArr =[winFruitId,winFruitId,winFruitId];
@@ -94,5 +104,11 @@ export default class NormalState extends SlotState{
         console.log(fruitIdArr.toString());
         return result;
     }
-    
+
+    private getBigwinReslut(fruitArr:Array<any>):SlotWin{
+        var bigwinFruitId :number = NumUtil.getRandomFruit(fruitArr);
+        var bigwin:SlotWin = new SlotWin(SlotWinEnum.Normal);
+        bigwin.slotArr = [bigwinFruitId,bigwinFruitId,bigwinFruitId];
+        return bigwin;
+    }
 }

@@ -7,6 +7,9 @@ import { CFG } from "../core/ConfigManager";
 import { ConfigConst } from "../GlobalData";
 import { UI } from "../core/UIManager";
 import SlotNode from "../game/SlotNode";
+import GameEvent from "../GameEvent";
+import { EVENT } from "../core/EventController";
+import { SOUND } from "../component/SoundManager";
 
 export default class GameSlot{
 
@@ -106,8 +109,9 @@ export default class GameSlot{
             UI.showWinAnim(new SlotResultAnim(SlotResultAniEnum.Repeat));
         },2);
         this._scene.scheduleOnce(()=>{
-            result.type = SlotWinEnum.Normal;
-            this.playSlotView(result,cb);
+            var repeat:SlotWin = result.repeatSlotWin;
+            repeat.cost = result.cost;
+            this.playSlotView(repeat,cb);
         },2.5)
     }
 
@@ -115,10 +119,23 @@ export default class GameSlot{
         this._slot.play(SlotFruit.guolan);
         this._scene.scheduleOnce(()=>{
             UI.showWinAnim(new SlotResultAnim(SlotResultAniEnum.BigWin));
+            EVENT.emit(GameEvent.BigWin_Start);
         },2);
-        this._scene.scheduleOnce(()=>{
-            cb && cb();
-        },2.5)
+        var i:number = 0;
+        for(var i:number = 0;i<=result.bigwinSlotWin.length;i++){
+            this._scene.scheduleOnce(()=>{
+                if(result.bigwinSlotWin.length>0){
+                    var bigwin:SlotWin = result.bigwinSlotWin.shift();
+                    bigwin.cost = result.cost;
+                    this.playSlotView(bigwin,null);
+                    EVENT.emit(GameEvent.BigWin_updateTurn);
+                }else{
+                    SOUND.playBgSound();
+                    EVENT.emit(GameEvent.BigWin_End);
+                    cb && cb();
+                }
+            },(i+1)*3.5)
+        }
     }
 
 }
