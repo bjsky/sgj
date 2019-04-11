@@ -42,6 +42,7 @@ export default class TipPanel extends TipBase{
     private initView(){
         this.label.node.active = true;
         this.label.string = this._content;
+        this.label["_updateRenderData"](true);
         this.bgNode.active = true;
         this.bgNode.width = this.label.node.width + 100;
 

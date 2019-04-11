@@ -27,6 +27,7 @@ export enum SlotResultAniEnum{
     Hevart,
     Expfly,
     BigWin,
+    Share,
 }
 export class SlotResultAnim{
 
@@ -47,6 +48,7 @@ export default class AnimUi extends UIBase {
 
     @property(cc.Sprite)  sprRepeat: cc.Sprite = null;
     @property(cc.Sprite)  sprBigWin: cc.Sprite = null;
+    @property(cc.Sprite)  sprShare: cc.Sprite = null;
     @property(cc.Node)  sprNode: cc.Node = null;
     @property(cc.Node)  nodeMuti: cc.Node = null;
     @property(cc.Sprite)  sprMuti: cc.Sprite = null;
@@ -71,8 +73,12 @@ export default class AnimUi extends UIBase {
             this.showNotice(this.sprRepeat.node,anim);
         }else if(anim.type == SlotResultAniEnum.BigWin){
             this.sprBigWin.node.active = true;
-            this.showBigWinNotice(this.sprBigWin.node);
-        }else if(anim.type == SlotResultAniEnum.Hevart){
+            this.showBigNotice(this.sprBigWin.node,anim);
+        }else if(anim.type == SlotResultAniEnum.Share){
+            this.sprShare.node.active = true;
+            this.showBigNotice(this.sprShare.node,anim);
+        }
+        else if(anim.type == SlotResultAniEnum.Hevart){
             this.nodeMuti.active = true;
             this.labelMuti.string = anim.addGold.toString();
             this.labelMuti["_updateRenderData"](true);
@@ -106,6 +112,7 @@ export default class AnimUi extends UIBase {
         this.nodeMuti.active = false;
         this.msStar.active = false;
         this.sprBigWin.node.active = false;
+        this.sprShare.node.active = false;
     }
 
     private showNotice(spr:cc.Node,anim:SlotResultAnim){
@@ -127,14 +134,18 @@ export default class AnimUi extends UIBase {
         spr.runAction(seqOut);
     }
 
-    private showBigWinNotice(spr:cc.Node){
+    private showBigNotice(spr:cc.Node,anim:SlotResultAnim){
         spr.scale = 0.7;
         spr.opacity = 255;
-        SOUND.playBigWinLockSound();
+        if(anim.type == SlotResultAniEnum.BigWin){
+            SOUND.playBigWinLockSound();
+        }
         var seqOut = cc.sequence(cc.scaleTo(0.2,1.3).easing(cc.easeBackOut()),
             cc.delayTime(1),
             cc.callFunc(()=>{
-                SOUND.playBigWinBgSound();
+                if(anim.type == SlotResultAniEnum.BigWin){
+                    SOUND.playBigWinBgSound();
+                }
             }),
             cc.fadeOut(0.5),
             cc.callFunc(()=>{

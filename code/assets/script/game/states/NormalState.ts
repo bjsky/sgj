@@ -62,7 +62,7 @@ export default class NormalState extends SlotState{
         if(isWin){  //赢
             var winFruitId:number = NumUtil.getRandomFruit(fruitArr);
             console.log("____"+winFruitId);
-            if(winFruitId == SlotFruit.shoutao){
+            if(winFruitId == SlotFruit.repeat){
                 result = new SlotWin(SlotWinEnum.Repeat);
                 var reslut2:SlotWin;
                 do{
@@ -79,6 +79,9 @@ export default class NormalState extends SlotState{
                     var bigwin = this.getBigwinReslut(this._bigwinFruitArr);
                     result.bigwinSlotWin.push(bigwin);
                 }
+            }else if(winFruitId == SlotFruit.share){        //分享得金币
+                result = new SlotWin(SlotWinEnum.Share);
+                result.slotArr = [winFruitId,winFruitId,winFruitId];
             }
             else{
                 fruitIdArr =[winFruitId,winFruitId,winFruitId];

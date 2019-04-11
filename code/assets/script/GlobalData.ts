@@ -20,7 +20,7 @@ export const ResConst = {
     WinAnim:"prefabs/animUi",
     UpgradeUI:"prefabs/upgradeUI",
     GetGold:"prefabs/getGold",
-    BuyLife:"prefabs/buyLifeUI"
+    ShareGold:"prefabs/shareGold"
 }
 export default class GlobalData{
 

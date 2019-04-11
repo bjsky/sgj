@@ -4,7 +4,7 @@ import SlotWin, { SlotWinEnum } from "../game/SlotWin";
 import { SlotResultAnim, SlotResultAniEnum} from "../view/AnimUi";
 import { SlotFruit } from "../game/SlotController";
 import { CFG } from "../core/ConfigManager";
-import { ConfigConst } from "../GlobalData";
+import { ConfigConst, ResConst } from "../GlobalData";
 import { UI } from "../core/UIManager";
 import SlotNode from "../game/SlotNode";
 import GameEvent from "../GameEvent";
@@ -54,6 +54,8 @@ export default class GameSlot{
             this.playSlotViewRepeat(result,cb);
         }else if(result.type == SlotWinEnum.BigWin){
             this.playSlotViewBigWin(result,cb);
+        }else if(result.type == SlotWinEnum.Share){
+            this.playSlotViewShare(result,cb);
         }
         else{
             cb && cb();
@@ -92,6 +94,21 @@ export default class GameSlot{
         }
     }
 
+    public playSlotViewShare(result:SlotWin,cb:Function){
+        this._slot.play(SlotFruit.share);
+        var anim:SlotResultAnim = new SlotResultAnim(SlotResultAniEnum.Share);
+        var fruitCfg:any = CFG.getCfgDataById(ConfigConst.Fruit,result.slotArr[0]);
+        anim.muti =  Number(fruitCfg.winMuti);
+        anim.addGold =  anim.muti * result.cost;
+        this._scene.scheduleOnce(()=>{
+            UI.showWinAnim(anim);
+        },2);
+        this._scene.scheduleOnce(()=>{
+            UI.createPopUp(ResConst.ShareGold,{muti:anim.muti,addGold:anim.addGold});
+            cb && cb();
+        },2.5)
+    }
+
     public playSlotViewRepeat(result:SlotWin,cb:Function){
         var slotArr:Array<number> = result.slotArr;
         // this._slotView1.play(SlotFruit.shoutao,0.6);
@@ -104,7 +121,7 @@ export default class GameSlot{
         //     result.type = SlotWinEnum.Normal;
         //     this.playSlotView(result,cb);
         // },1.5)
-        this._slot.play(SlotFruit.shoutao);
+        this._slot.play(SlotFruit.repeat);
         this._scene.scheduleOnce(()=>{
             UI.showWinAnim(new SlotResultAnim(SlotResultAniEnum.Repeat));
         },2);

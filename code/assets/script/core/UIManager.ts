@@ -26,7 +26,7 @@ export default class UIManager{
     //弹窗层级
     public PopupLayer:cc.Node = null;
     public AnimLayer:cc.Node = null;
-    public TopLayer:cc.Node = null;
+    public TipLayer:cc.Node = null;
     //剧情层级
     private _root:cc.Node = null;
     /**
@@ -40,7 +40,7 @@ export default class UIManager{
         this.UILayer = root.getChildByName("UILayer");
         this.PopupLayer = root.getChildByName("PopupLayer");
         this.AnimLayer = root.getChildByName("AnimLayer");
-        this.TopLayer = root.getChildByName("TopLayer");
+        this.TipLayer = root.getChildByName("TipLayer");
 
         this.initMaskLayer();
         this.initAnimLayer();
@@ -218,7 +218,7 @@ export default class UIManager{
      * @param pos 位置
      */
     public showTip(content:string){
-        this.loadUI(ResConst.TipPanel,{content:content},this.TopLayer);
+        this.loadUI(ResConst.TipPanel,{content:content},this.TipLayer);
     }
 
     public showAlert(content:string,okCallback?:Function,cancelCallback?:Function,btnType:number = AlertBtnType.OKButton){

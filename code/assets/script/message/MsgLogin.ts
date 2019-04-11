@@ -2,6 +2,8 @@
 import NetConst from "../NetConst";
 import MessageBase from "../core/net/MessageBase";
 import StringUtil from "../utils/StringUtil";
+import { CFG } from "../core/ConfigManager";
+import { ConfigConst } from "../GlobalData";
 
 /**
  * 登录客户端数据
@@ -112,12 +114,13 @@ export default class MsgLogin
     }
 
     public respFromLocal(){
+        var firstenergy:number = Number(CFG.getCfgByKey(ConfigConst.Constant,"key","firstEnergy")[0].value);
         var json:any = {firstLogin:true,
             accountId:StringUtil.getUUidClient(),
             newUser:0,
             serverTime:new Date().getTime(),
             userInfo:{name:"开心农场",icon:"",gender:1,exp:0,totalExp:0,level:1},
-            resInfo:{gold:0,life:4500},
+            resInfo:{gold:0,life:firstenergy},
         };
         return this.parse(json);
     }

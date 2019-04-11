@@ -4,8 +4,8 @@
 export enum SlotWinEnum{
     Normal = 1,       //普通
     Repeat = 2,     //再来一次
-    BigWinReady,    //大奖锁定
-    BigWin          //中大奖了
+    BigWin,          //中大奖了
+    Share,          //分享
     
 }
 export default class SlotWin{

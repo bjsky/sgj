@@ -229,14 +229,13 @@ export default class GameScene extends cc.Component {
     }
 
     private onBuyLife(e){
-        UI.createPopUp(ResConst.BuyLife,{});
     }
 
     private _bigwinTiems:number = 0;
     private onBigwinStart(e){
-        var seq = cc.sequence(cc.fadeIn(0.3),cc.fadeOut(0.3)).repeatForever();
+        var seq = cc.sequence(cc.fadeIn(0.1),cc.fadeOut(0.1)).repeatForever();
         this.lightLeft.runAction(seq);
-        var seq1 = cc.sequence(cc.fadeIn(0.3),cc.fadeOut(0.3)).repeatForever();
+        var seq1 = cc.sequence(cc.fadeIn(0.1),cc.fadeOut(0.1)).repeatForever();
         this.lightRight.runAction(seq1);
         this._bigwinTiems = Number(CFG.getCfgByKey(ConfigConst.Constant,"key","bigWinRound")[0].value);
         this.bigwinTimes.string = this._bigwinTiems.toString();

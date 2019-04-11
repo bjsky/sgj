@@ -32,6 +32,7 @@ export default class TipBase extends UIBase{
         this.node.runAction(
             cc.sequence(
                     cc.moveBy(this.during,moveBy).easing(cc.easeOut(1.5)),
+                    cc.delayTime(1),
                 cc.callFunc(
                     ()=>{
                         UI.removeUI(this.node);

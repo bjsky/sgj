@@ -5,7 +5,7 @@
     {"id":"4","name":"柠檬","icon":"ui/fruit/nm","use":"1","isBig":"1","winMuti":"10","flyCoin":"10","weight":"0.08","weightsum":"0.8"},
     {"id":"5","name":"蓝莓","icon":"ui/fruit/lm","use":"1","isBig":"1","winMuti":"15","flyCoin":"20","weight":"0.06","weightsum":"0.9"},
     {"id":"6","name":"樱桃","icon":"ui/fruit/yt","use":"1","isBig":"1","winMuti":"20","flyCoin":"20","weight":"0.05","weightsum":"1"},
-    {"id":"7","name":"分享","icon":"ui/fruit/gp","use":"0","isBig":"0","winMuti":"0","flyCoin":"0","weight":"0.2","weightsum":"0"},
+    {"id":"7","name":"分享","icon":"ui/fruit/gp","use":"1","isBig":"0","winMuti":"50","flyCoin":"0","weight":"0.1","weightsum":"5"},
     {"id":"8","name":"果篮","icon":"ui/fruit/gl","use":"1","isBig":"0","winMuti":"100","flyCoin":"0","weight":"0.04","weightsum":"4"},
     {"id":"9","name":"repeat","icon":"ui/fruit/st","use":"1","isBig":"0","winMuti":"0","flyCoin":"0","weight":"0.2","weightsum":"0"},
     {"id":"10","name":"种植","icon":"","use":"0","isBig":"0","winMuti":"0","flyCoin":"0","weight":"0.05","weightsum":"0"},

@@ -8,9 +8,12 @@ export enum SlotFruit{
     ningmeng =4,      //香蕉
     lanmei =5,        //樱桃
     yingtao =6,        //橙子
-    guopan =7,         //果盘
+    share =7,         //分享
     guolan=8,         //果篮
-    shoutao=9,        //手套
+    repeat=9,        //手套
+    plant=10,      //种植
+    pick =11,            //采摘
+    steal =12,              //偷取
 }
 export default class SlotContoller {
     private static _instance: SlotContoller = null;
