@@ -81,7 +81,7 @@ export default class GameScene extends cc.Component {
     private moveInAction(cb){
         this.sceneNode.x = -this.sprTrans.width;
         this.sceneNode.runAction(cc.sequence(
-            cc.moveBy(0.3,cc.v2(this.sprTrans.width,0)).easing(cc.easeOut(1.5))
+            cc.moveBy(0.15,cc.v2(this.sprTrans.width,0)).easing(cc.easeOut(1.5))
             ,cc.callFunc(cb))    
         );
     }
@@ -140,7 +140,7 @@ export default class GameScene extends cc.Component {
         //去果园
         cc.director.preloadScene(SceneCont.FarmScene,()=>{
             this.sceneNode.runAction(
-                cc.sequence(cc.moveBy(0.3,cc.v2(-this.sprTrans.width,0)).easing(cc.easeIn(1.5)),
+                cc.sequence(cc.moveBy(0.15,cc.v2(-this.sprTrans.width,0)).easing(cc.easeIn(1.5)),
                 cc.callFunc(()=>{
                     cc.director.loadScene(SceneCont.FarmScene);
                 }))
