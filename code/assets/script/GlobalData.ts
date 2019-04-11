@@ -22,6 +22,11 @@ export const ResConst = {
     GetGold:"prefabs/getGold",
     ShareGold:"prefabs/shareGold"
 }
+
+export const SceneCont ={
+    SlotScene:"game",
+    FarmScene:"farm",
+}
 export default class GlobalData{
 
     private static _instance: GlobalData = null;

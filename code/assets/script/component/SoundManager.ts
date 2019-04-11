@@ -115,6 +115,9 @@ export default class SoundManager{
     public playBigWinBgSound(){
         this.playMusicSound(SoundConst.BigWin_Bg_sound);
     }
+    public playFarmBgSound(){
+        this.playMusicSound(SoundConst.Farm_Bg_sound);
+    }
     public playCoinflySound(len:number){
         this.playEffectSound(SoundConst["Coinfly_sound_"+len]);
     }
@@ -136,6 +139,7 @@ export class SoundConst {
     public static Coinfly_sound_20:string ="sounds/coinfly_3";
     public static Levelup_sound:string ="sounds/levelup";
     public static bigWinLock_sound:string ="sounds/bigwinlock";
+    public static Farm_Bg_sound:string ="sounds/farm";
 }
 
 export var SOUND = SoundManager.getInstance();

@@ -12,7 +12,7 @@ import { SlotInputStart, SlotInputEnum } from "../game/SlotInput";
 import SlotWin from "../game/SlotWin";
 import GameSlot from "./GameSlot";
 import { SlotResultAnim, SlotResultAniEnum } from "../view/AnimUi";
-import { ResConst, ConfigConst } from "../GlobalData";
+import { ResConst, ConfigConst, SceneCont } from "../GlobalData";
 import { GetGoldViewType } from "../view/GetGold";
 import { CFG } from "../core/ConfigManager";
 import SlotNode from "../game/SlotNode";
@@ -39,26 +39,13 @@ export default class GameScene extends cc.Component {
     @property(SlotView) slot3: SlotView = null;
     @property(cc.Button) btnOn: cc.Button = null;
 
-    @property(cc.Button) btnBuyLife: cc.Button = null;
-
-    @property(cc.Label) lblTitle: cc.Label = null;
-    @property(cc.Label) lblName: cc.Label = null;
-    @property(cc.Label) lblScore: cc.Label = null;
     @property(cc.Label) lblAddExp: cc.Label = null;
-    @property(cc.Label) lblLifeDesc: cc.Label = null;
-
-    @property(cc.ProgressBar) proExp: cc.ProgressBar = null;
-
-
-    @property(ExpLevelEffect) explevelEffect:ExpLevelEffect = null;
-    @property(NumberEffect) goldEffect:NumberEffect = null;
 
     @property(cc.Node) houseNode:cc.Node = null;
-    @property(cc.Sprite) sprStar: cc.Sprite = null;
-    @property(cc.Node) coinIcon:cc.Node = null;
 
-    @property(cc.Label) lblTotalLife: cc.Label = null;
     @property(cc.Label) lblcostLife: cc.Label = null;
+    @property(cc.Label) lblTotalLife: cc.Label = null;
+    @property(cc.Label) lblLifeDesc: cc.Label = null;
 
     @property(SlotNode) slotNode: SlotNode = null;
 
@@ -66,28 +53,43 @@ export default class GameScene extends cc.Component {
     @property(cc.Node) lightRight: cc.Node = null;
     @property(cc.Label) bigwinTimes: cc.Label = null;
     
+
+    @property(cc.Button) btnToFarm: cc.Button = null;
+
+    @property(cc.Node) sceneNode: cc.Node = null;
+    @property(cc.Node) sprTrans: cc.Node = null;
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
 
-        UI.registerLayer(this.uicanvas)
         this.showNothing();
-
     }
 
 
     start () {
 
-        Game.startGame();
+        if(Game.loadingComplete){
+            this.initScene();
+            this.moveInAction(()=>{
+                SOUND.playBgSound();
+            });
+        }else{
+            Game.startGame(this.uicanvas);
+        }
+    }
 
+    private moveInAction(cb){
+        this.sceneNode.x = -this.sprTrans.width;
+        this.sceneNode.runAction(cc.sequence(
+            cc.moveBy(0.3,cc.v2(this.sprTrans.width,0)).easing(cc.easeOut(1.5))
+            ,cc.callFunc(cb))    
+        );
     }
 
     onEnable(){
-        EVENT.on(GameEvent.Loading_complete,this.initGameView,this);
+        EVENT.on(GameEvent.Loading_complete,this.onLoadingComplete,this);
         EVENT.on(GameEvent.Play_Slot,this.onPlaySlot,this);
         EVENT.on(GameEvent.Show_Exp_Fly,this.onShowExpfly,this);
-        EVENT.on(GameEvent.Show_Exp_FlyEnd,this.onShowExpflyEnd,this);
-        EVENT.on(GameEvent.Show_Gold_Fly,this.onShowGoldfly,this);
         EVENT.on(GameEvent.UpgreadUI_Closed,this.onUpgradeUIClose,this);
         EVENT.on(GameEvent.BigWin_Start,this.onBigwinStart,this);
         EVENT.on(GameEvent.BigWin_updateTurn,this.onBigwinTurn,this);
@@ -95,12 +97,10 @@ export default class GameScene extends cc.Component {
     }
 
     onDisable(){
-
-        EVENT.off(GameEvent.Loading_complete,this.initGameView,this);
+        this.clearScene();
+        EVENT.off(GameEvent.Loading_complete,this.onLoadingComplete,this);
         EVENT.off(GameEvent.Play_Slot,this.onPlaySlot,this);
         EVENT.off(GameEvent.Show_Exp_Fly,this.onShowExpfly,this);
-        EVENT.off(GameEvent.Show_Exp_FlyEnd,this.onShowExpflyEnd,this);
-        EVENT.off(GameEvent.Show_Gold_Fly,this.onShowGoldfly,this);
         EVENT.off(GameEvent.UpgreadUI_Closed,this.onUpgradeUIClose,this);
         EVENT.off(GameEvent.BigWin_Start,this.onBigwinStart,this);
         EVENT.off(GameEvent.BigWin_updateTurn,this.onBigwinTurn,this);
@@ -109,40 +109,52 @@ export default class GameScene extends cc.Component {
 
     private _gameSlot:GameSlot;
     private _addLifeFlyInterval:number = 3;
-    private initGameView(){
+
+    private onLoadingComplete(e){
+        this.initScene();
+        SOUND.playBgSound();
+    }
+    private initScene(){
 
         this._gameSlot = new GameSlot(this);
         this._gameSlot.initSlotView(this.slot1,this.slot2,this.slot3);
         this._gameSlot.initSlotView2(this.slotNode)
-        this.initView();
-        this.addEventListener();
+        this.btnOn.node.on(ButtonEffect.CLICK_END,this.onSlot,this);
+        this.btnToFarm.node.on(ButtonEffect.CLICK_END,this.onGoFarm,this);
         this.schedule(this.lifeReturnFly,this._addLifeFlyInterval,cc.macro.REPEAT_FOREVER);
 
-        SOUND.playBgSound();
+        this.lblTotalLife.string = Common.resInfo.life.toString();
+        this.updateCostView();
     }
 
-    private addEventListener(){
-        this.btnOn.node.on(ButtonEffect.CLICK_END,this.onSlot,this);
-        this.btnBuyLife.node.on(ButtonEffect.CLICK_END,this.onBuyLife,this);
+    private clearScene(){
+        this.btnOn.node.off(ButtonEffect.CLICK_END,this.onSlot,this);
+        this.btnToFarm.node.off(ButtonEffect.CLICK_END,this.onGoFarm,this);
+        this.unschedule(this.lifeReturnFly);
+        this._gameSlot.clear();
+
+    }
+
+    private onGoFarm(e){
+        this.btnToFarm.node.off(ButtonEffect.CLICK_END,this.onGoFarm,this);
+        //去果园
+        cc.director.preloadScene(SceneCont.FarmScene,()=>{
+            this.sceneNode.runAction(
+                cc.sequence(cc.moveBy(0.3,cc.v2(-this.sprTrans.width,0)).easing(cc.easeIn(1.5)),
+                cc.callFunc(()=>{
+                    cc.director.loadScene(SceneCont.FarmScene);
+                }))
+            )
+        });
     }
 
     private onShowExpfly(e){
         var anim:SlotResultAnim = new SlotResultAnim(SlotResultAniEnum.Expfly);
-        anim.starTo = this.sprStar.node.parent.convertToWorldSpaceAR(this.sprStar.node.position);
+        anim.starTo = UI.main.sprStar.node.parent.convertToWorldSpaceAR(UI.main.sprStar.node.position);
         anim.starFrom = this.btnOn.node.parent.convertToWorldSpaceAR(this.btnOn.node.position);
         UI.showWinAnim(anim);
 
         this.lblTotalLife.string = Common.resInfo.life.toString();
-    }
-
-    private onShowExpflyEnd(e){
-
-        this.lblScore.string = "种植经验："+Common.userInfo.totalExp;
-        this.explevelEffect.playProgressAnim(Common.userInfo.exp,Common.userInfo.levelExp,Common.userInfo.level);
-    }
-
-    private onShowGoldfly(e){
-        this.goldEffect.setValue(Common.resInfo.gold);
     }
 
     private _isSlotLocked:boolean = false;
@@ -155,7 +167,7 @@ export default class GameScene extends cc.Component {
         if(this._isSlotLocked)
             return;
         this._isSlotLocked = true;
-        this.btnOn.getComponent(ButtonEffect).enabled = false;
+        this.enableButtons(false);
         var input:SlotInputStart = new SlotInputStart(SlotInputEnum.startPlay,this.CurCost);
         Slot.excute(input);
     }
@@ -167,16 +179,17 @@ export default class GameScene extends cc.Component {
 
     private playEnd(){
         this._isSlotLocked = false;
-        this.btnOn.getComponent(ButtonEffect).enabled = true;
+        this.enableButtons(true);
         Common.checkShowLevelup();
     }
 
+    private enableButtons(bool:boolean){
+        this.btnOn.getComponent(ButtonEffect).enabled = bool;
+        this.btnToFarm.getComponent(ButtonEffect).enabled = bool;
+    }
+
     private showNothing(){
-        this.lblName.string ="";
-        this.lblScore.string ="";
-        this.proExp.progress =0;
         this.lblAddExp.string = "";
-        this.lblTitle.string ="";
         this.lblTotalLife.string = "";
         this.lblcostLife.string = "";
         this.lblLifeDesc.string ="";
@@ -185,18 +198,6 @@ export default class GameScene extends cc.Component {
         this.lightRight.opacity = 0;
     }
     private onUpgradeUIClose(e){
-        this.lblTitle.string = Common.userInfo.title;
-        this.updateCostView();
-    }
-
-    private initView(){
-        this.explevelEffect.initProgress(Common.userInfo.exp,Common.userInfo.levelExp,Common.userInfo.level);
-        this.lblName.string = Common.userInfo.name;
-        this.lblTitle.string = Common.userInfo.title;
-        this.lblScore.string = "种植经验："+Common.userInfo.totalExp;
-        this.lblTotalLife.string = Common.resInfo.life.toString();
-
-        this.goldEffect.setValue(Common.resInfo.gold,false);
         this.updateCostView();
     }
 
@@ -226,9 +227,6 @@ export default class GameScene extends cc.Component {
             Common.resInfo.life += addLifeFly;
             this.lblTotalLife.string = Common.resInfo.life.toString();
         }
-    }
-
-    private onBuyLife(e){
     }
 
     private _bigwinTiems:number = 0;

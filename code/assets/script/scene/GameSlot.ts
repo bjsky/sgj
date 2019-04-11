@@ -37,12 +37,18 @@ export default class GameSlot{
         this._slot.initFruit();
     }
 
+    public clear(){
+        this._slotView1 = this._slotView2 = this._slotView3 = null;
+        this._slot = null;
+        this._scene = null;
+    }
+
     public playSlotView(result:SlotWin,cb:Function){
         var slotArr:Array<number> = result.slotArr;
         var winAnim:SlotResultAnim = null;
         if(result.type == SlotWinEnum.Normal){
             winAnim = new SlotResultAnim(SlotResultAniEnum.Hevart);
-            winAnim.coinTo = this._scene.coinIcon.parent.convertToWorldSpaceAR(this._scene.coinIcon.position);
+            winAnim.coinTo = UI.main.coinIcon.parent.convertToWorldSpaceAR(UI.main.coinIcon.position);
             var fruitCfg:any = CFG.getCfgDataById(ConfigConst.Fruit,slotArr[0]);
             winAnim.muti = Number(fruitCfg.winMuti);
             winAnim.flyCoin = Number(fruitCfg.flyCoin);

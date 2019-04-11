@@ -15,15 +15,20 @@ export default class GameController {
     }
     
 
-    public startGame(){
-
+    public startGame(root:cc.Node){
+        UI.registerLayer(root);
         Global.initSystemInfo();
 
-        Loading.startLoading(this.onLoadingComplete);
+        Loading.startLoading(this.onLoadingComplete.bind(this));
 
     }
     
+    private _loadingComplete:boolean = false;
+    public get loadingComplete(){
+        return this._loadingComplete;
+    }
     private onLoadingComplete(){
+        this._loadingComplete = true;
         EVENT.emit(GameEvent.Loading_complete);
     }
 
