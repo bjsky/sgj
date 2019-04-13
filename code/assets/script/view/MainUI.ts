@@ -48,7 +48,8 @@ export default class MainUI extends UIBase {
         EVENT.on(GameEvent.Show_Exp_FlyEnd,this.onShowExpflyEnd,this);
         EVENT.on(GameEvent.Show_Gold_Fly,this.onShowGoldfly,this);
         EVENT.on(GameEvent.UpgreadUI_Closed,this.onUpgradeUIClose,this);
-        EVENT.on(GameEvent.PlantTree,this.onPlantTree,this);
+        EVENT.on(GameEvent.Plant_Tree,this.onPlantTree,this);
+        EVENT.on(GameEvent.Pick_Tree_Fly_End,this.onPickTreeFlyEnd,this);
     }
 
     onDisable(){
@@ -57,7 +58,8 @@ export default class MainUI extends UIBase {
         EVENT.off(GameEvent.Show_Exp_FlyEnd,this.onShowExpflyEnd,this);
         EVENT.off(GameEvent.Show_Gold_Fly,this.onShowGoldfly,this);
         EVENT.off(GameEvent.UpgreadUI_Closed,this.onUpgradeUIClose,this);
-        EVENT.off(GameEvent.PlantTree,this.onPlantTree,this);
+        EVENT.off(GameEvent.Plant_Tree,this.onPlantTree,this);
+        EVENT.off(GameEvent.Pick_Tree_Fly_End,this.onPickTreeFlyEnd,this);
     }
 
     private hideAll(){
@@ -83,7 +85,10 @@ export default class MainUI extends UIBase {
 
 
     private onShowExpflyEnd(e){
-
+        this.lblScore.string = "种植经验："+Common.userInfo.totalExp;
+        this.explevelEffect.playProgressAnim(Common.userInfo.exp,Common.userInfo.levelExp,Common.userInfo.level);
+    }
+    private onPickTreeFlyEnd(e){
         this.lblScore.string = "种植经验："+Common.userInfo.totalExp;
         this.explevelEffect.playProgressAnim(Common.userInfo.exp,Common.userInfo.levelExp,Common.userInfo.level);
     }

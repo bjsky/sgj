@@ -1,37 +1,42 @@
 import MessageBase from "../core/net/MessageBase";
 import NetConst from "../NetConst";
+import { SUserInfo } from "./MsgLogin";
 import { Common } from "../CommonData";
-import { SUserInfo, SResInfo } from "./MsgLogin";
 
-export class CSSlot{
-    public energy:number = 0;
-    public energyStartTime:number = 0;
+export class CSPick{
+    //采摘的地格索引 如 1;2;4;5,移除该地格数据
+    public indexStr:string = "";
+    //增加的总经验
     public addExp:number = 0;
 }
-export class SCSlot{
+
+export class SCPick{
+    //获得的经验
+    public addExp:number = 0;
+    //用户信息更新
     public userInfo:SUserInfo = null;
 
-    public static parse(obj:any):SCSlot{
-        var info:SCSlot = new SCSlot();
+    public static parse(obj:any):SCPick{
+        var info:SCPick = new SCPick();
+        info.addExp = obj.addExp;
         info.userInfo = SUserInfo.parse(obj.userInfo);
         return info;
     }
 }
-export default class MsgSlot extends MessageBase {
-    public param:CSSlot;
-    public resp:SCSlot;
+
+export default class MsgPick extends MessageBase {
+    public param:CSPick;
+    public resp:SCPick;
 
     constructor(){
-        super(NetConst.Slot);
+        super(NetConst.Pick);
         // this.isLocal = true;
     }
 
-    public static create(cost:number,addExp:number){
-        var msg = new MsgSlot();
-        msg.param = new CSSlot();
-        Common.resInfo.energy -=cost;
-        msg.param.energy = Common.resInfo.energy;
-        msg.param.energyStartTime = Common.resInfo.energyStartTime;
+    public static create(ids:string,addExp:number){
+        var msg = new MsgPick();
+        msg.param = new CSPick();
+        msg.param.indexStr = ids;
         msg.param.addExp = addExp;
         return msg;
     }
@@ -39,6 +44,7 @@ export default class MsgSlot extends MessageBase {
     public respFromLocal(){
         var userInfo:SUserInfo = Common.userInfo.cloneAddExpServerInfo(this.param.addExp);
         var json:any = {
+            addExp:this.param.addExp,
             userInfo:userInfo
         };
         return this.parse(json);
@@ -46,7 +52,7 @@ export default class MsgSlot extends MessageBase {
 
 
     private parse(obj:any):MessageBase{
-        this.resp = SCSlot.parse(obj);
+        this.resp = SCPick.parse(obj);
         return this;
     }
 

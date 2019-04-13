@@ -25,7 +25,7 @@ export default class TipBase extends UIBase{
     }
 
     onEnable(){
-            
+        this.node.stopAllActions();
         this.node.position = UI.TipLayer.convertToNodeSpaceAR(this._pos);
 
         var moveBy:cc.Vec2 = cc.v2(this.flyX,this.flyY);

@@ -29,6 +29,8 @@ export default class SeedItem extends DListItem{
     @property(cc.Label) lblLockLv:cc.Label = null;
     @property(cc.Node) nodeLock:cc.Node = null;
     @property(cc.Node) nodeunLock:cc.Node = null;
+
+    @property(cc.Button) btnPlant:cc.Button = null;
     // LIFE-CYCLE CALLBACKS:
 
     // onLoad () {}
@@ -48,6 +50,7 @@ export default class SeedItem extends DListItem{
     }
     onEnable(){
         super.onEnable();
+        this.btnPlant.node.on(ButtonEffect.CLICK_END,this.onPlant,this);
         this.nodeLock.active = this.nodeunLock.active = false;
         this.lblSeedName.string = this._seedName;
         this.sprFruit.load(this._icon);
@@ -63,9 +66,12 @@ export default class SeedItem extends DListItem{
 
     onDisable(){
         super.onDisable();
+
+        this.btnPlant.node.off(ButtonEffect.CLICK_END,this.onPlant,this);
     }
 
-    protected onNodeTouch(e){
+
+    private onPlant(e){
         if(Common.userInfo.level<this._unlockLv){
             var title:string = CFG.getCfgDataById(ConfigConst.Level,this._unlockLv).title;
             UI.showTip(title + " 解锁");
@@ -75,11 +81,12 @@ export default class SeedItem extends DListItem{
             UI.showTip("金币不足");
             return;
         }
-        
-        this.list.node.emit(DList.ITEM_CLICK,{index:this.index,data:this._data});
-        if(this.index!=this.list.selectIndex){
-            this.list.selectIndex = this.index;
-            this.list.node.emit(DList.ITEM_SELECT_CHANGE,{index:this.index,data:this._data});
+        var index:number = Farm.getIdleFarmlandIndex();
+        if(index<0){
+            UI.showTip("没有空闲土地，滑动采摘");
+            return;
+        }else{
+            Farm.plantOnce(this._seedId,index);
         }
     }
     start () {

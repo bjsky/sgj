@@ -1,5 +1,12 @@
 import FarmlandInfo from "../../FarmlandInfo";
 import UIBase from "../../component/UIBase";
+import { CFG } from "../../core/ConfigManager";
+import { ConfigConst } from "../../GlobalData";
+import { Drag, CDragEvent } from "../../core/DragManager";
+import { Farm } from "../../game/farm/FarmController";
+import { UI } from "../../core/UIManager";
+import { Common } from "../../CommonData";
+import StringUtil from "../../utils/StringUtil";
 
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
@@ -13,28 +20,110 @@ import UIBase from "../../component/UIBase";
 
 const {ccclass, property} = cc._decorator;
 
+export enum FarmlandState{
+    Planting =1,
+    Planed
+}
 @ccclass
 export default class FarmlandUI extends UIBase {
 
-    @property(cc.Label)
-    label: cc.Label = null;
+    @property(cc.Node) nodePlanting: cc.Node = null;
+    @property(cc.Node) nodePlanted: cc.Node = null;
+    @property(cc.Node) nodePick: cc.Node = null;
 
-    @property
-    text: string = 'hello';
+    @property(cc.ProgressBar) plantProgress: cc.ProgressBar = null;
+    @property(cc.Label) lblProgress: cc.Label = null;
+    @property(cc.Label) pickCount: cc.Label = null;
+    
 
     private _farmland:FarmlandInfo = null;
+    private _growthTotalTime:number = 0;
+    private _growthStartTime:number = 0;
+    // private _pickTimes:number = 0;
+    private _addExp:number = 0;
+
+    private _state:FarmlandState = 0;
+    public get index(){
+        return this._farmland.index;
+    }
 
     public setData(data:any){
         super.setData(data);
         this._farmland = data.farmland;
+        this._growthStartTime = this._farmland.growthStartTime;
+        // this._pickTimes = this._farmland.pickTimes;
+        var cfg:any = CFG.getCfgDataById(ConfigConst.Plant,this._farmland.treeType);
+        this._growthTotalTime = Number(cfg.growthTime);
+        this._addExp = Number(cfg.addExpPer);
     }
     // LIFE-CYCLE CALLBACKS:
 
     // onLoad () {}
 
+    onEnable(){
+        Drag.addDragMove(this.node);
+        this.node.on(CDragEvent.DRAG_MOVE,this.onDragMove,this);
+        this._state = this.growthTime>=this._growthTotalTime?FarmlandState.Planed:FarmlandState.Planting;
+        this.onStateChange();
+        // this.pickCount.string = this._pickTimes.toString();
+        // this.nodePick.active = this._pickTimes>0;
+    }
+    private onStateChange(){
+        if(this._state == FarmlandState.Planed){
+            this.nodePlanted.active = true;
+            this.nodePlanting.active = false;
+        }else if(this._state == FarmlandState.Planting){
+            this.nodePlanted.active = false;
+            this.nodePlanting.active = true;
+        }
+    }
+
+    onDisable(){
+        Drag.removeDragMove(this.node);
+        this.node.off(CDragEvent.DRAG_MOVE,this.onDragMove,this);
+    }
+
+    public onUpdateView(){
+        var farmland = Farm.getFarmlandAtIndex(this.index);
+        this._farmland = farmland;
+        // this._pickTimes = this._farmland.pickTimes;
+        this._growthStartTime = this._farmland.growthStartTime;
+        this._state = FarmlandState.Planting;
+        this.onStateChange();
+        // this.pickCount.string = this._pickTimes.toString();
+        // this.nodePick.active = this._pickTimes>0;
+    }
+
+    public onRemoveView(cb:Function){
+        cb && cb();
+    }
+
     start () {
 
     }
 
-    // update (dt) {}
+    public get growthTime(){
+        return (Common.getServerTime() - this._growthStartTime)/1000;
+    }
+    update (dt) {
+        if(this._state == FarmlandState.Planting){
+            var growTime = this.growthTime;
+            
+            if(growTime>= this._growthTotalTime){
+                this._state = FarmlandState.Planed;
+                this.onStateChange();
+            }else{
+                var levelTime:number = Math.ceil(this._growthTotalTime - growTime);
+                this.lblProgress.string = StringUtil.formatTimeHMS(levelTime,2);
+                var pro:number = (this._growthTotalTime - growTime)/this._growthTotalTime;
+                this.plantProgress.progress = pro;    
+            }
+        }
+    }
+
+    private onDragMove(e){
+        if(this._state == FarmlandState.Planed){
+            Farm.pickOnce(this._farmland.index,this._addExp);
+        }
+    }
 }

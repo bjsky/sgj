@@ -29,5 +29,11 @@ export default class GameEvent {
     //大奖结束
     public static BigWin_End:string ="BigWin_End";
     //种植树
-    public static PlantTree:string ="PlantTree";
+    public static Plant_Tree:string ="Plant_Tree";
+    //更新树
+    public static Update_Tree:string ="Update_Tree";
+    //移除树
+    public static Remove_Tree:string ="Remove_Tree";
+    //采摘动画完成
+    public static Pick_Tree_Fly_End:string ="Pick_Tree_Fly_End";
 }

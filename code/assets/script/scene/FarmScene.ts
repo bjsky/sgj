@@ -7,6 +7,8 @@ import { UI } from "../core/UIManager";
 import { EVENT } from "../core/EventController";
 import GameEvent from "../GameEvent";
 import FarmlandInfo from "../FarmlandInfo";
+import { Drag, CDragEvent } from "../core/DragManager";
+import FarmlandUI from "../view/Farm/FarmlandUI";
 import { Common } from "../CommonData";
 
 // Learn TypeScript:
@@ -26,6 +28,9 @@ export default class FarmScene extends cc.Component {
 
 
     @property(cc.Button) btnToSlot: cc.Button = null;
+    @property(cc.Button) btnPick: cc.Button = null;
+    @property(cc.Node) pickNode:cc.Node = null;
+
 
     @property(cc.Node) sceneNode: cc.Node = null;
     @property(cc.Node) sprTrans: cc.Node = null;
@@ -37,6 +42,10 @@ export default class FarmScene extends cc.Component {
 
     // onLoad () {}
 
+    private _farmlandNodeDic:any = {};
+    public getFarmlandUIWithIdx(indx:number):FarmlandUI{
+        return this._farmlandNodeDic[indx];
+    }
     start () {
         this.moveInAction(()=>{
             // SOUND.playFarmBgSound();
@@ -44,23 +53,24 @@ export default class FarmScene extends cc.Component {
     }
 
     onEnable(){
-        EVENT.on(GameEvent.PlantTree,this.onPlantTree,this);
+        EVENT.on(GameEvent.Plant_Tree,this.onPlantTree,this);
+        EVENT.on(GameEvent.Update_Tree,this.onUpdateTree,this);
+        EVENT.on(GameEvent.Remove_Tree,this.onRemoveTree,this);
         this.initScene();
-
-        this.seedList.node.on(DList.ITEM_CLICK,this.onListItemClick,this);
     }
 
 
     onDisable(){
-        EVENT.off(GameEvent.PlantTree,this.onPlantTree,this);
+        EVENT.off(GameEvent.Plant_Tree,this.onPlantTree,this);
+        EVENT.off(GameEvent.Update_Tree,this.onUpdateTree,this);
+        EVENT.off(GameEvent.Remove_Tree,this.onRemoveTree,this);
         this.clearScene();
-
-        this.seedList.node.off(DList.ITEM_CLICK,this.onListItemClick,this);
     }
 
     private initScene(){
 
         this.btnToSlot.node.on(ButtonEffect.CLICK_END,this.onGoSlot,this);
+        this.btnPick.node.on(cc.Node.EventType.TOUCH_START,this.onDragStart,this);
 
         this.initSeedList();
         this.initFarmland();
@@ -69,6 +79,8 @@ export default class FarmScene extends cc.Component {
     private clearScene(){
 
         this.btnToSlot.node.off(ButtonEffect.CLICK_END,this.onGoSlot,this);
+        this.btnPick.node.off(cc.Node.EventType.TOUCH_START,this.onDragStart,this);
+        this._farmlandNodeDic = {};
     }
 
     private onGoSlot(e){
@@ -106,25 +118,17 @@ export default class FarmScene extends cc.Component {
     private initFarmland(){
         var farmlandNode:cc.Node;
         var farmland:FarmlandInfo;
+        this._farmlandNodeDic = {};
         for(var i:number = 0;i<this.farmlandNodes.length;i++){
             farmlandNode = this.farmlandNodes[i];
             farmland = Farm.getFarmlandAtIndex(i);
             if(farmland == null){
                 continue;
             }else{
-                UI.loadUI(ResConst.FarmlandUI,{farmland:farmland},farmlandNode);
+                UI.loadUI(ResConst.FarmlandUI,{farmland:farmland},farmlandNode,(farmland:FarmlandUI)=>{
+                    this._farmlandNodeDic[farmland.index] = farmland;
+                });
             }
-        }
-    }
-
-    private onListItemClick(e){
-        var seedId:number = Number(e.data.id);
-        var index:number = Farm.getIdleFarmlandIndex();
-        if(index<0){
-            UI.showTip("没有空闲土地");
-            return;
-        }else{
-            Farm.plantOnce(seedId,index);
         }
     }
 
@@ -134,9 +138,42 @@ export default class FarmScene extends cc.Component {
         var farmlandNode:cc.Node = this.farmlandNodes[index];
         var farmland:FarmlandInfo = Farm.getFarmlandAtIndex(index);
         if(farmland!=null){
-            UI.loadUI(ResConst.FarmlandUI,{farmland:farmland},farmlandNode);
+            UI.loadUI(ResConst.FarmlandUI,{farmland:farmland},farmlandNode,(farmland:FarmlandUI)=>{
+                this._farmlandNodeDic[farmland.index] = farmland;
+            });
         }
     }   
+
+    private onDragStart(e){
+        this.btnPick.node.on(CDragEvent.DRAG_END,this.onDragEnd,this);
+        Drag.startDrag(this.btnPick.node,{});
+    }
+    private onDragEnd(e){
+        this.btnPick.node.off(CDragEvent.DRAG_END,this.onDragEnd,this);
+        Farm.pickServer(()=>{
+            EVENT.emit(GameEvent.Pick_Tree_Fly_End,{});
+            Common.checkShowLevelup();
+            
+        });
+    }
+
+    private onUpdateTree(e){
+        var index:number = e.index;
+        var farmland:FarmlandUI = this.getFarmlandUIWithIdx(index);
+        if(farmland){
+            farmland.onUpdateView();
+        }
+    }
+    private onRemoveTree(e){
+        var index:number = e.index;
+        var farmland:FarmlandUI = this.getFarmlandUIWithIdx(index);
+        if(farmland){
+            farmland.onRemoveView(()=>{
+                delete this._farmlandNodeDic[farmland.index];
+                UI.removeUI(farmland.node)
+            });
+        }
+    }
 
     // update (dt) {}
 }

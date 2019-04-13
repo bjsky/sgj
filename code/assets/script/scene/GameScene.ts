@@ -122,9 +122,21 @@ export default class GameScene extends cc.Component {
         this.btnOn.node.on(ButtonEffect.CLICK_END,this.onSlot,this);
         this.btnToFarm.node.on(ButtonEffect.CLICK_END,this.onGoFarm,this);
         this.schedule(this.lifeReturnFly,this._addLifeFlyInterval,cc.macro.REPEAT_FOREVER);
-
-        this.lblTotalLife.string = Common.resInfo.life.toString();
+        this.updateEnergy();
+        this.lblTotalLife.string = Common.resInfo.energy.toString();
         this.updateCostView();
+    }
+    public updateEnergy(){
+        var minues = (Common.getServerTime()- Common.resInfo.energyStartTime)/(60*1000);
+        var levelCfg:any = CFG.getCfgDataById(ConfigConst.Level,Common.userInfo.level);
+        var curEnerty:number = Common.resInfo.energy + minues*Number(levelCfg.lifeReturn);
+        if(curEnerty>Number(levelCfg.lifeMax)){
+            curEnerty = Number(levelCfg.lifeMax);
+        }else{
+            curEnerty = Number(curEnerty.toFixed(0));
+        }
+        Common.resInfo.energy = curEnerty;
+        Common.resInfo.energyStartTime = Common.getServerTime();
     }
 
     private clearScene(){
@@ -154,13 +166,13 @@ export default class GameScene extends cc.Component {
         anim.starFrom = this.btnOn.node.parent.convertToWorldSpaceAR(this.btnOn.node.position);
         UI.showWinAnim(anim);
 
-        this.lblTotalLife.string = Common.resInfo.life.toString();
+        this.lblTotalLife.string = Common.resInfo.energy.toString();
     }
 
     private _isSlotLocked:boolean = false;
     private onSlot(e){
 
-        if(Common.resInfo.life< this.CurCost){
+        if(Common.resInfo.energy< this.CurCost){
             UI.createPopUp(ResConst.GetGold,{type:GetGoldViewType.getGold});
             return;
         }
@@ -222,11 +234,11 @@ export default class GameScene extends cc.Component {
     // update (dt) {}
 
     private lifeReturnFly(){
-        if(Common.resInfo.life<this._curLifeReturnMax){
-            var addLifeFly:number = Number((this._curLifeReturn*this._addLifeFlyInterval/60).toFixed(0));
-            Common.resInfo.life += addLifeFly;
-            this.lblTotalLife.string = Common.resInfo.life.toString();
-        }
+        // if(Common.resInfo.energy<this._curLifeReturnMax){
+            // var addLifeFly:number = Number((this._curLifeReturn*this._addLifeFlyInterval/60).toFixed(0));
+            this.updateEnergy();
+            this.lblTotalLife.string = Common.resInfo.energy.toString();
+        // }
     }
 
     private _bigwinTiems:number = 0;

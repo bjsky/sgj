@@ -4,6 +4,7 @@ import MessageBase from "../core/net/MessageBase";
 import StringUtil from "../utils/StringUtil";
 import { CFG } from "../core/ConfigManager";
 import { ConfigConst } from "../GlobalData";
+import { Common } from "../CommonData";
 
 /**
  * 登录客户端数据
@@ -82,13 +83,16 @@ export class SUserInfo {
 export class SResInfo{
     //金币
     public gold:number = 0;
-
-    public life:number = 0;
+    //精力
+    public energy:number = 0;
+    //精力开始时间，首次取服务器时间，之后取存储的时间
+    public energyStartTime:number = 0;
 
     public static parse(obj:any):SResInfo{
         var info:SResInfo = new SResInfo();
         info.gold = obj.gold;
-        info.life = obj.life;
+        info.energy = obj.energy;
+        info.energyStartTime = obj.energyStartTime;
         return info;
     }
 }
@@ -97,19 +101,19 @@ export class SFarmlandInfo{
     
     //地格索引
     public index:number = 0;
-    //果树唯一id
-    public treeUid:string = "";
     //果树类型
     public treeType:number = 0;
-    //剩余采摘次数
-    public pickTimes:number = 0;
+    // //剩余采摘次数
+    // public pickTimes:number = 0;
+    //开始种植时间
+    public growthStartTime:number = 0;
 
     public static parse(obj:any):SFarmlandInfo{
         var info:SFarmlandInfo = new SFarmlandInfo();
         info.index = obj.index;
-        info.treeUid = obj.treeUid;
         info.treeType = obj.treeType;
-        info.pickTimes = obj.pickTimes;
+        // info.pickTimes = obj.pickTimes;
+        info.growthStartTime = obj.growthStartTime;
         return info;
     }
 }
@@ -147,9 +151,17 @@ export default class MsgLogin
             newUser:0,
             serverTime:new Date().getTime(),
             userInfo:{name:"开心农场",icon:"",gender:1,exp:0,totalExp:0,level:1},
-            resInfo:{gold:0,life:firstenergy},
+            resInfo:{gold:0,energy:firstenergy,energyStartTime:Common.getServerTime()},
             farmlands:[
-                {index:0,treeUid:"100000001",treeType:1,pickTimes:4},
+                // {index:0,treeType:1,pickTimes:4},
+                // {index:1,treeType:1,pickTimes:4},
+                // {index:2,treeType:1,pickTimes:4},
+                // {index:3,treeType:1,pickTimes:4},
+                // {index:4,treeType:1,pickTimes:4},
+                // {index:5,treeType:1,pickTimes:4},
+                // {index:6,treeType:1,pickTimes:4},
+                // {index:7,treeType:1,pickTimes:4},
+                // {index:8,treeType:1,pickTimes:4},
             ],
         };
         return this.parse(json);

@@ -5,6 +5,7 @@ import { EVENT } from "../../core/EventController";
 import GameEvent from "../../GameEvent";
 import { SFarmlandInfo } from "../../message/MsgLogin";
 import FarmlandInfo from "../../FarmlandInfo";
+import MsgPick from "../../message/MsgPick";
 
 export default class FarmController{
 
@@ -19,19 +20,13 @@ export default class FarmController{
     public _farmlandCount:number = 9;
 
     private _farmlandsDic:any = {};
-    private _farmlands:SFarmlandInfo[] = null;
     public initFromServer(farmlands:SFarmlandInfo[]){
-        this._farmlands = farmlands;
         this._farmlandsDic = {};
         farmlands.forEach((tr:SFarmlandInfo)=>{
             var farmland:FarmlandInfo = new FarmlandInfo();
             farmland.initFromServer(tr);
             this._farmlandsDic[farmland.index] = farmland;
         });
-    }
-
-    public cloneServerInfo():SFarmlandInfo[]{
-        return this._farmlands.slice();
     }
 
     public getIdleFarmlandIndex():number{
@@ -55,14 +50,55 @@ export default class FarmController{
         NET.send(MsgPlant.create(seedId,index),(msg:MsgPlant)=>{
             if(msg && msg.resp){
                 Common.resInfo.updateInfo(msg.resp.resInfo);
-                this.updateFarmlands(msg.resp.farmlands);
-                EVENT.emit(GameEvent.PlantTree,{index:index,seedId:seedId});
+                var farmland = new FarmlandInfo();
+                farmland.initFromServer(msg.resp.farmland);
+                this._farmlandsDic[index] = farmland;
+                EVENT.emit(GameEvent.Plant_Tree,{index:index,seedId:seedId});
             }
         },this)
     }
 
-    private updateFarmlands(farmlands:SFarmlandInfo[]){
-        this.initFromServer(farmlands);
+    private updateFarmland(index:number,farmland:FarmlandInfo){
+        this._farmlandsDic[index] = farmland;
+        EVENT.emit(GameEvent.Update_Tree,{index:index});
+    }
+
+    private removeFarmland(index:number){
+        delete this._farmlandsDic[index];
+        EVENT.emit(GameEvent.Remove_Tree,{index:index});
+    }
+
+
+    private _pickIndex:Array<number> = [];
+    private _addExp:number = 0;
+    public pickOnce(index:number,addExp:number){
+        if(this._pickIndex.indexOf(index)<0){
+            this._pickIndex.push(index);
+            this._addExp += addExp;
+            // var farmland:FarmlandInfo = this.getFarmlandAtIndex(index);
+            // if(farmland.pickTimes>0){
+            //     farmland.pickTimes --;
+            //     farmland.growthStartTime = Common.getServerTime();
+            //     this.updateFarmland(index,farmland);
+            // }else{
+                this.removeFarmland(index);
+            // }
+        }
+    }
+
+    public pickServer(cb:Function){
+        if(this._pickIndex.length>0){
+            var pickstr:string = this._pickIndex.join(";");
+            var addExp:number = this._addExp;
+            this._pickIndex= [];
+            this._addExp = 0;
+            NET.send(MsgPick.create(pickstr,addExp),(msg:MsgPick)=>{
+                if(msg && msg.resp){
+                    Common.updateUserInfo(msg.resp.userInfo);
+                    cb && cb();
+                }
+            },this);
+        }
     }
 }
 
