@@ -28,6 +28,8 @@ export enum SlotResultAniEnum{
     Expfly,
     BigWin,
     Share,
+    PickTreeStand,
+    PickTreefly,
 }
 export class SlotResultAnim{
 
@@ -55,6 +57,7 @@ export default class AnimUi extends UIBase {
     @property(cc.Label)  labelMuti: cc.Label = null;
     @property(cc.Node)  msStar: cc.Node = null;
     @property(cc.Node)  coinNode: cc.Node = null;
+    @property(cc.Node)  starNode: cc.Node = null;
 
     // LIFE-CYCLE CALLBACKS:
 
@@ -97,7 +100,7 @@ export default class AnimUi extends UIBase {
             var moveFrom:cc.Vec2 = this.msStar.parent.convertToNodeSpaceAR(anim.starFrom);
             var moveTo:cc.Vec2 = this.msStar.parent.convertToNodeSpaceAR(anim.starTo);
 
-            var moveCenter:cc.Vec2 = cc.v2(moveFrom.x-200,moveFrom.y+100);
+            var moveCenter:cc.Vec2 = cc.v2(moveFrom.x-200,moveFrom.y+50);
             this.msStar.position = moveFrom;
             var move = cc.sequence(cc.bezierTo(0.6,[moveFrom,moveCenter,moveTo]).easing(cc.easeIn(1.5)),
                 cc.callFunc(()=>{
@@ -105,6 +108,10 @@ export default class AnimUi extends UIBase {
                     EVENT.emit(GameEvent.Show_Exp_FlyEnd);
                 }));
             this.msStar.runAction(move);
+        }else if(anim.type == SlotResultAniEnum.PickTreeStand){
+            this.addStar(anim.starFrom);
+        }else if(anim.type == SlotResultAniEnum.PickTreefly){
+            this.flyStar(anim.starTo);
         }
     }
     private hideAll(){
@@ -204,5 +211,50 @@ export default class AnimUi extends UIBase {
         }
     }
 
+    private _starPool:cc.NodePool = new cc.NodePool();
+    private _stars:cc.Node[] = [];
+    private addStar(pos:cc.Vec2){
+        var star:cc.Node = this._starPool.get();
+        if(!star){
+            star = new cc.Node();
+            var spr:LoadSprite = star.addComponent(LoadSprite);
+            spr.load(PathUtil.getStarUrl());
+        }
+        star.parent = this.starNode;
+        star.position = this.starNode.convertToNodeSpaceAR(pos);
+        star.opacity = 0;
+        
+        star.runAction(cc.sequence(cc.fadeIn(0.2),cc.rotateBy(2,360).repeatForever()));
+        this._stars.push(star);
+    }
+
+    private _starDelay:number = 0.1;
+    private flyStar(toPos:cc.Vec2){
+        var starNode:cc.Node;
+        for(var i:number = 0;i<this._stars.length;i++){
+            starNode = this._stars[i];
+            var moveFrom = starNode.position;
+            var moveTo = this.starNode.convertToNodeSpaceAR(toPos);
+            var moveCenter = cc.v2(moveFrom.x+200,moveFrom.y+100);
+            var move = cc.bezierTo(0.6,[moveFrom,moveCenter,moveTo]).easing(cc.easeIn(1.5))
+            var seq = cc.sequence(
+                cc.delayTime(this._starDelay*i),
+                move//cc.moveTo(0.4,this.starNode.convertToNodeSpaceAR(toPos))
+                ,cc.fadeOut(0.01))
+            starNode.runAction(seq);
+        }
+        this.scheduleOnce(()=>{
+            this.clearStars();
+            EVENT.emit(GameEvent.Show_Exp_FlyEnd);
+            Common.checkShowLevelup();
+        },this._stars.length*this._starDelay+0.6)
+    }
+    private clearStars(){
+        while(this._stars.length>0){
+            var star:cc.Node = this._stars.shift();
+            star.stopAllActions();
+            this._starPool.put(star);
+        }
+    }
     // update (dt) {}
 }

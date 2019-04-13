@@ -10,6 +10,7 @@ import FarmlandInfo from "../FarmlandInfo";
 import { Drag, CDragEvent } from "../core/DragManager";
 import FarmlandUI from "../view/Farm/FarmlandUI";
 import { Common } from "../CommonData";
+import { SlotResultAnim, SlotResultAniEnum } from "../view/AnimUi";
 
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
@@ -151,9 +152,9 @@ export default class FarmScene extends cc.Component {
     private onDragEnd(e){
         this.btnPick.node.off(CDragEvent.DRAG_END,this.onDragEnd,this);
         Farm.pickServer(()=>{
-            EVENT.emit(GameEvent.Pick_Tree_Fly_End,{});
-            Common.checkShowLevelup();
-            
+            var anim:SlotResultAnim = new SlotResultAnim(SlotResultAniEnum.PickTreefly);
+            anim.starTo = UI.main.sprStar.node.parent.convertToWorldSpaceAR(UI.main.sprStar.node.position);
+            UI.showWinAnim(anim);
         });
     }
 
@@ -168,12 +169,17 @@ export default class FarmScene extends cc.Component {
         var index:number = e.index;
         var farmland:FarmlandUI = this.getFarmlandUIWithIdx(index);
         if(farmland){
+            var anim:SlotResultAnim = new SlotResultAnim(SlotResultAniEnum.PickTreeStand);
+            // anim.starTo = UI.main.sprStar.node.parent.convertToWorldSpaceAR(UI.main.sprStar.node.position);
+            anim.starFrom = farmland.node.parent.convertToWorldSpaceAR(farmland.node.position);
+            UI.showWinAnim(anim);
             farmland.onRemoveView(()=>{
                 delete this._farmlandNodeDic[farmland.index];
                 UI.removeUI(farmland.node)
             });
         }
     }
+
 
     // update (dt) {}
 }
