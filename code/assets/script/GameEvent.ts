@@ -28,4 +28,6 @@ export default class GameEvent {
     public static BigWin_updateTurn:string = "BigWin_updateTurn";
     //大奖结束
     public static BigWin_End:string ="BigWin_End";
+    //种植树
+    public static PlantTree:string ="PlantTree";
 }

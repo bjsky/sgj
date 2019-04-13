@@ -89,7 +89,7 @@ export default class AnimUi extends UIBase {
 
             NET.send(MsgSlotWin.create(anim.addGold),(msg:MsgSlotWin)=>{
                 if(msg && msg.resp){
-                    Common.resInfo.initFormServer(msg.resp.resInfo);
+                    Common.resInfo.updateInfo(msg.resp.resInfo);
                 }
             },this)
         }else if(anim.type == SlotResultAniEnum.Expfly){

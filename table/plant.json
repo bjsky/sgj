@@ -1,0 +1,8 @@
+[
+    {"id":"1","name":"橙子树","icon":"ui/fruit/cz","unlocklv":"0","plantcost":"2000","addExpPer":"50","growthCount":"4","growthTime":"3"},
+    {"id":"2","name":"西瓜地","icon":"ui/fruit/xg","unlocklv":"5","plantcost":"3000","addExpPer":"60","growthCount":"5","growthTime":"3"},
+    {"id":"3","name":"香蕉林","icon":"ui/fruit/xj","unlocklv":"10","plantcost":"4000","addExpPer":"70","growthCount":"6","growthTime":"3"},
+    {"id":"4","name":"柠檬树","icon":"ui/fruit/nm","unlocklv":"20","plantcost":"6000","addExpPer":"90","growthCount":"7","growthTime":"3"},
+    {"id":"5","name":"蓝莓地","icon":"ui/fruit/lm","unlocklv":"30","plantcost":"8000","addExpPer":"110","growthCount":"8","growthTime":"3"},
+    {"id":"6","name":"樱桃树","icon":"ui/fruit/yt","unlocklv":"40","plantcost":"10000","addExpPer":"130","growthCount":"9","growthTime":"3"}
+    ]

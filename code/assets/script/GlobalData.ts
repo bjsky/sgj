@@ -13,6 +13,7 @@ export const ConfigConst = {
     Constant:"configs/constant",
     Level:"configs/level",
     Fruit:"configs/fruit",
+    Plant:"configs/plant",
 }
 export const ResConst = {
     AlertPanel:"prefabs/alertPanel",
@@ -20,7 +21,8 @@ export const ResConst = {
     WinAnim:"prefabs/animUi",
     UpgradeUI:"prefabs/upgradeUI",
     GetGold:"prefabs/getGold",
-    ShareGold:"prefabs/shareGold"
+    ShareGold:"prefabs/shareGold",
+    FarmlandUI:"prefabs/farmland"
 }
 
 export const SceneCont ={

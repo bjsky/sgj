@@ -17,4 +17,8 @@ export default class NetConst{
     public static Slot:number = 10002;
     //中奖
     public static SlotWin:number = 10003;
+    //种植
+    public static Plant:number = 10004;
+    //收集
+    public static Pick:number = 10005;
 }

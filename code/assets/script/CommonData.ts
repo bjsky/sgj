@@ -6,6 +6,7 @@ import { EVENT } from "./core/EventController";
 import GameEvent from "./GameEvent";
 import { UI } from "./core/UIManager";
 import ResInfo from "./ResInfo";
+import { Farm } from "./game/farm/FarmController";
 
 export default class CommonData {
     private static _instance: CommonData = null;
@@ -46,6 +47,7 @@ export default class CommonData {
         this._serverTime = data.serverTime;
         this.userInfo.initFromServer(data.userInfo);
         this.resInfo.initFormServer(data.resInfo);
+        Farm.initFromServer(data.farmlands);
     }
 
     public getCostArr():Array<number>{

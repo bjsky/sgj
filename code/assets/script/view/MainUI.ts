@@ -48,6 +48,7 @@ export default class MainUI extends UIBase {
         EVENT.on(GameEvent.Show_Exp_FlyEnd,this.onShowExpflyEnd,this);
         EVENT.on(GameEvent.Show_Gold_Fly,this.onShowGoldfly,this);
         EVENT.on(GameEvent.UpgreadUI_Closed,this.onUpgradeUIClose,this);
+        EVENT.on(GameEvent.PlantTree,this.onPlantTree,this);
     }
 
     onDisable(){
@@ -56,6 +57,7 @@ export default class MainUI extends UIBase {
         EVENT.off(GameEvent.Show_Exp_FlyEnd,this.onShowExpflyEnd,this);
         EVENT.off(GameEvent.Show_Gold_Fly,this.onShowGoldfly,this);
         EVENT.off(GameEvent.UpgreadUI_Closed,this.onUpgradeUIClose,this);
+        EVENT.off(GameEvent.PlantTree,this.onPlantTree,this);
     }
 
     private hideAll(){
@@ -87,6 +89,9 @@ export default class MainUI extends UIBase {
     }
 
     private onShowGoldfly(e){
+        this.goldEffect.setValue(Common.resInfo.gold);
+    }
+    private onPlantTree(e){
         this.goldEffect.setValue(Common.resInfo.gold);
     }
     start () {

@@ -33,6 +33,8 @@ export class SCLoginData {
     public userInfo:SUserInfo = null;
     //资源信息
     public resInfo:SResInfo = null;
+    //地格信息
+    public farmlands:SFarmlandInfo[] = null;
 
     public static parse(obj:any):SCLoginData{
         var data:SCLoginData = new SCLoginData();
@@ -42,6 +44,10 @@ export class SCLoginData {
         data.serverTime = obj.serverTime;
         data.userInfo = SUserInfo.parse(obj.userInfo);
         data.resInfo = SResInfo.parse(obj.resInfo);
+        data.farmlands = [];
+        obj.farmlands.forEach((treeObj) => {
+            data.farmlands.push(SFarmlandInfo.parse(treeObj));
+        });
         return data;
     }
 }
@@ -86,6 +92,27 @@ export class SResInfo{
         return info;
     }
 }
+
+export class SFarmlandInfo{
+    
+    //地格索引
+    public index:number = 0;
+    //果树唯一id
+    public treeUid:string = "";
+    //果树类型
+    public treeType:number = 0;
+    //剩余采摘次数
+    public pickTimes:number = 0;
+
+    public static parse(obj:any):SFarmlandInfo{
+        var info:SFarmlandInfo = new SFarmlandInfo();
+        info.index = obj.index;
+        info.treeUid = obj.treeUid;
+        info.treeType = obj.treeType;
+        info.pickTimes = obj.pickTimes;
+        return info;
+    }
+}
 export default class MsgLogin
  extends MessageBase {
     public param:CSLoginData;
@@ -121,6 +148,9 @@ export default class MsgLogin
             serverTime:new Date().getTime(),
             userInfo:{name:"开心农场",icon:"",gender:1,exp:0,totalExp:0,level:1},
             resInfo:{gold:0,life:firstenergy},
+            farmlands:[
+                {index:0,treeUid:"100000001",treeType:1,pickTimes:4},
+            ],
         };
         return this.parse(json);
     }

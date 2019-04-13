@@ -71,7 +71,7 @@ export default class GameScene extends cc.Component {
         if(Game.loadingComplete){
             this.initScene();
             this.moveInAction(()=>{
-                SOUND.playBgSound();
+                // SOUND.playBgSound();
             });
         }else{
             Game.startGame(this.uicanvas);

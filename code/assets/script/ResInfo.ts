@@ -10,6 +10,9 @@ export default class ResInfo {
         this.life = sInfo.life;
         this.gold = sInfo.gold;
     }
+    public updateInfo(sInfo:SResInfo){
+        this.initFormServer(sInfo);
+    }
 
     public cloneServerInfo():SResInfo{
         var sInfo:SResInfo = new SResInfo();
