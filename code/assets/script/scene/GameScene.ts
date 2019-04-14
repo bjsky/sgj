@@ -33,7 +33,6 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class GameScene extends cc.Component {
 
-    @property(cc.Node) uicanvas: cc.Node = null;
     @property(SlotView) slot1: SlotView = null;
     @property(SlotView) slot2: SlotView = null;
     @property(SlotView) slot3: SlotView = null;
@@ -68,37 +67,32 @@ export default class GameScene extends cc.Component {
 
     start () {
 
-        if(Game.loadingComplete){
-            this.initScene();
-            this.moveInAction(()=>{
-                // SOUND.playBgSound();
-            });
-        }else{
-            Game.startGame(this.uicanvas);
-        }
+        this.moveInAction(()=>{
+            // SOUND.playBgSound();
+        });
+        
     }
 
     private moveInAction(cb){
-        this.sceneNode.x = -this.sprTrans.width;
+        this.sceneNode.x = this.sprTrans.width;
         this.sceneNode.runAction(cc.sequence(
-            cc.moveBy(0.15,cc.v2(this.sprTrans.width,0)).easing(cc.easeOut(1.5))
+            cc.moveBy(0.15,cc.v2(-this.sprTrans.width,0)).easing(cc.easeOut(1.5))
             ,cc.callFunc(cb))    
         );
     }
 
     onEnable(){
-        EVENT.on(GameEvent.Loading_complete,this.onLoadingComplete,this);
         EVENT.on(GameEvent.Play_Slot,this.onPlaySlot,this);
         EVENT.on(GameEvent.Show_Exp_Fly,this.onShowExpfly,this);
         EVENT.on(GameEvent.UpgreadUI_Closed,this.onUpgradeUIClose,this);
         EVENT.on(GameEvent.BigWin_Start,this.onBigwinStart,this);
         EVENT.on(GameEvent.BigWin_updateTurn,this.onBigwinTurn,this);
         EVENT.on(GameEvent.BigWin_End,this.onBigwinEnd,this);
+        this.initScene();
     }
 
     onDisable(){
         this.clearScene();
-        EVENT.off(GameEvent.Loading_complete,this.onLoadingComplete,this);
         EVENT.off(GameEvent.Play_Slot,this.onPlaySlot,this);
         EVENT.off(GameEvent.Show_Exp_Fly,this.onShowExpfly,this);
         EVENT.off(GameEvent.UpgreadUI_Closed,this.onUpgradeUIClose,this);
@@ -110,10 +104,6 @@ export default class GameScene extends cc.Component {
     private _gameSlot:GameSlot;
     private _addLifeFlyInterval:number = 3;
 
-    private onLoadingComplete(e){
-        this.initScene();
-        SOUND.playBgSound();
-    }
     private initScene(){
 
         this._gameSlot = new GameSlot(this);
@@ -152,7 +142,7 @@ export default class GameScene extends cc.Component {
         //去果园
         cc.director.preloadScene(SceneCont.FarmScene,()=>{
             this.sceneNode.runAction(
-                cc.sequence(cc.moveBy(0.15,cc.v2(-this.sprTrans.width,0)).easing(cc.easeIn(1.5)),
+                cc.sequence(cc.moveBy(0.15,cc.v2(this.sprTrans.width,0)).easing(cc.easeIn(1.5)),
                 cc.callFunc(()=>{
                     cc.director.loadScene(SceneCont.FarmScene);
                 }))

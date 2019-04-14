@@ -12,6 +12,8 @@ import FarmlandUI from "../view/Farm/FarmlandUI";
 import { Common } from "../CommonData";
 import { SlotResultAnim, SlotResultAniEnum } from "../view/AnimUi";
 import SeedItem from "../view/Farm/SeedItem";
+import { Game } from "../GameController";
+import { SOUND } from "../component/SoundManager";
 
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
@@ -29,6 +31,7 @@ const {ccclass, property} = cc._decorator;
 export default class FarmScene extends cc.Component {
 
 
+    @property(cc.Node) uicanvas: cc.Node = null;
     @property(cc.Button) btnToSlot: cc.Button = null;
     @property(cc.Button) btnPick: cc.Button = null;
     @property(cc.Node) pickNode:cc.Node = null;
@@ -49,21 +52,27 @@ export default class FarmScene extends cc.Component {
         return this._farmlandNodeDic[indx];
     }
     start () {
-        this.moveInAction(()=>{
-            // SOUND.playFarmBgSound();
-        });
+        if(Game.loadingComplete){
+            this.initScene();
+            this.moveInAction(()=>{
+                // SOUND.playFarmBgSound();
+            });
+        }else{
+            Game.startGame(this.uicanvas);
+        }
     }
 
     onEnable(){
+        EVENT.on(GameEvent.Loading_complete,this.onLoadingComplete,this);
         EVENT.on(GameEvent.Plant_Tree,this.onPlantTree,this);
         EVENT.on(GameEvent.Update_Tree,this.onUpdateTree,this);
         EVENT.on(GameEvent.Remove_Tree,this.onRemoveTree,this);
         EVENT.on(GameEvent.UpgreadUI_Closed,this.onUpgradeUIClose,this);
-        this.initScene();
     }
 
 
     onDisable(){
+        EVENT.off(GameEvent.Loading_complete,this.onLoadingComplete,this);
         EVENT.off(GameEvent.Plant_Tree,this.onPlantTree,this);
         EVENT.off(GameEvent.Update_Tree,this.onUpdateTree,this);
         EVENT.off(GameEvent.Remove_Tree,this.onRemoveTree,this);
@@ -71,6 +80,10 @@ export default class FarmScene extends cc.Component {
         this.clearScene();
     }
 
+    private onLoadingComplete(e){
+        this.initScene();
+        SOUND.playFarmBgSound();
+    }
     private initScene(){
 
         this.btnToSlot.node.on(ButtonEffect.CLICK_END,this.onGoSlot,this);
@@ -92,7 +105,7 @@ export default class FarmScene extends cc.Component {
         //去转盘
         cc.director.preloadScene(SceneCont.SlotScene,()=>{
             this.sceneNode.runAction(
-                cc.sequence(cc.moveBy(0.15,cc.v2(this.sprTrans.width,0)).easing(cc.easeIn(1.5)),
+                cc.sequence(cc.moveBy(0.15,cc.v2(-this.sprTrans.width,0)).easing(cc.easeIn(1.5)),
                 cc.callFunc(()=>{
                     cc.director.loadScene(SceneCont.SlotScene);
                 }))
@@ -101,9 +114,9 @@ export default class FarmScene extends cc.Component {
     }
 
     private moveInAction(cb:Function){
-        this.sceneNode.x = this.sprTrans.width;
+        this.sceneNode.x = -this.sprTrans.width;
         this.sceneNode.runAction(
-            cc.sequence(cc.moveBy(0.15,cc.v2(-this.sprTrans.width,0)).easing(cc.easeOut(1.5)),
+            cc.sequence(cc.moveBy(0.15,cc.v2(this.sprTrans.width,0)).easing(cc.easeOut(1.5)),
             cc.callFunc(cb))
         );
     }

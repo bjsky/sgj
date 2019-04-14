@@ -105,6 +105,7 @@ export default class AnimUi extends UIBase {
             var move = cc.sequence(cc.bezierTo(0.6,[moveFrom,moveCenter,moveTo]).easing(cc.easeIn(1.5)),
                 cc.callFunc(()=>{
                     this.msStar.active = false;
+                    UI.main.playExpBounce();
                     EVENT.emit(GameEvent.Show_Exp_FlyEnd);
                 }));
             this.msStar.runAction(move);
@@ -182,6 +183,10 @@ export default class AnimUi extends UIBase {
                     cc.sequence(cc.scaleTo(0.07,-1,1),cc.scaleTo(0.07,1,1)).repeatForever(),
                     cc.moveTo(0.4,moveTo).easing(cc.easeIn(1.5))
                 )
+                ,cc.fadeOut(0.01)
+                ,cc.callFunc(()=>{
+                    UI.main.playGoldBounce();
+                })
             );
             coin.runAction(flyMotion);
             this._coins.push(coin);
@@ -228,7 +233,7 @@ export default class AnimUi extends UIBase {
         this._stars.push(star);
     }
 
-    private _starDelay:number = 0.1;
+    private _starDelay:number = 0.12;
     private flyStar(toPos:cc.Vec2){
         var starNode:cc.Node;
         for(var i:number = 0;i<this._stars.length;i++){
@@ -240,12 +245,17 @@ export default class AnimUi extends UIBase {
             var seq = cc.sequence(
                 cc.delayTime(this._starDelay*i),
                 move//cc.moveTo(0.4,this.starNode.convertToNodeSpaceAR(toPos))
-                ,cc.fadeOut(0.01))
+                ,cc.fadeOut(0.01),cc.callFunc(()=>{
+                    UI.main.playExpBounce();
+                }))
             starNode.runAction(seq);
         }
         this.scheduleOnce(()=>{
-            this.clearStars();
             EVENT.emit(GameEvent.Show_Exp_FlyEnd);
+            
+        },0.6)
+        this.scheduleOnce(()=>{
+            this.clearStars();
             Common.checkShowLevelup();
         },this._stars.length*this._starDelay+0.6)
     }

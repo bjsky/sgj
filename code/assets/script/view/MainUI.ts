@@ -4,6 +4,8 @@ import NumberEffect from "../component/NumberEffect";
 import { EVENT } from "../core/EventController";
 import GameEvent from "../GameEvent";
 import { Common } from "../CommonData";
+import ResBounceEffect from "../component/ResBounceEffect";
+import { SOUND } from "../component/SoundManager";
 
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
@@ -30,6 +32,8 @@ export default class MainUI extends UIBase {
 
     @property(ExpLevelEffect) explevelEffect:ExpLevelEffect = null;
     @property(NumberEffect) goldEffect:NumberEffect = null;
+    @property(ResBounceEffect) goldBounceEffect:ResBounceEffect = null;
+    @property(ResBounceEffect) expBounceEffect:ResBounceEffect = null;
 
 
     @property(cc.Sprite) sprStar: cc.Sprite = null;
@@ -101,6 +105,15 @@ export default class MainUI extends UIBase {
     }
     start () {
 
+    }
+
+    public playExpBounce(){
+        this.expBounceEffect.play();
+        SOUND.playStarBounceSound();
+    }
+
+    public playGoldBounce(){
+        this.goldBounceEffect.play();
     }
 
     // update (dt) {}

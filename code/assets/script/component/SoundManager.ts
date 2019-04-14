@@ -127,6 +127,12 @@ export default class SoundManager{
     public playBigWinLockSound(){
         this.playEffectSound(SoundConst.bigWinLock_sound);
     }
+    public playPlantSound(){
+        this.playEffectSound(SoundConst.Plant_sound);
+    }
+    public playStarBounceSound(){
+        this.playEffectSound(SoundConst.Star_Bounce_sound);
+    }
 }
 
 export class SoundConst {
@@ -140,6 +146,8 @@ export class SoundConst {
     public static Levelup_sound:string ="sounds/levelup";
     public static bigWinLock_sound:string ="sounds/bigwinlock";
     public static Farm_Bg_sound:string ="sounds/farm";
+    public static Plant_sound:string ="sounds/plant";
+    public static Star_Bounce_sound:string ="sounds/star";
 }
 
 export var SOUND = SoundManager.getInstance();

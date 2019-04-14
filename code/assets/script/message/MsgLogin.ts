@@ -146,12 +146,13 @@ export default class MsgLogin
 
     public respFromLocal(){
         var firstenergy:number = Number(CFG.getCfgByKey(ConfigConst.Constant,"key","firstEnergy")[0].value);
+        var firstGold:number = Number(CFG.getCfgByKey(ConfigConst.Constant,"key","firstGold")[0].value)
         var json:any = {firstLogin:true,
             accountId:StringUtil.getUUidClient(),
             newUser:0,
             serverTime:new Date().getTime(),
             userInfo:{name:"开心农场",icon:"",gender:1,exp:0,totalExp:0,level:1},
-            resInfo:{gold:0,energy:firstenergy,energyStartTime:Common.getServerTime()},
+            resInfo:{gold:firstGold,energy:firstenergy,energyStartTime:Common.getServerTime()},
             farmlands:[
                 // {index:0,treeType:1,growthStartTime:0},
                 // {index:1,treeType:1,growthStartTime:0},

@@ -153,7 +153,7 @@ export default class GameSlot{
                     this.playSlotView(bigwin,null);
                     EVENT.emit(GameEvent.BigWin_updateTurn);
                 }else{
-                    SOUND.playBgSound();
+                    SOUND.playFarmBgSound();
                     EVENT.emit(GameEvent.BigWin_End);
                     cb && cb();
                 }
