@@ -11,14 +11,11 @@ export class CSPick{
 }
 
 export class SCPick{
-    //获得的经验
-    public addExp:number = 0;
     //用户信息更新
     public userInfo:SUserInfo = null;
 
     public static parse(obj:any):SCPick{
         var info:SCPick = new SCPick();
-        info.addExp = obj.addExp;
         info.userInfo = SUserInfo.parse(obj.userInfo);
         return info;
     }

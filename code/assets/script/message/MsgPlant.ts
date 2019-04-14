@@ -2,13 +2,11 @@ import MessageBase from "../core/net/MessageBase";
 import NetConst from "../NetConst";
 import { SResInfo, SFarmlandInfo} from "./MsgLogin";
 import { Common } from "../CommonData";
-import { CFG } from "../core/ConfigManager";
-import { ConfigConst } from "../GlobalData";
 
 export class CSPlant{
     public treeType:number = 0;
     public index:number = 0;
-
+    public costGold:number = 0;
 }
 
 export class SCPlant{
@@ -32,19 +30,18 @@ export default class MsgPlant extends MessageBase {
         // this.isLocal = true;
     }
 
-    public static create(treeType:number,index:number){
+    public static create(treeType:number,index:number,cost:number){
         var msg = new MsgPlant();
         msg.param = new CSPlant();
         msg.param.treeType = treeType;
         msg.param.index = index;
+        msg.param.costGold = cost;
         return msg;
     }
 
     public respFromLocal(){
         var resInfo:SResInfo = Common.resInfo.cloneServerInfo();
-        var seedCfg:any = CFG.getCfgDataById(ConfigConst.Plant,this.param.treeType);
-        var costGold:number = Number(seedCfg.plantcost);
-        resInfo.gold -= costGold;
+        resInfo.gold -= this.param.costGold;
         var farmland:SFarmlandInfo = new SFarmlandInfo();
         farmland.index = this.param.index;
         farmland.treeType = this.param.treeType;

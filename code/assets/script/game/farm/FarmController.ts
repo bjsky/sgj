@@ -6,6 +6,8 @@ import GameEvent from "../../GameEvent";
 import { SFarmlandInfo } from "../../message/MsgLogin";
 import FarmlandInfo from "../../FarmlandInfo";
 import MsgPick from "../../message/MsgPick";
+import { CFG } from "../../core/ConfigManager";
+import { ConfigConst } from "../../GlobalData";
 
 export default class FarmController{
 
@@ -47,7 +49,9 @@ export default class FarmController{
     }
 
     public plantOnce(seedId:number,index:number){
-        NET.send(MsgPlant.create(seedId,index),(msg:MsgPlant)=>{
+        var seedCfg:any = CFG.getCfgDataById(ConfigConst.Plant,seedId);
+        var costGold:number = Number(seedCfg.plantcost);
+        NET.send(MsgPlant.create(seedId,index,costGold),(msg:MsgPlant)=>{
             if(msg && msg.resp){
                 Common.resInfo.updateInfo(msg.resp.resInfo);
                 var farmland = new FarmlandInfo();

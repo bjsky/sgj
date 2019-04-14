@@ -51,9 +51,14 @@ export default class SeedItem extends DListItem{
     onEnable(){
         super.onEnable();
         this.btnPlant.node.on(ButtonEffect.CLICK_END,this.onPlant,this);
-        this.nodeLock.active = this.nodeunLock.active = false;
         this.lblSeedName.string = this._seedName;
         this.sprFruit.load(this._icon);
+
+        this.updateUnlock();
+    }
+
+    public updateUnlock(){
+        this.nodeLock.active = this.nodeunLock.active = false;
         if(Common.userInfo.level>= this._unlockLv){
             this.nodeunLock.active = true;
             this.lblSeedCost.string = this._cost.toString();

@@ -11,6 +11,7 @@ import { Drag, CDragEvent } from "../core/DragManager";
 import FarmlandUI from "../view/Farm/FarmlandUI";
 import { Common } from "../CommonData";
 import { SlotResultAnim, SlotResultAniEnum } from "../view/AnimUi";
+import SeedItem from "../view/Farm/SeedItem";
 
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
@@ -57,6 +58,7 @@ export default class FarmScene extends cc.Component {
         EVENT.on(GameEvent.Plant_Tree,this.onPlantTree,this);
         EVENT.on(GameEvent.Update_Tree,this.onUpdateTree,this);
         EVENT.on(GameEvent.Remove_Tree,this.onRemoveTree,this);
+        EVENT.on(GameEvent.UpgreadUI_Closed,this.onUpgradeUIClose,this);
         this.initScene();
     }
 
@@ -65,6 +67,7 @@ export default class FarmScene extends cc.Component {
         EVENT.off(GameEvent.Plant_Tree,this.onPlantTree,this);
         EVENT.off(GameEvent.Update_Tree,this.onUpdateTree,this);
         EVENT.off(GameEvent.Remove_Tree,this.onRemoveTree,this);
+        EVENT.off(GameEvent.UpgreadUI_Closed,this.onUpgradeUIClose,this);
         this.clearScene();
     }
 
@@ -104,16 +107,23 @@ export default class FarmScene extends cc.Component {
             cc.callFunc(cb))
         );
     }
+    private onUpgradeUIClose(e){
+        var plantUnlockCfg:any[] = CFG.getCfgByKey(ConfigConst.Plant,"unlocklv",Common.userInfo.level);
+        if(plantUnlockCfg.length>0){
+            var levelcfg = plantUnlockCfg[0];
+            var seedItem :SeedItem= this.seedList.getItemAt(this._listData.indexOf(levelcfg)) as SeedItem;
+            seedItem.updateUnlock();
+        }
+    }
 
-
+    private _listData:any[] = [];
     private initSeedList(){
-        var listData:any[] =[];
         var group:any = CFG.getCfgGroup(ConfigConst.Plant);
         for(var key in group){
-            listData.push(group[key]);
+            this._listData.push(group[key]);
         }
         this.seedList.direction = DListDirection.Vertical;
-        this.seedList.setListData(listData);
+        this.seedList.setListData(this._listData);
     }
 
     private initFarmland(){
