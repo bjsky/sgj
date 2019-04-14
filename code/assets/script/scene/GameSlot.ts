@@ -10,6 +10,7 @@ import SlotNode from "../game/SlotNode";
 import GameEvent from "../GameEvent";
 import { EVENT } from "../core/EventController";
 import { SOUND } from "../component/SoundManager";
+import { ShareType } from "../view/SharePanel";
 
 export default class GameSlot{
 
@@ -110,7 +111,7 @@ export default class GameSlot{
             UI.showWinAnim(anim);
         },2);
         this._scene.scheduleOnce(()=>{
-            UI.createPopUp(ResConst.ShareGold,{muti:anim.muti,addGold:anim.addGold});
+            UI.createPopUp(ResConst.SharePanel,{type:ShareType.shareGetGold,muti:anim.muti,addGold:anim.addGold});
             cb && cb();
         },2.5)
     }

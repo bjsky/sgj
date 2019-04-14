@@ -61,6 +61,9 @@ export default class ShareController{
     public shareGetGold(addGold:number){
 
     }
+    public shareGetEnergy(addEnergy:number){
+        
+    }
 }
 
 export var Share :ShareController = ShareController.getInstance();

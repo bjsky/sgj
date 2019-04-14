@@ -20,8 +20,8 @@ export const ResConst = {
     TipPanel:"prefabs/tipPanel",
     WinAnim:"prefabs/animUi",
     UpgradeUI:"prefabs/upgradeUI",
-    GetGold:"prefabs/getGold",
-    ShareGold:"prefabs/shareGold",
+    MessgaePanel:"prefabs/messagePanel",
+    SharePanel:"prefabs/sharePanel",
     FarmlandUI:"prefabs/farmland"
 }
 

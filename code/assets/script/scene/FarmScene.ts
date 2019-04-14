@@ -68,6 +68,7 @@ export default class FarmScene extends cc.Component {
         EVENT.on(GameEvent.Update_Tree,this.onUpdateTree,this);
         EVENT.on(GameEvent.Remove_Tree,this.onRemoveTree,this);
         EVENT.on(GameEvent.UpgreadUI_Closed,this.onUpgradeUIClose,this);
+        EVENT.on(GameEvent.Scene_To_Slot,this.onGoSlot,this);
     }
 
 
@@ -76,7 +77,7 @@ export default class FarmScene extends cc.Component {
         EVENT.off(GameEvent.Plant_Tree,this.onPlantTree,this);
         EVENT.off(GameEvent.Update_Tree,this.onUpdateTree,this);
         EVENT.off(GameEvent.Remove_Tree,this.onRemoveTree,this);
-        EVENT.off(GameEvent.UpgreadUI_Closed,this.onUpgradeUIClose,this);
+        EVENT.off(GameEvent.Scene_To_Slot,this.onGoSlot,this);
         this.clearScene();
     }
 

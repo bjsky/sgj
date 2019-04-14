@@ -13,10 +13,10 @@ import SlotWin from "../game/SlotWin";
 import GameSlot from "./GameSlot";
 import { SlotResultAnim, SlotResultAniEnum } from "../view/AnimUi";
 import { ResConst, ConfigConst, SceneCont } from "../GlobalData";
-import { GetGoldViewType } from "../view/GetGold";
 import { CFG } from "../core/ConfigManager";
 import SlotNode from "../game/SlotNode";
 import { SOUND } from "../component/SoundManager";
+import { ShareType } from "../view/SharePanel";
 
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
@@ -163,7 +163,7 @@ export default class GameScene extends cc.Component {
     private onSlot(e){
 
         if(Common.resInfo.energy< this.CurCost){
-            UI.createPopUp(ResConst.GetGold,{type:GetGoldViewType.getGold});
+            UI.createPopUp(ResConst.SharePanel,{type:ShareType.shareGetEnergy});
             return;
         }
         if(this._isSlotLocked)

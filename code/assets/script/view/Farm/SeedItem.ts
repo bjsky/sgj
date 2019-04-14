@@ -3,11 +3,12 @@ import LoadSprite from "../../component/LoadSprite";
 import PathUtil from "../../utils/PathUtil";
 import { Common } from "../../CommonData";
 import { CFG } from "../../core/ConfigManager";
-import { ConfigConst } from "../../GlobalData";
+import { ConfigConst, ResConst } from "../../GlobalData";
 import ButtonEffect from "../../component/ButtonEffect";
 import FarmController, { Farm } from "../../game/farm/FarmController";
 import DList from "../../component/DList";
 import { UI } from "../../core/UIManager";
+import { MessagePanelType } from "../MessagePanel";
 
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
@@ -83,12 +84,16 @@ export default class SeedItem extends DListItem{
             return;
         }
         if(Common.resInfo.gold<this._cost){
-            UI.showTip("金币不足");
+            UI.createPopUp(ResConst.MessgaePanel,{type:MessagePanelType.gotoSlot})
             return;
         }
         var index:number = Farm.getIdleFarmlandIndex();
         if(index<0){
-            UI.showTip("没有空闲土地，滑动采摘");
+            if(Farm.getGrowedFarmlandCount()>0){
+                UI.showTip("没有空闲土地，滑动采摘");
+            }else{
+                UI.showTip("没有空闲土地，等会再来");
+            }
             return;
         }else{
             Farm.plantOnce(this._seedId,index);
