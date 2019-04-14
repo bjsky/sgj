@@ -195,7 +195,7 @@ export default class FarmScene extends cc.Component {
         if(farmland){
             var anim:SlotResultAnim = new SlotResultAnim(SlotResultAniEnum.PickTreeStand);
             // anim.starTo = UI.main.sprStar.node.parent.convertToWorldSpaceAR(UI.main.sprStar.node.position);
-            anim.starFrom = farmland.node.parent.convertToWorldSpaceAR(farmland.node.position);
+            anim.starFrom = farmland.node.parent.convertToWorldSpaceAR(farmland.node.position).add(cc.v2(0,10));
             UI.showWinAnim(anim);
             farmland.onRemoveView(()=>{
                 delete this._farmlandNodeDic[farmland.index];

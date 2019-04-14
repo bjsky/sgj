@@ -116,7 +116,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 150,
+      "width": 140,
       "height": 200
     },
     "_anchorPoint": {
@@ -179,8 +179,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 72,
-      "height": 84
+      "width": 107,
+      "height": 117
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -190,7 +190,7 @@
     "_position": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": 30,
+      "y": 38,
       "z": 0
     },
     "_scale": {
@@ -225,7 +225,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "dcb53833-650a-44d3-8145-b4c7952cd990"
+      "__uuid__": "7b65e3f7-b650-4956-8f74-e8412f72a3c3"
     },
     "_type": 0,
     "_sizeMode": 1,
@@ -295,7 +295,7 @@
     "_position": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": -30,
+      "y": -26,
       "z": 0
     },
     "_scale": {
@@ -450,8 +450,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 30,
-      "height": 39
+      "width": 32,
+      "height": 38
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -461,7 +461,7 @@
     "_position": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": 20,
+      "y": 26,
       "z": 0
     },
     "_scale": {
@@ -496,7 +496,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "14af16c5-2745-4da6-a7df-3a0cdf66700d"
+      "__uuid__": "44461a8a-d9fa-4f85-8007-a4ca5776a095"
     },
     "_type": 0,
     "_sizeMode": 1,
@@ -545,9 +545,9 @@
     "_opacity": 255,
     "_color": {
       "__type__": "cc.Color",
-      "r": 138,
-      "g": 0,
-      "b": 0,
+      "r": 139,
+      "g": 3,
+      "b": 3,
       "a": 255
     },
     "_contentSize": {
@@ -1117,7 +1117,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "a58528c5-fd47-40bf-b552-319c3c488e81"
+      "__uuid__": "4d448757-79a5-4db3-89b6-b9fed5c1ff6d"
     },
     "_type": 1,
     "_sizeMode": 0,

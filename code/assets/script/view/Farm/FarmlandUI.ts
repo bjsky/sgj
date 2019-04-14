@@ -7,6 +7,8 @@ import { Farm } from "../../game/farm/FarmController";
 import { UI } from "../../core/UIManager";
 import { Common } from "../../CommonData";
 import StringUtil from "../../utils/StringUtil";
+import LoadSprite from "../../component/LoadSprite";
+import PathUtil from "../../utils/PathUtil";
 
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
@@ -27,13 +29,10 @@ export enum FarmlandState{
 @ccclass
 export default class FarmlandUI extends UIBase {
 
-    @property(cc.Node) nodePlanting: cc.Node = null;
-    @property(cc.Node) nodePlanted: cc.Node = null;
-    @property(cc.Node) nodePick: cc.Node = null;
-
+    @property(LoadSprite) sprTree: LoadSprite = null;
+    @property(cc.Node) nodeProgress: cc.Node = null;
     @property(cc.ProgressBar) plantProgress: cc.ProgressBar = null;
     @property(cc.Label) lblProgress: cc.Label = null;
-    @property(cc.Label) pickCount: cc.Label = null;
     
 
     private _farmland:FarmlandInfo = null;
@@ -41,6 +40,7 @@ export default class FarmlandUI extends UIBase {
     private _growthStartTime:number = 0;
     // private _pickTimes:number = 0;
     private _addExp:number = 0;
+    private _treeIcon:string ="";
 
     private _state:FarmlandState = 0;
     public get index(){
@@ -55,6 +55,7 @@ export default class FarmlandUI extends UIBase {
         var cfg:any = CFG.getCfgDataById(ConfigConst.Plant,this._farmland.treeType);
         this._growthTotalTime = Number(cfg.growthTime);
         this._addExp = Number(cfg.addExpPer);
+        this._treeIcon = cfg.icon;
     }
     // LIFE-CYCLE CALLBACKS:
 
@@ -70,11 +71,11 @@ export default class FarmlandUI extends UIBase {
     }
     private onStateChange(){
         if(this._state == FarmlandState.Planed){
-            this.nodePlanted.active = true;
-            this.nodePlanting.active = false;
+            this.nodeProgress.active = false;
+            this.sprTree.load(this._treeIcon)
         }else if(this._state == FarmlandState.Planting){
-            this.nodePlanted.active = false;
-            this.nodePlanting.active = true;
+            this.nodeProgress.active = true;
+            this.sprTree.load(this._treeIcon+'_g')
         }
     }
 
