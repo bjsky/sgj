@@ -4,6 +4,7 @@ import { CFG } from "./core/ConfigManager";
 import { NET } from "./core/net/NetController";
 import MsgLogin from "./message/MsgLogin";
 import { Common } from "./CommonData";
+import { Wechat } from "./WeChatInterface";
 
 export default class LoadingController {
     private static _instance: LoadingController = null;
@@ -20,10 +21,7 @@ export default class LoadingController {
     public startLoading(onCompleteCb:Function){
         this._onComplteCb = onCompleteCb;
 
-        if(Global.serverType == ServerType.Client){
-            new ConfigLoading().start(this._onComplteCb);
-        }
-
+        new ConfigLoading().start(this._onComplteCb);
     }
 }
 
@@ -46,7 +44,19 @@ export class ConfigLoading{
         });
 
         console.log("Config loaded!");
-        new LoginServer().start(this._completeCb);
+        switch(Global.serverType){
+            case ServerType.Client:{
+                new ServerLogin().start(this._completeCb);
+            }
+            break;
+            case ServerType.Debug:{
+                new ServerConnect().start(this._completeCb);
+            }break
+            case ServerType.Publish:{
+                new WechatLogin().start(this._completeCb);
+            }
+            break;
+        }
     }
     private loadConfigProgress(pro:number){
 
@@ -56,18 +66,68 @@ export class ConfigLoading{
     }
 }
 
-export class LoginServer{
+export class WechatLogin{
     private _completeCb:Function = null;
     public start(completeCb:Function){
         this._completeCb = completeCb;
+        //微信登录
+        Wechat.wxLogin(this.loginCb.bind(this));
+    }
 
-        NET.send(MsgLogin.create("",""),(msg:MsgLogin)=>{
-            if(msg && msg.resp){
-                console.log(msg.resp);
-            }
-            Common.initFromServer(msg.resp);
-            this._completeCb && this._completeCb();
+    public loginCb(res){
+        console.log("LoadingStepLogin:wxLogin,",JSON.stringify(res));
+        Global.code = res.code;
+        new ServerConnect().start(this._completeCb);
+    }
+}
+
+export class ServerConnect{
+    private _completeCb:Function = null;
+    public start(completeCb:Function){
+        this._completeCb = completeCb;
+        NET.connect(Global.serverUrl,(resp)=>{
+            console.log("LoadingStepServerConn:Connected")
+            new ServerLogin().start(this._completeCb);
         },this)
+    }
+}
+
+export class ServerLogin{
+    private _completeCb:Function = null;
+    public start(completeCb:Function){
+        this._completeCb = completeCb;
+        
+        switch(Global.serverType){
+            case ServerType.Client:{
+                NET.send(MsgLogin.create("",""),(msg:MsgLogin)=>{
+                    if(msg && msg.resp){
+                        console.log(msg.resp);
+                    }
+                    Common.initFromServer(msg.resp);
+                    this._completeCb && this._completeCb();
+                },this)
+            }
+            break;
+            case ServerType.Debug:{
+                NET.send(MsgLogin.create(Global.testAccount,"",{name:"测试1"}),(msg:MsgLogin)=>{
+                    if(msg && msg.resp){
+                        console.log(msg.resp);
+                    }
+                    Common.initFromServer(msg.resp);
+                    this._completeCb && this._completeCb();
+                },this)
+            }break;
+            case ServerType.Publish:{
+                NET.send(MsgLogin.create("",Global.code,Global.loginUserInfo),(msg:MsgLogin)=>{
+                    if(msg && msg.resp){
+                        console.log(msg.resp);
+                    }
+                    Common.initFromServer(msg.resp);
+                    this._completeCb && this._completeCb();
+                },this)
+            }break;
+        }
+        
     }
 }
 

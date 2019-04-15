@@ -17,8 +17,7 @@ export default class GameController {
 
     public startGame(root:cc.Node){
         UI.registerLayer(root);
-        Global.initSystemInfo();
-
+        Global.initGame();
         Loading.startLoading(this.onLoadingComplete.bind(this));
 
     }

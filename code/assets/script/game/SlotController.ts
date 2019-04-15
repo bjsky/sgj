@@ -27,11 +27,16 @@ export default class SlotContoller {
 
     private _slotMachine:SlotMachine = null;
 
+    //执行次数
+    public excuteCount:number = 0;
+    //上次分享
+    public prevShareCount:number = 0;
     public excute(input:SlotInput){
         if(this._slotMachine == null){
             this._slotMachine = new SlotMachine(SlotMachineState.normal);
         }
 
+        this.excuteCount++;
         this._slotMachine.excute(input);
     }
 }

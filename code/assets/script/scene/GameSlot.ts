@@ -163,7 +163,6 @@ export default class GameSlot{
         },2);
         this._scene.scheduleOnce(()=>{
             var repeat:SlotWin = result.repeatSlotWin;
-            repeat.cost = result.cost;
             this.playSlotView(repeat,cb);
         },2.5)
     }
@@ -179,7 +178,6 @@ export default class GameSlot{
             this._scene.scheduleOnce(()=>{
                 if(result.bigwinSlotWin.length>0){
                     var bigwin:SlotWin = result.bigwinSlotWin.shift();
-                    bigwin.cost = result.cost;
                     this.playSlotView(bigwin,null);
                     EVENT.emit(GameEvent.BigWin_updateTurn);
                 }else{

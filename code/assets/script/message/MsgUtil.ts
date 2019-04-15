@@ -4,6 +4,8 @@ import MsgLogin from "./MsgLogin";
 import MsgHeartBeat from "./MsgHeartBeat";
 import MsgSlot from "./MsgSlot";
 import MsgSlotWin from "./MsgSlotWin";
+import MsgPlant from "./MsgPlant";
+import MsgPick from "./MsgPick";
 
 /**
  * 太特么坑了，父类中还不能导入子类
@@ -25,6 +27,12 @@ export default class MsgUtil{
             break;
             case NetConst.SlotWin:
                 message = new MsgSlotWin();
+            break;
+            case NetConst.Plant:
+                message = new MsgPlant();
+            break;
+            case NetConst.Pick:
+                message = new MsgPick();
             break;
             default:
             message = null;

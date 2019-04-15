@@ -149,7 +149,7 @@ export default class MsgLogin
         var firstGold:number = Number(CFG.getCfgByKey(ConfigConst.Constant,"key","firstGold")[0].value)
         var json:any = {firstLogin:true,
             accountId:StringUtil.getUUidClient(),
-            newUser:0,
+            newUser:1,
             serverTime:new Date().getTime(),
             userInfo:{name:"开心农场",icon:"",gender:1,exp:0,totalExp:0,level:1},
             resInfo:{gold:firstGold,energy:firstenergy,energyStartTime:Common.getServerTime()},

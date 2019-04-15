@@ -41,12 +41,15 @@ export default class GlobalData{
     }
 
     public serverType:number = ServerType.Client;
-    public version:string = "1.0.1";
+    public version:string = "1.0.10";
     
+    public testAccount:string ="test001"//"test027";
+    public serverUrl:string = "wss://www.xh52.top:8580/websocket";
+
     public isIPhoneX:boolean =false;
     public statusBarHeight:number = 0;
     public systemInfo:any =null;
-    public initSystemInfo(){
+    public initGame(){
         this.systemInfo = Wechat.getSystemInfo(); 
         console.log("initSystemInfo:"+JSON.stringify(this.systemInfo) );
         if(this.systemInfo && this.systemInfo.model.indexOf("iPhone X")>=0 )
@@ -55,8 +58,21 @@ export default class GlobalData{
             this.statusBarHeight = Number(this.systemInfo.statusBarHeight);
             UI.adjustHeight();
         }
+        var gameCfg = Wechat.getGameConfigData();
+        if(gameCfg.serverUrl!=undefined){
+            this.serverUrl = gameCfg.serverUrl;
+        }
+        console.log("initGameConfig:",this.serverType,this.serverUrl)
     }
 
+
+    public code:string ="";//微信登录code
+    //登录授权userInfo，未授权为空
+    public loginUserInfo:any = null;
+
+    public initUserInfo(userInfo){
+        this.loginUserInfo = userInfo;
+    }
 }
 
 export var Global:GlobalData = GlobalData.getInstance();

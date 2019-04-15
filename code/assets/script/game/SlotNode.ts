@@ -53,11 +53,11 @@ export default class SlotNode extends cc.Component {
         if(this._state == SlotStateEnum.Fast){
             var angleF:number = dt*this._speed;
             this.node.rotation+=angleF;
-            for(var i:number = 0;i<this._fruitNode.length;i++){
-                if(i!=6 && i!=8 && i!=11){
-                    this._fruitNode[i].rotation = -this.node.rotation;
-                }
-            }
+            // for(var i:number = 0;i<this._fruitNode.length;i++){
+            //     if(i!=6 && i!=8 && i!=11){
+            //         this._fruitNode[i].rotation = -this.node.rotation;
+            //     }
+            // }
         }
         else if(this._state == SlotStateEnum.SlowBegin){
             this.node.stopAllActions();
@@ -73,11 +73,11 @@ export default class SlotNode extends cc.Component {
             })))
             this._state = SlotStateEnum.Slow;
         }else if(this._state == SlotStateEnum.Slow){
-            for(var i:number = 0;i<this._fruitNode.length;i++){
-                if(i!=6 && i!=8 && i!=11){
-                    this._fruitNode[i].rotation = -this.node.rotation;
-                }
-            }
+            // for(var i:number = 0;i<this._fruitNode.length;i++){
+            //     if(i!=6 && i!=8 && i!=11){
+            //         this._fruitNode[i].rotation = -this.node.rotation;
+            //     }
+            // }
         }
 
     }

@@ -39,6 +39,15 @@ export default class FarmController{
         }
         return -1;
     }
+    public getPlantFarmlandCount():number{
+        var count:number = 0;
+        for(var i:number = 0;i<this._farmlandCount;i++){
+            if(this._farmlandsDic[i]!=undefined){
+                count++;
+            }
+        }
+        return count;
+    }
     //成熟的田个数
     public getPlantedFarmlandCount(levalTime:number = 0):number{
         var count:number = 0;
@@ -121,6 +130,7 @@ export default class FarmController{
 
     public pickServer(cb:Function){
         if(this._pickIndex.length>0){
+            this._prevPickTime = Common.getServerTime();
             var pickstr:string = this._pickIndex.join(";");
             var addExp:number = this._addExp;
             this._pickIndex= [];
@@ -137,6 +147,11 @@ export default class FarmController{
     public plantFree:boolean = false;
     //立即采摘
     public pickImmediatly:boolean = false;
+
+    private _prevPickTime:number = 0;
+    public canPicImmediatly():boolean{
+        return Common.getServerTime()-this._prevPickTime >30*1000;
+    }
 }
 
 export var Farm:FarmController = FarmController.getInstance();
