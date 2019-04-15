@@ -88,6 +88,7 @@ export default class GameScene extends cc.Component {
         EVENT.on(GameEvent.BigWin_Start,this.onBigwinStart,this);
         EVENT.on(GameEvent.BigWin_updateTurn,this.onBigwinTurn,this);
         EVENT.on(GameEvent.BigWin_End,this.onBigwinEnd,this);
+        EVENT.on(GameEvent.Scene_To_Farm,this.onGoFarm,this);
         this.initScene();
     }
 
@@ -99,6 +100,7 @@ export default class GameScene extends cc.Component {
         EVENT.off(GameEvent.BigWin_Start,this.onBigwinStart,this);
         EVENT.off(GameEvent.BigWin_updateTurn,this.onBigwinTurn,this);
         EVENT.off(GameEvent.BigWin_End,this.onBigwinEnd,this);
+        EVENT.off(GameEvent.Scene_To_Farm,this.onGoFarm,this);
     }
 
     private _gameSlot:GameSlot;

@@ -11,6 +11,7 @@ import GameEvent from "../GameEvent";
 import { EVENT } from "../core/EventController";
 import { SOUND } from "../component/SoundManager";
 import { ShareType } from "../view/SharePanel";
+import { MessagePanelType } from "../view/MessagePanel";
 
 export default class GameSlot{
 
@@ -63,6 +64,10 @@ export default class GameSlot{
             this.playSlotViewBigWin(result,cb);
         }else if(result.type == SlotWinEnum.Share){
             this.playSlotViewShare(result,cb);
+        }else if(result.type == SlotWinEnum.Plant){
+            this.playSlotViewPlant(result,cb);
+        }else if(result.type == SlotWinEnum.Pick){
+            this.playSlotViewPick(result,cb);
         }
         else{
             cb && cb();
@@ -112,6 +117,30 @@ export default class GameSlot{
         },2);
         this._scene.scheduleOnce(()=>{
             UI.createPopUp(ResConst.SharePanel,{type:ShareType.shareGetGold,muti:anim.muti,addGold:anim.addGold});
+            cb && cb();
+        },2.5)
+    }
+
+    public playSlotViewPlant(reslut:SlotWin,cb:Function){
+        this._slot.play(SlotFruit.plant);
+        var anim:SlotResultAnim = new SlotResultAnim(SlotResultAniEnum.Plant);
+        this._scene.scheduleOnce(()=>{
+            UI.showWinAnim(anim);
+        },2);
+        this._scene.scheduleOnce(()=>{
+            UI.createPopUp(ResConst.MessgaePanel,{type:MessagePanelType.plantFree});
+            cb && cb();
+        },2.5)
+    }
+
+    public playSlotViewPick(result:SlotWin,cb:Function){
+        this._slot.play(SlotFruit.pick);
+        var anim:SlotResultAnim = new SlotResultAnim(SlotResultAniEnum.Pick);
+        this._scene.scheduleOnce(()=>{
+            UI.showWinAnim(anim);
+        },2);
+        this._scene.scheduleOnce(()=>{
+            UI.createPopUp(ResConst.MessgaePanel,{type:MessagePanelType.pickImmediatly});
             cb && cb();
         },2.5)
     }

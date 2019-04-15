@@ -123,7 +123,8 @@ export default class FarmlandUI extends UIBase {
     }
 
     private onDragMove(e){
-        if(this._state == FarmlandState.Planed){
+        if(this._state == FarmlandState.Planed
+            ||Farm.pickImmediatly){
             Farm.pickOnce(this._farmland.index,this._addExp);
         }
     }

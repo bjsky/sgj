@@ -38,5 +38,7 @@ export default class GameEvent {
     public static Pick_Tree_Fly_End:string ="Pick_Tree_Fly_End";
     //场景切换
     public static Scene_To_Slot:string ="Scene_To_Slot";
-    public static Scene_To_Plant:string ="Scene_To_Plant";
+    public static Scene_To_Farm:string ="Scene_To_Farm";
+    //免费种植改变
+    public static Plant_Free_Change:string="Plant_Free_Change";
 }

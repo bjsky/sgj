@@ -39,6 +39,32 @@ export default class FarmController{
         }
         return -1;
     }
+    //成熟的田个数
+    public getPlantedFarmlandCount(levalTime:number = 0):number{
+        var count:number = 0;
+        for(var index in this._farmlandsDic){
+            var farmland:FarmlandInfo = this._farmlandsDic[index];
+            var cfg:any = CFG.getCfgDataById(ConfigConst.Plant,farmland.treeType);
+            var growthTime:number = (Common.getServerTime() - farmland.growthStartTime)/1000;
+            if(growthTime+levalTime>=Number(cfg.growthTime)){
+                count++;
+            } 
+        }
+        return count;
+    }
+    //未成熟田个数
+    public getPlantingFarmlandCount(levalTime:number = 0):number{
+        var count:number = 0;
+        for(var index in this._farmlandsDic){
+            var farmland:FarmlandInfo = this._farmlandsDic[index];
+            var cfg:any = CFG.getCfgDataById(ConfigConst.Plant,farmland.treeType);
+            var growthTime:number = (Common.getServerTime() - farmland.growthStartTime)/1000;
+            if(growthTime+levalTime<Number(cfg.growthTime)){
+                count++;
+            } 
+        }
+        return count;
+    }
 
     public getFarmlandAtIndex(index:number):FarmlandInfo{
         if(this._farmlandsDic[index]!=undefined ||this._farmlandsDic[index]!=null){
@@ -48,9 +74,12 @@ export default class FarmController{
         }
     }
 
-    public plantOnce(seedId:number,index:number){
+    public plantOnce(seedId:number,index:number,isFree:boolean = false){
         var seedCfg:any = CFG.getCfgDataById(ConfigConst.Plant,seedId);
         var costGold:number = Number(seedCfg.plantcost);
+        if(isFree){
+            costGold = 0;
+        }
         NET.send(MsgPlant.create(seedId,index,costGold),(msg:MsgPlant)=>{
             if(msg && msg.resp){
                 Common.resInfo.updateInfo(msg.resp.resInfo);
@@ -104,6 +133,10 @@ export default class FarmController{
             },this);
         }
     }
+    //免费种植
+    public plantFree:boolean = false;
+    //立即采摘
+    public pickImmediatly:boolean = false;
 }
 
 export var Farm:FarmController = FarmController.getInstance();

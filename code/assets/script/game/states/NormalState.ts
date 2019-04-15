@@ -12,6 +12,7 @@ import MsgSlot from "../../message/MsgSlot";
 import { Common } from "../../CommonData";
 import SlotWin, { SlotWinEnum } from "../SlotWin";
 import { SResInfo } from "../../message/MsgLogin";
+import { Farm } from "../farm/FarmController";
 
 export default class NormalState extends SlotState{
 
@@ -82,6 +83,20 @@ export default class NormalState extends SlotState{
             }else if(winFruitId == SlotFruit.share){        //分享得金币
                 result = new SlotWin(SlotWinEnum.Share);
                 result.slotArr = [winFruitId,winFruitId,winFruitId];
+            }else if(winFruitId == SlotFruit.pick){ //采摘
+                if(Farm.getPlantingFarmlandCount(5)>0){
+                    result = new SlotWin(SlotWinEnum.Pick);
+                    result.slotArr = [winFruitId,winFruitId,winFruitId];
+                }else{
+                    return this.getNormalResult(fruitArr);
+                }
+            }else if(winFruitId == SlotFruit.plant){    //种植
+                if(Farm.getIdleFarmlandIndex()>=0){
+                    result = new SlotWin(SlotWinEnum.Plant);
+                    result.slotArr = [winFruitId,winFruitId,winFruitId];
+                }else{
+                    return this.getNormalResult(fruitArr);
+                }
             }
             else{
                 fruitIdArr =[winFruitId,winFruitId,winFruitId];

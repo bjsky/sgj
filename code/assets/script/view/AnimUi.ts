@@ -30,6 +30,8 @@ export enum SlotResultAniEnum{
     Share,
     PickTreeStand,
     PickTreefly,
+    Plant,
+    Pick,
 }
 export class SlotResultAnim{
 
@@ -48,9 +50,12 @@ export class SlotResultAnim{
 @ccclass
 export default class AnimUi extends UIBase {
 
+    @property(cc.Sprite)  sprBG: cc.Sprite = null;
     @property(cc.Sprite)  sprRepeat: cc.Sprite = null;
     @property(cc.Sprite)  sprBigWin: cc.Sprite = null;
     @property(cc.Sprite)  sprShare: cc.Sprite = null;
+    @property(cc.Sprite)  sprPlant: cc.Sprite = null;
+    @property(cc.Sprite)  sprPick: cc.Sprite = null;
     @property(cc.Node)  sprNode: cc.Node = null;
     @property(cc.Node)  nodeMuti: cc.Node = null;
     @property(cc.Sprite)  sprMuti: cc.Sprite = null;
@@ -72,22 +77,23 @@ export default class AnimUi extends UIBase {
 
     public showAnim(anim:SlotResultAnim){
         if(anim.type == SlotResultAniEnum.Repeat){
-            this.sprRepeat.node.active = true;
             this.showNotice(this.sprRepeat.node,anim);
         }else if(anim.type == SlotResultAniEnum.BigWin){
-            this.sprBigWin.node.active = true;
-            this.showBigNotice(this.sprBigWin.node,anim);
+            this.showSpecialNotice(this.sprBigWin.node,anim);
         }else if(anim.type == SlotResultAniEnum.Share){
-            this.sprShare.node.active = true;
-            this.showBigNotice(this.sprShare.node,anim);
+            this.showSpecialNotice(this.sprShare.node,anim);
+        }else if(anim.type == SlotResultAniEnum.Plant){
+            this.showSpecialNotice(this.sprPlant.node,anim);
+        }else if(anim.type == SlotResultAniEnum.Pick){
+            this.showSpecialNotice(this.sprPick.node,anim);
         }
         else if(anim.type == SlotResultAniEnum.Hevart){
-            this.nodeMuti.active = true;
             this.labelMuti.string = anim.addGold.toString();
             this.labelMuti["_updateRenderData"](true);
             var totalw:number = this.sprMuti.node.width+7+this.labelMuti.node.width;
             this.sprMuti.node.x = -totalw/2;
             this.labelMuti.node.x = totalw/2-this.labelMuti.node.width;
+            this.sprBG.node.width = totalw + 50;
             this.showNotice(this.nodeMuti,anim);
 
             NET.send(MsgSlotWin.create(anim.addGold),(msg:MsgSlotWin)=>{
@@ -116,18 +122,24 @@ export default class AnimUi extends UIBase {
         }
     }
     private hideAll(){
-        this.sprRepeat.node.active = false;
-        this.nodeMuti.active = false;
         this.msStar.active = false;
+        this.sprNode.active = false;
+        this.sprRepeat.node.active = false;
         this.sprBigWin.node.active = false;
         this.sprShare.node.active = false;
+        this.sprPlant.node.active = false;
+        this.sprPick.node.active = false;
+        this.nodeMuti.active = false;
     }
 
     private showNotice(spr:cc.Node,anim:SlotResultAnim){
-        spr.scale = 0.7;
-        spr.opacity = 255;
+        this.sprNode.active = true;
+        this.sprBG.node.width = spr.width +50;
+        spr.active =true;
+        this.sprNode.scale = 0.7;
+        this.sprNode.opacity = 255;
         var seqOut = cc.sequence(cc.scaleTo(0.15,1).easing(cc.easeBackOut()),
-            cc.delayTime(0.6),
+            cc.delayTime(0.5),
             cc.callFunc(()=>{
                 if(anim.type == SlotResultAniEnum.Hevart){
                     this.showCoinFly(anim);
@@ -135,21 +147,23 @@ export default class AnimUi extends UIBase {
             }),
             cc.fadeOut(0.5),
             cc.callFunc(()=>{
-                if(anim.type == SlotResultAniEnum.Repeat){
-                    spr.active = false;
-                }
+                this.sprNode.active = false;
+                spr.active = false;
             }));
-        spr.runAction(seqOut);
+        this.sprNode.runAction(seqOut);
     }
 
-    private showBigNotice(spr:cc.Node,anim:SlotResultAnim){
-        spr.scale = 0.7;
-        spr.opacity = 255;
+    private showSpecialNotice(spr:cc.Node,anim:SlotResultAnim){
+        this.sprNode.active = true;
+        this.sprBG.node.width = spr.width +50;
+        spr.active = true;
+        this.sprNode.scale = 0.7;
+        this.sprNode.opacity = 255;
         if(anim.type == SlotResultAniEnum.BigWin){
             SOUND.playBigWinLockSound();
         }
-        var seqOut = cc.sequence(cc.scaleTo(0.2,1.3).easing(cc.easeBackOut()),
-            cc.delayTime(1),
+        var seqOut = cc.sequence(cc.scaleTo(0.15,1).easing(cc.easeBackOut()),
+            cc.delayTime(0.5),
             cc.callFunc(()=>{
                 if(anim.type == SlotResultAniEnum.BigWin){
                     SOUND.playBigWinBgSound();
@@ -157,9 +171,10 @@ export default class AnimUi extends UIBase {
             }),
             cc.fadeOut(0.5),
             cc.callFunc(()=>{
+                this.sprNode.active = false;
                 spr.active = false;
             }));
-        spr.runAction(seqOut);
+        this.sprNode.runAction(seqOut);
     }
 
     private _delay:number = 0.06;

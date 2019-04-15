@@ -34,6 +34,7 @@ export default class FarmScene extends cc.Component {
     @property(cc.Node) uicanvas: cc.Node = null;
     @property(cc.Button) btnToSlot: cc.Button = null;
     @property(cc.Button) btnPick: cc.Button = null;
+    @property(cc.Button) btnPickIme: cc.Button = null;
     @property(cc.Node) pickNode:cc.Node = null;
 
 
@@ -89,15 +90,18 @@ export default class FarmScene extends cc.Component {
 
         this.btnToSlot.node.on(ButtonEffect.CLICK_END,this.onGoSlot,this);
         this.btnPick.node.on(cc.Node.EventType.TOUCH_START,this.onDragStart,this);
+        this.btnPickIme.node.on(cc.Node.EventType.TOUCH_START,this.onPickImeDragStart,this);
 
         this.initSeedList();
         this.initFarmland();
+        this.pickImmediatley = Farm.pickImmediatly;
     }
 
     private clearScene(){
 
         this.btnToSlot.node.off(ButtonEffect.CLICK_END,this.onGoSlot,this);
         this.btnPick.node.off(cc.Node.EventType.TOUCH_START,this.onDragStart,this);
+        this.btnPickIme.node.off(cc.Node.EventType.TOUCH_START,this.onPickImeDragStart,this);
         this._farmlandNodeDic = {};
     }
 
@@ -173,6 +177,10 @@ export default class FarmScene extends cc.Component {
         this.btnPick.node.on(CDragEvent.DRAG_END,this.onDragEnd,this);
         Drag.startDrag(this.btnPick.node,{});
     }
+    private onPickImeDragStart(e){
+        this.btnPickIme.node.on(CDragEvent.DRAG_END,this.onPickImeDragEnd,this);
+        Drag.startDrag(this.btnPickIme.node,{});
+    }
     private onDragEnd(e){
         this.btnPick.node.off(CDragEvent.DRAG_END,this.onDragEnd,this);
         Farm.pickServer(()=>{
@@ -180,6 +188,21 @@ export default class FarmScene extends cc.Component {
             anim.starTo = UI.main.sprStar.node.parent.convertToWorldSpaceAR(UI.main.sprStar.node.position);
             UI.showWinAnim(anim);
         });
+    }
+    private onPickImeDragEnd(e){
+        this.btnPickIme.node.off(CDragEvent.DRAG_END,this.onPickImeDragEnd,this);
+        this.pickImmediatley = false;
+        Farm.pickImmediatly = false;
+        Farm.pickServer(()=>{
+            var anim:SlotResultAnim = new SlotResultAnim(SlotResultAniEnum.PickTreefly);
+            anim.starTo = UI.main.sprStar.node.parent.convertToWorldSpaceAR(UI.main.sprStar.node.position);
+            UI.showWinAnim(anim);
+        });
+    }
+
+    public set pickImmediatley(bool:boolean){
+        this.btnPick.node.active = !bool;
+        this.btnPickIme.node.active = bool;
     }
 
     private onUpdateTree(e){

@@ -6,7 +6,8 @@ export enum SlotWinEnum{
     Repeat = 2,     //再来一次
     BigWin,          //中大奖了
     Share,          //分享
-    
+    Plant,          //种植
+    Pick,           //采摘
 }
 export default class SlotWin{
     constructor(type:SlotWinEnum){

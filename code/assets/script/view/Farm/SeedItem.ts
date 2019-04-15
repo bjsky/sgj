@@ -9,6 +9,8 @@ import FarmController, { Farm } from "../../game/farm/FarmController";
 import DList from "../../component/DList";
 import { UI } from "../../core/UIManager";
 import { MessagePanelType } from "../MessagePanel";
+import { EVENT } from "../../core/EventController";
+import GameEvent from "../../GameEvent";
 
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
@@ -32,6 +34,7 @@ export default class SeedItem extends DListItem{
     @property(cc.Node) nodeunLock:cc.Node = null;
 
     @property(cc.Button) btnPlant:cc.Button = null;
+    @property(cc.Button) btnPlantFree:cc.Button = null;
     // LIFE-CYCLE CALLBACKS:
 
     // onLoad () {}
@@ -51,11 +54,15 @@ export default class SeedItem extends DListItem{
     }
     onEnable(){
         super.onEnable();
+
+        EVENT.on(GameEvent.Plant_Free_Change,this.onPlantFreeChange,this);
         this.btnPlant.node.on(ButtonEffect.CLICK_END,this.onPlant,this);
+        this.btnPlantFree.node.on(ButtonEffect.CLICK_END,this.onPlantFree,this);
         this.lblSeedName.string = this._seedName;
         this.sprFruit.load(this._icon);
 
         this.updateUnlock();
+        this.showPlantFree(Farm.plantFree);
     }
 
     public updateUnlock(){
@@ -72,8 +79,18 @@ export default class SeedItem extends DListItem{
 
     onDisable(){
         super.onDisable();
-
+        EVENT.off(GameEvent.Plant_Free_Change,this.onPlantFreeChange,this);
         this.btnPlant.node.off(ButtonEffect.CLICK_END,this.onPlant,this);
+        this.btnPlantFree.node.off(ButtonEffect.CLICK_END,this.onPlantFree,this);
+    }
+
+    private onPlantFreeChange(e){
+        this.showPlantFree(Farm.plantFree);
+    }
+
+    private showPlantFree(bool:boolean){
+        this.btnPlant.node.active = !bool;
+        this.btnPlantFree.node.active = bool;
     }
 
 
@@ -89,7 +106,7 @@ export default class SeedItem extends DListItem{
         }
         var index:number = Farm.getIdleFarmlandIndex();
         if(index<0){
-            if(Farm.getGrowedFarmlandCount()>0){
+            if(Farm.getPlantedFarmlandCount()>0){
                 UI.showTip("没有空闲土地，滑动采摘");
             }else{
                 UI.showTip("没有空闲土地，等会再来");
@@ -97,6 +114,22 @@ export default class SeedItem extends DListItem{
             return;
         }else{
             Farm.plantOnce(this._seedId,index);
+        }
+    }
+
+    private onPlantFree(e){
+        var index:number = Farm.getIdleFarmlandIndex();
+        if(index<0){
+            if(Farm.getPlantedFarmlandCount()>0){
+                UI.showTip("没有空闲土地，滑动采摘");
+            }else{
+                UI.showTip("没有空闲土地，等会再来");
+            }
+            return;
+        }else{
+            Farm.plantOnce(this._seedId,index,true);
+            Farm.plantFree = false;
+            EVENT.emit(GameEvent.Plant_Free_Change,{free:false});
         }
     }
     start () {
