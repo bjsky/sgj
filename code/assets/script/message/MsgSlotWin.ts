@@ -12,7 +12,7 @@ export class SCSlotWin{
 
     public static parse(obj:any):SCSlotWin{
         var info:SCSlotWin = new SCSlotWin();
-        info.resInfo = SResInfo.parse(obj.resInfo);
+        info.resInfo = SResInfo.parse(obj);
         return info;
     }
 }
@@ -35,9 +35,7 @@ export default class MsgSlotWin extends MessageBase {
     public respFromLocal(){
         var resInfo:SResInfo = Common.resInfo.cloneServerInfo()
         resInfo.gold+=this.param.addGold;
-        var json:any = {
-            resInfo:resInfo
-        };
+        var json:any = resInfo;
         return this.parse(json);
     }
 

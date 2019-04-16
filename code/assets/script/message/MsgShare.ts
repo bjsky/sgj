@@ -5,7 +5,7 @@ import ResInfo from "../ResInfo";
 import { Common } from "../CommonData";
 
 export class CSShare{
-    public gold:number = 0;
+    public addGold:number = 0;
     public energy:number = 0;
     public energyStartTime:number = 0;
 }
@@ -15,7 +15,7 @@ export class SCShare{
 
     public static parse(obj:any):SCShare{
         var info:SCShare = new SCShare();
-        info.resInfo = SResInfo.parse(obj.resInfo);
+        info.resInfo = SResInfo.parse(obj);
         return info;
     }
 }
@@ -30,10 +30,10 @@ export default class MsgShare extends MessageBase{
         // this.isLocal = true;
     }
 
-    public static create(gold:number,energy:number,energyStartTime:number){
+    public static create(addGold:number,energy:number,energyStartTime:number){
         var msg = new MsgShare();
         msg.param = new CSShare();
-        msg.param.gold = gold;
+        msg.param.addGold = addGold;
         msg.param.energy = energy;
         msg.param.energyStartTime = energyStartTime;
         return msg;
@@ -43,10 +43,8 @@ export default class MsgShare extends MessageBase{
         var resInfo:SResInfo = Common.resInfo.cloneServerInfo();
         resInfo.energy= this.param.energy;
         resInfo.energyStartTime= this.param.energyStartTime;
-        resInfo.gold= this.param.gold;
-        var json:any = {
-            resInfo:resInfo
-        };
+        resInfo.gold= this.param.addGold;
+        var json:any = resInfo;
         return this.parse(json);
     }
 

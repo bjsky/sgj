@@ -177,7 +177,7 @@ window.showVideoAd = function (cb, VideoAd_type) {
 let shareCallbackFunc = function(){
   return {
     title:"点一点，得金币，看谁最快当上水果大王！",
-    imageUrl:"https://www.xh52.top/resShare/share_2.jpg",
+    imageUrl:"https://s.1233k.com/resShare/share_2.jpg",
     query:"",
   }
 }
@@ -228,10 +228,10 @@ let checkUpdate = function() {
 let appOnLaunch = function()
 {
 
-  //测试服务器地址
-  window.login_server_url = "wss://www.xh52.top:8580/websocket";//服务器域名地址
-  // //正式服务器地址
-  // window.login_server_url = "wss://wz.1233k.com:8580/websocket";//服务器域名地址
+  // // //测试服务器地址
+  // window.login_server_url = "wss://www.xh52.top:8580/websocket";//服务器域名地址
+  // 正式服务器地址
+  window.login_server_url = "wss://wz.1233k.com:8580/websocket";//服务器域名地址
 
   var opt = wx.getLaunchOptionsSync();
   

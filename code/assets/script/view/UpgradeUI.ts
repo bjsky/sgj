@@ -57,7 +57,7 @@ export default class UpgradeUI extends PopUpBase{
             }
             var unlocktitle:string ="";
             if(Number(levelCfg.unlcokTitle)==1){
-                unlocktitle = "获得称号：<color = #00ff00><b>"+levelCfg.title+"</b></c>";
+                unlocktitle = "获得职位：<color = #00ff00><b>"+levelCfg.title+"</b></c>";
             }
             if(unlocktitle!=""){
                 unlcokStr = unlcokStr +"<br />"+ unlocktitle;

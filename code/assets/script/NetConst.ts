@@ -22,5 +22,5 @@ export default class NetConst{
     //收集
     public static Pick:number = 22004;
     //分享增加
-    public static Share:number = 10002;
+    public static Share:number = 22005;
 }

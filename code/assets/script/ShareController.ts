@@ -63,9 +63,8 @@ export default class ShareController{
     }
 
     public shareGetGold(addGold:number){
-        var gold:number = Common.resInfo.gold+ addGold;
         Common.resInfo.updateEnergy();
-        NET.send(MsgShare.create(gold,Common.resInfo.energy,Common.resInfo.energyStartTime),(msg:MsgShare)=>{
+        NET.send(MsgShare.create(addGold,Common.resInfo.energy,Common.resInfo.energyStartTime),(msg:MsgShare)=>{
             if(msg && msg.resp){
                 Common.resInfo.updateInfo(msg.resp.resInfo);
                 EVENT.emit(GameEvent.Gold_UI_Update);
@@ -75,7 +74,7 @@ export default class ShareController{
     public shareGetEnergy(addEnergy:number){
         Common.resInfo.energy+= addEnergy;
         Common.resInfo.updateEnergy();
-        NET.send(MsgShare.create(Common.resInfo.gold,Common.resInfo.energy,Common.resInfo.energyStartTime),(msg:MsgShare)=>{
+        NET.send(MsgShare.create(0,Common.resInfo.energy,Common.resInfo.energyStartTime),(msg:MsgShare)=>{
             if(msg && msg.resp){
                 Common.resInfo.updateInfo(msg.resp.resInfo);
                 EVENT.emit(GameEvent.Energy_UI_Update);
