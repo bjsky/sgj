@@ -15,7 +15,6 @@ import { SlotResultAnim, SlotResultAniEnum } from "../view/AnimUi";
 import { ResConst, ConfigConst, SceneCont } from "../GlobalData";
 import { CFG } from "../core/ConfigManager";
 import SlotNode from "../game/SlotNode";
-import { SOUND } from "../component/SoundManager";
 import { ShareType } from "../view/SharePanel";
 
 // Learn TypeScript:

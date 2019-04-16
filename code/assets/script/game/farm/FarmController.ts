@@ -150,7 +150,7 @@ export default class FarmController{
 
     private _prevPickTime:number = 0;
     public canPicImmediatly():boolean{
-        return Common.getServerTime()-this._prevPickTime >15*1000;
+        return Common.getServerTime()-this._prevPickTime >10*1000;
     }
 }
 

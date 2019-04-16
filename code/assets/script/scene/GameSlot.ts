@@ -9,9 +9,9 @@ import { UI } from "../core/UIManager";
 import SlotNode from "../game/SlotNode";
 import GameEvent from "../GameEvent";
 import { EVENT } from "../core/EventController";
-import { SOUND } from "../component/SoundManager";
 import { ShareType } from "../view/SharePanel";
 import { MessagePanelType } from "../view/MessagePanel";
+import { SOUND } from "../core/SoundManager";
 
 export default class GameSlot{
 

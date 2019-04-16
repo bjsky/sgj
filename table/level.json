@@ -48,5 +48,5 @@
     {"id":"47","level":"47","exp":"23500","totalExp":"540500","title":"董事长","unlcokTitle":"1","cost":"560","lifeReturn":"1120","lifeMax":"28000"},
     {"id":"48","level":"48","exp":"24000","totalExp":"564000","title":"董事会主席","unlcokTitle":"1","cost":"570","lifeReturn":"1140","lifeMax":"28500"},
     {"id":"49","level":"49","exp":"24500","totalExp":"588000","title":"果业协会会长","unlcokTitle":"1","cost":"580","lifeReturn":"1160","lifeMax":"29000"},
-    {"id":"50","level":"50","exp":"25000","totalExp":"612500","title":"水果大王","unlcokTitle":"1","cost":"590","lifeReturn":"1180","lifeMax":"29500"}
+    {"id":"50","level":"50","exp":"-1","totalExp":"612500","title":"水果大王","unlcokTitle":"1","cost":"590","lifeReturn":"1180","lifeMax":"29500"}
     ]

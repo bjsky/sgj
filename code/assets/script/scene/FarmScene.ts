@@ -13,7 +13,7 @@ import { Common } from "../CommonData";
 import { SlotResultAnim, SlotResultAniEnum } from "../view/AnimUi";
 import SeedItem from "../view/Farm/SeedItem";
 import { Game } from "../GameController";
-import { SOUND } from "../component/SoundManager";
+import { SOUND } from "../core/SoundManager";
 
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html

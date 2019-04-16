@@ -1,4 +1,5 @@
-import { SOUND } from "./SoundManager";
+import { SOUND } from "../core/SoundManager";
+
 
 // Learn TypeScript:
 //  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/typescript.html

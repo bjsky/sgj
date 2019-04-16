@@ -5,7 +5,7 @@ import { EVENT } from "../core/EventController";
 import GameEvent from "../GameEvent";
 import { Common } from "../CommonData";
 import ResBounceEffect from "../component/ResBounceEffect";
-import { SOUND } from "../component/SoundManager";
+import { SOUND } from "../core/SoundManager";
 
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html

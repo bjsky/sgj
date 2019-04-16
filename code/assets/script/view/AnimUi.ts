@@ -7,7 +7,7 @@ import { EVENT } from "../core/EventController";
 import GameEvent from "../GameEvent";
 import LoadSprite from "../component/LoadSprite";
 import PathUtil from "../utils/PathUtil";
-import { SOUND } from "../component/SoundManager";
+import { SOUND } from "../core/SoundManager";
 
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html

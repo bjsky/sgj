@@ -4,7 +4,7 @@ import { CFG } from "../core/ConfigManager";
 import { ConfigConst } from "../GlobalData";
 import { EVENT } from "../core/EventController";
 import GameEvent from "../GameEvent";
-import { SOUND } from "../component/SoundManager";
+import { SOUND } from "../core/SoundManager";
 
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
