@@ -62,8 +62,6 @@ export class SUserInfo {
     public gender:number = 0;
     //当前经验
     public exp:number = 0;
-    //总经验
-    public totalExp:number = 0;
     //当前等级
     public level:number = 1;
 
@@ -73,7 +71,6 @@ export class SUserInfo {
         info.icon = obj.icon;
         info.gender = obj.gender;
         info.exp = obj.exp;
-        info.totalExp = obj.totalExp;
         info.level = obj.level;
 
         return info;
@@ -149,10 +146,10 @@ export default class MsgLogin
         var firstGold:number = Number(CFG.getCfgByKey(ConfigConst.Constant,"key","firstGold")[0].value)
         var json:any = {firstLogin:true,
             accountId:StringUtil.getUUidClient(),
-            newUser:1,
+            newUser:0,
             serverTime:new Date().getTime(),
             userInfo:{name:"开心农场",icon:"",gender:1,exp:0,totalExp:0,level:1},
-            resInfo:{gold:firstGold,energy:firstenergy,energyStartTime:Common.getServerTime()},
+            resInfo:{gold:firstGold,energy:200,energyStartTime:Common.getServerTime()},
             farmlands:[
                 // {index:0,treeType:1,growthStartTime:0},
                 // {index:1,treeType:1,growthStartTime:0},

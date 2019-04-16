@@ -14,11 +14,13 @@ export default class NetConst{
     public static Login:number = 10001;
 
     //抽奖
-    public static Slot:number = 10002;
+    public static Slot:number = 22001;
     //中奖
-    public static SlotWin:number = 10003;
+    public static SlotWin:number = 22002;
     //种植
-    public static Plant:number = 10004;
+    public static Plant:number = 22003;
     //收集
-    public static Pick:number = 10005;
+    public static Pick:number = 22004;
+    //分享增加
+    public static Share:number = 10002;
 }

@@ -28,6 +28,8 @@ export default class SharePanel extends PopUpBase{
     @property(cc.Label) lblDesc:cc.Label = null;
     @property(cc.RichText) lblCoin:cc.RichText = null;
     @property(cc.Button) btnShare:cc.Button = null;
+    @property(cc.Node) iconCoin:cc.Node = null;
+    @property(cc.Node) iconStar:cc.Node = null;
     
     // onLoad () {}
 
@@ -59,6 +61,8 @@ export default class SharePanel extends PopUpBase{
     }
 
     private initView(){
+        this.iconCoin.active = (this._type == ShareType.shareGetGold);
+        this.iconStar.active = (this._type == ShareType.shareGetEnergy);
         if(this._type == ShareType.shareGetGold){
             this.lblCoin.string = "<color=#f6ff00><b>"+this._addGold+"</c>";
             this.lblDesc.string = "分享好友立即获得\n"+this._muti+"倍奖励！";

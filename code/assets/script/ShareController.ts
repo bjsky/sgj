@@ -1,6 +1,10 @@
 import { Global, ServerType } from "./GlobalData";
 import { Common } from "./CommonData";
 import { Wechat } from "./WeChatInterface";
+import { NET } from "./core/net/NetController";
+import MsgShare from "./message/MsgShare";
+import { EVENT } from "./core/EventController";
+import GameEvent from "./GameEvent";
 
 export default class ShareController{
 
@@ -59,10 +63,24 @@ export default class ShareController{
     }
 
     public shareGetGold(addGold:number){
-
+        var gold:number = Common.resInfo.gold+ addGold;
+        Common.resInfo.updateEnergy();
+        NET.send(MsgShare.create(gold,Common.resInfo.energy,Common.resInfo.energyStartTime),(msg:MsgShare)=>{
+            if(msg && msg.resp){
+                Common.resInfo.updateInfo(msg.resp.resInfo);
+                EVENT.emit(GameEvent.Gold_UI_Update);
+            }
+        },this)
     }
     public shareGetEnergy(addEnergy:number){
-        
+        Common.resInfo.energy+= addEnergy;
+        Common.resInfo.updateEnergy();
+        NET.send(MsgShare.create(Common.resInfo.gold,Common.resInfo.energy,Common.resInfo.energyStartTime),(msg:MsgShare)=>{
+            if(msg && msg.resp){
+                Common.resInfo.updateInfo(msg.resp.resInfo);
+                EVENT.emit(GameEvent.Energy_UI_Update);
+            }
+        },this)
     }
 }
 

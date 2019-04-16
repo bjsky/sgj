@@ -73,13 +73,6 @@ export default class GameScene extends cc.Component {
         
     }
 
-    private moveInAction(cb){
-        this.sceneNode.x = this.sprTrans.width;
-        this.sceneNode.runAction(cc.sequence(
-            cc.moveBy(0.15,cc.v2(-this.sprTrans.width,0)).easing(cc.easeOut(1.5))
-            ,cc.callFunc(cb))    
-        );
-    }
 
     onEnable(){
         EVENT.on(GameEvent.Play_Slot,this.onPlaySlot,this);
@@ -89,6 +82,7 @@ export default class GameScene extends cc.Component {
         EVENT.on(GameEvent.BigWin_updateTurn,this.onBigwinTurn,this);
         EVENT.on(GameEvent.BigWin_End,this.onBigwinEnd,this);
         EVENT.on(GameEvent.Scene_To_Farm,this.onGoFarm,this);
+        EVENT.on(GameEvent.Energy_UI_Update,this.onEnergyUIUpdate,this);
         this.initScene();
     }
 
@@ -101,6 +95,7 @@ export default class GameScene extends cc.Component {
         EVENT.off(GameEvent.BigWin_updateTurn,this.onBigwinTurn,this);
         EVENT.off(GameEvent.BigWin_End,this.onBigwinEnd,this);
         EVENT.off(GameEvent.Scene_To_Farm,this.onGoFarm,this);
+        EVENT.off(GameEvent.Energy_UI_Update,this.onEnergyUIUpdate,this);
     }
 
     private _gameSlot:GameSlot;
@@ -114,21 +109,12 @@ export default class GameScene extends cc.Component {
         this.btnOn.node.on(ButtonEffect.CLICK_END,this.onSlot,this);
         this.btnToFarm.node.on(ButtonEffect.CLICK_END,this.onGoFarm,this);
         this.schedule(this.lifeReturnFly,this._addLifeFlyInterval,cc.macro.REPEAT_FOREVER);
-        this.updateEnergy();
-        this.lblTotalLife.string = Common.resInfo.energy.toString();
+        this.onEnergyUIUpdate(null);
         this.updateCostView();
     }
-    public updateEnergy(){
-        var minues = (Common.getServerTime()- Common.resInfo.energyStartTime)/(60*1000);
-        var levelCfg:any = CFG.getCfgDataById(ConfigConst.Level,Common.userInfo.level);
-        var curEnerty:number = Common.resInfo.energy + minues*Number(levelCfg.lifeReturn);
-        if(curEnerty>Number(levelCfg.lifeMax)){
-            curEnerty = Number(levelCfg.lifeMax);
-        }else{
-            curEnerty = Number(curEnerty.toFixed(0));
-        }
-        Common.resInfo.energy = curEnerty;
-        Common.resInfo.energyStartTime = Common.getServerTime();
+    private onEnergyUIUpdate(e){
+        Common.resInfo.updateEnergy();
+        this.lblTotalLife.string = Common.resInfo.energy.toString();
     }
 
     private clearScene(){
@@ -144,12 +130,22 @@ export default class GameScene extends cc.Component {
         //去果园
         cc.director.preloadScene(SceneCont.FarmScene,()=>{
             this.sceneNode.runAction(
-                cc.sequence(cc.moveBy(0.15,cc.v2(this.sprTrans.width,0)).easing(cc.easeIn(1.5)),
-                cc.callFunc(()=>{
-                    cc.director.loadScene(SceneCont.FarmScene);
-                }))
+                cc.sequence(
+                    cc.moveBy(0.2,cc.v2(this.sprTrans.width,0)),//.easing(cc.easeOut(1.5)),
+                    cc.callFunc(()=>{
+                        cc.director.loadScene(SceneCont.FarmScene);
+                    })
+                )
             )
         });
+    }
+
+    private moveInAction(cb){
+        this.sceneNode.x = this.sprTrans.width;
+        this.sceneNode.runAction(cc.sequence(
+            cc.moveBy(0.2,cc.v2(-this.sprTrans.width,0))//.easing(cc.easeIn(1.5))
+            ,cc.callFunc(cb))    
+        );
     }
 
     private onShowExpfly(e){
@@ -226,11 +222,7 @@ export default class GameScene extends cc.Component {
     // update (dt) {}
 
     private lifeReturnFly(){
-        // if(Common.resInfo.energy<this._curLifeReturnMax){
-            // var addLifeFly:number = Number((this._curLifeReturn*this._addLifeFlyInterval/60).toFixed(0));
-            this.updateEnergy();
-            this.lblTotalLife.string = Common.resInfo.energy.toString();
-        // }
+        this.onEnergyUIUpdate(null);
     }
 
     private _bigwinTiems:number = 0;

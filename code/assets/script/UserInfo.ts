@@ -43,11 +43,11 @@ export default class UserInfo {
         this.gender = data.gender;
         this.exp = data.exp;
         this.level = data.level;
-        this.totalExp = data.totalExp;
         
         var levelCfg = CFG.getCfgDataById(ConfigConst.Level,this.level);
         this.levelExp = levelCfg.exp;
         this.title = levelCfg.title;
+        this.totalExp = Number(levelCfg.totalExp)+this.exp;
     }
     public updateInfo(data:SUserInfo){
         this.initFromServer(data);
@@ -58,7 +58,6 @@ export default class UserInfo {
         clone.icon = this.icon;
         clone.gender = this.gender;
         clone.exp = this.exp;
-        clone.totalExp = this.totalExp;
         clone.level = this.level;
         return clone;
     }
@@ -78,7 +77,6 @@ export default class UserInfo {
         var clone:SUserInfo = this.cloneServerInfo();
         clone.exp = curExp;
         clone.level = curLevel;
-        clone.totalExp += exp;
         return clone;
     }
 }

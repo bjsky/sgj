@@ -41,4 +41,8 @@ export default class GameEvent {
     public static Scene_To_Farm:string ="Scene_To_Farm";
     //免费种植改变
     public static Plant_Free_Change:string="Plant_Free_Change";
+    //金币更新
+    public static Gold_UI_Update:string = 'Gold_UI_Update';
+    //能量立即更新显示
+    public static Energy_UI_Update:string ="Energy_UI_Update";
 }

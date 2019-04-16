@@ -1,4 +1,7 @@
 import { SResInfo } from "./message/MsgLogin";
+import { Common } from "./CommonData";
+import { ConfigConst } from "./GlobalData";
+import { CFG } from "./core/ConfigManager";
 
 export default class ResInfo {
     //精力
@@ -24,5 +27,18 @@ export default class ResInfo {
         sInfo.energyStartTime = this.energyStartTime;
         sInfo.gold = this.gold;
         return sInfo;
+    }
+
+    public updateEnergy(){
+        var minues = (Common.getServerTime()- Common.resInfo.energyStartTime)/(60*1000);
+        var levelCfg:any = CFG.getCfgDataById(ConfigConst.Level,Common.userInfo.level);
+        var curEnerty:number = Common.resInfo.energy + minues*Number(levelCfg.lifeReturn);
+        if(curEnerty>Number(levelCfg.lifeMax)){
+            curEnerty = Number(levelCfg.lifeMax);
+        }else{
+            curEnerty = Number(curEnerty.toFixed(0));
+        }
+        this.energy = curEnerty;
+        this.energyStartTime = Common.getServerTime();
     }
 }

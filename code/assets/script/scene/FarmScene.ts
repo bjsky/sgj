@@ -110,7 +110,7 @@ export default class FarmScene extends cc.Component {
         //去转盘
         cc.director.preloadScene(SceneCont.SlotScene,()=>{
             this.sceneNode.runAction(
-                cc.sequence(cc.moveBy(0.15,cc.v2(-this.sprTrans.width,0)).easing(cc.easeIn(1.5)),
+                cc.sequence(cc.moveBy(0.2,cc.v2(-this.sprTrans.width,0)),//.easing(cc.easeOut(1.5)),
                 cc.callFunc(()=>{
                     cc.director.loadScene(SceneCont.SlotScene);
                 }))
@@ -121,7 +121,7 @@ export default class FarmScene extends cc.Component {
     private moveInAction(cb:Function){
         this.sceneNode.x = -this.sprTrans.width;
         this.sceneNode.runAction(
-            cc.sequence(cc.moveBy(0.15,cc.v2(this.sprTrans.width,0)).easing(cc.easeOut(1.5)),
+            cc.sequence(cc.moveBy(0.2,cc.v2(this.sprTrans.width,0)),//.easing(cc.easeIn(1.5)),
             cc.callFunc(cb))
         );
     }

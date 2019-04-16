@@ -13,7 +13,7 @@ export class SCSlot{
 
     public static parse(obj:any):SCSlot{
         var info:SCSlot = new SCSlot();
-        info.userInfo = SUserInfo.parse(obj.userInfo);
+        info.userInfo = SUserInfo.parse(obj);
         return info;
     }
 }
@@ -38,9 +38,7 @@ export default class MsgSlot extends MessageBase {
 
     public respFromLocal(){
         var userInfo:SUserInfo = Common.userInfo.cloneAddExpServerInfo(this.param.addExp);
-        var json:any = {
-            userInfo:userInfo
-        };
+        var json:any = userInfo;
         return this.parse(json);
     }
 
