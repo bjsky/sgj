@@ -37,9 +37,11 @@ export default class FarmScene extends cc.Component {
     @property(cc.Button) btnPickIme: cc.Button = null;
     @property(cc.Node) pickNode:cc.Node = null;
 
+    @property(cc.Node) guideNode:cc.Node = null;
+
 
     @property(cc.Node) sceneNode: cc.Node = null;
-    @property(cc.Node) sprTrans: cc.Node = null;
+    // @property(cc.Node) sprTrans: cc.Node = null;
 
     @property(DList) seedList: DList = null;
     @property([cc.Node]) farmlandNodes: cc.Node[] = [];
@@ -53,6 +55,7 @@ export default class FarmScene extends cc.Component {
         return this._farmlandNodeDic[indx];
     }
     start () {
+        this.guideNode.active = false;
         if(Game.loadingComplete){
             this.initScene();
             this.moveInAction(()=>{
@@ -85,6 +88,16 @@ export default class FarmScene extends cc.Component {
     private onLoadingComplete(e){
         this.initScene();
         SOUND.playFarmBgSound();
+        console.log(Common.newUser)
+        if(Common.newUser ==1){ //新用户
+            this.scheduleOnce(()=>{
+                this.guideNode.active = true;
+            },0.6)
+        }
+    }
+
+    private hideGuide(){
+        this.guideNode.active = false;
     }
     private initScene(){
 
@@ -103,6 +116,7 @@ export default class FarmScene extends cc.Component {
         this.btnPick.node.off(cc.Node.EventType.TOUCH_START,this.onDragStart,this);
         this.btnPickIme.node.off(cc.Node.EventType.TOUCH_START,this.onPickImeDragStart,this);
         this._farmlandNodeDic = {};
+        this.hideGuide();
     }
 
     private onGoSlot(e){
@@ -110,7 +124,8 @@ export default class FarmScene extends cc.Component {
         //去转盘
         cc.director.preloadScene(SceneCont.SlotScene,()=>{
             this.sceneNode.runAction(
-                cc.sequence(cc.moveBy(0.2,cc.v2(-this.sprTrans.width,0)),//.easing(cc.easeOut(1.5)),
+                cc.sequence(
+                    cc.fadeOut(0.1),// cc.moveBy(0.2,cc.v2(-this.sprTrans.width,0)),//.easing(cc.easeOut(1.5)),
                 cc.callFunc(()=>{
                     cc.director.loadScene(SceneCont.SlotScene);
                 }))
@@ -119,9 +134,11 @@ export default class FarmScene extends cc.Component {
     }
 
     private moveInAction(cb:Function){
-        this.sceneNode.x = -this.sprTrans.width;
+        // this.sceneNode.x = -this.sprTrans.width;
         this.sceneNode.runAction(
-            cc.sequence(cc.moveBy(0.2,cc.v2(this.sprTrans.width,0)),//.easing(cc.easeIn(1.5)),
+            cc.sequence(
+                cc.fadeIn(0.1),
+                // cc.moveBy(0.2,cc.v2(this.sprTrans.width,0)),//.easing(cc.easeIn(1.5)),
             cc.callFunc(cb))
         );
     }
@@ -162,6 +179,7 @@ export default class FarmScene extends cc.Component {
     }
 
     private onPlantTree(e){
+        this.hideGuide();
         var treeid:number = e.seedId;
         var index:number = e.index;
         var farmlandNode:cc.Node = this.farmlandNodes[index];

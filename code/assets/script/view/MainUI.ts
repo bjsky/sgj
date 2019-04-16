@@ -22,6 +22,9 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class MainUI extends UIBase {
 
+    @property(cc.Label) lblLevelEx: cc.Label = null;
+    @property(cc.Label) lblLevel: cc.Label = null;
+    @property(cc.Label) lblGold: cc.Label = null;
     @property(cc.Label) lblTitle: cc.Label = null;
     @property(cc.Label) lblName: cc.Label = null;
     @property(cc.Label) lblScore: cc.Label = null;
@@ -69,6 +72,9 @@ export default class MainUI extends UIBase {
     }
 
     private hideAll(){
+        this.lblLevelEx.string ="";
+        this.lblLevel.string ="";
+        this.lblGold.string = "";
         this.lblName.string ="";
         this.lblScore.string ="";
         this.proExp.progress =0;
@@ -76,7 +82,7 @@ export default class MainUI extends UIBase {
     }
 
     private initView(e){
-
+        this.lblLevelEx.string ="Lv.";
         this.explevelEffect.initProgress(Common.userInfo.exp,Common.userInfo.levelExp,Common.userInfo.level);
         this.lblName.string = Common.userInfo.name;
         this.lblTitle.string = Common.userInfo.title;

@@ -1,6 +1,9 @@
 import { EVENT } from "./core/EventController";
 import GameEvent from "./GameEvent";
 import { ServerType, Global } from "./GlobalData";
+import { Share } from "./ShareController";
+import { NET } from "./core/net/NetController";
+import { Game } from "./GameController";
 
 export default class WeChatInterface{
     private static _instance: WeChatInterface = null;
@@ -17,9 +20,12 @@ export default class WeChatInterface{
             {
                 EVENT.emit(GameEvent.Weixin_onShow);
                 try {
-                    // if(Share.isShareOnHide){    //分享中
-                    //     Share.shareOnShow();
-                    // }
+                    if(Share.isShareOnHide){    //分享中
+                        Share.shareOnShow();
+                    }
+                    if(!NET.isNetUseable){
+                        Game.reLogin();
+                    }
                 }catch (error) {
                     console.log(error)
                 }

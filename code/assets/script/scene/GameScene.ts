@@ -56,7 +56,7 @@ export default class GameScene extends cc.Component {
     @property(cc.Button) btnToFarm: cc.Button = null;
 
     @property(cc.Node) sceneNode: cc.Node = null;
-    @property(cc.Node) sprTrans: cc.Node = null;
+    // @property(cc.Node) sprTrans: cc.Node = null;
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
@@ -131,7 +131,7 @@ export default class GameScene extends cc.Component {
         cc.director.preloadScene(SceneCont.FarmScene,()=>{
             this.sceneNode.runAction(
                 cc.sequence(
-                    cc.moveBy(0.2,cc.v2(this.sprTrans.width,0)),//.easing(cc.easeOut(1.5)),
+                    cc.fadeOut(0.1),// cc.moveBy(0.2,cc.v2(this.sprTrans.width,0)),//.easing(cc.easeOut(1.5)),
                     cc.callFunc(()=>{
                         cc.director.loadScene(SceneCont.FarmScene);
                     })
@@ -141,9 +141,9 @@ export default class GameScene extends cc.Component {
     }
 
     private moveInAction(cb){
-        this.sceneNode.x = this.sprTrans.width;
+        // this.sceneNode.x = this.sprTrans.width;
         this.sceneNode.runAction(cc.sequence(
-            cc.moveBy(0.2,cc.v2(-this.sprTrans.width,0))//.easing(cc.easeIn(1.5))
+            cc.fadeIn(0.1)// cc.moveBy(0.2,cc.v2(-this.sprTrans.width,0))//.easing(cc.easeIn(1.5))
             ,cc.callFunc(cb))    
         );
     }

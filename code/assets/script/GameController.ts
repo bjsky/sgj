@@ -31,6 +31,22 @@ export default class GameController {
         EVENT.emit(GameEvent.Loading_complete);
     }
 
+    private _isReLogin:boolean =false;
+    public get isReLogin(){
+        return this._isReLogin;
+    }
+    //断线重来
+    public reLogin(){
+        if(this._isReLogin){
+            return;
+        }
+        this._isReLogin = true;
+        Loading.startReConnect(this.onReconnectComplete.bind(this));
+    }
+
+    private onReconnectComplete(){
+        this._isReLogin = false;
+    }
 }
 
 

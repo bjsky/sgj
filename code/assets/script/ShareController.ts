@@ -28,7 +28,7 @@ export default class ShareController{
         this._shareFailCb =fail;
         if(Global.serverType == ServerType.Publish){
             var title:string ="点一点，摇金币，水果大王就是你";
-            var imgUrl:string ="https://www.xh52.top/resShare/share_1.jpg";
+            var imgUrl:string ="https://s.1233k.com/resShare/share_2.jpg";
             var query:string ="";
             
             this._shareOnHideTime = Common.getServerTime();

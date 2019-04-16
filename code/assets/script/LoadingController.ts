@@ -5,6 +5,7 @@ import { NET } from "./core/net/NetController";
 import MsgLogin from "./message/MsgLogin";
 import { Common } from "./CommonData";
 import { Wechat } from "./WeChatInterface";
+import { Game } from "./GameController";
 
 export default class LoadingController {
     private static _instance: LoadingController = null;
@@ -22,6 +23,12 @@ export default class LoadingController {
         this._onComplteCb = onCompleteCb;
 
         new ConfigLoading().start(this._onComplteCb);
+    }
+
+    private _reConnectComplete:Function = null;
+    public startReConnect(complete:Function){
+        this._reConnectComplete = complete;
+        new GameConnect().start(this._reConnectComplete);
     }
 }
 
@@ -44,6 +51,20 @@ export class ConfigLoading{
         });
 
         console.log("Config loaded!");
+        new GameConnect().start(this._completeCb);
+    }
+    private loadConfigProgress(pro:number){
+
+    }
+    private loadConfigFailed(msg:string){
+        console.log("config load failed!",msg);
+    }
+}
+
+export class GameConnect{
+    private _completeCb:Function = null;
+    public start(completeCb:Function){
+        this._completeCb = completeCb;
         switch(Global.serverType){
             case ServerType.Client:{
                 new ServerLogin().start(this._completeCb);
@@ -57,12 +78,6 @@ export class ConfigLoading{
             }
             break;
         }
-    }
-    private loadConfigProgress(pro:number){
-
-    }
-    private loadConfigFailed(msg:string){
-        console.log("config load failed!",msg);
     }
 }
 
@@ -85,10 +100,17 @@ export class ServerConnect{
     private _completeCb:Function = null;
     public start(completeCb:Function){
         this._completeCb = completeCb;
-        NET.connect(Global.serverUrl,(resp)=>{
-            console.log("LoadingStepServerConn:Connected")
-            new ServerLogin().start(this._completeCb);
-        },this)
+        if(Game.isReLogin){
+            NET.reConnect(()=>{
+                new ServerLogin().start(this._completeCb);
+            })
+        }else{
+            NET.connect(Global.serverUrl,(resp)=>{
+                console.log("LoadingStepServerConn:Connected")
+                new ServerLogin().start(this._completeCb);
+            },this)
+
+        }
     }
 }
 

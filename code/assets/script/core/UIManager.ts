@@ -6,6 +6,7 @@ import { Global, ResConst } from "../GlobalData";
 import { AlertBtnType } from "../view/AlertPanel";
 import AnimUi, { SlotResultAnim } from "../view/AnimUi";
 import MainUI from "../view/MainUI";
+import Connect from "../scene/Connect";
 
 /**
  * 管理各种界面单例,层级
@@ -205,15 +206,19 @@ export default class UIManager{
     ///////////////////////
 
     // 转圈提示
-    public addLoadingLayer(worldPoint:cc.Vec2 = null)
+    public addLoadingLayer()
     {
-        // this._panelHolder.addLoadingLayer(worldPoint);
+        let connectingLayer = this.TipLayer.getChildByName("connectingLayer");
+        var connect:Connect = connectingLayer.getComponent("Connect");
+        connect.showConnect(true);
     }
 
         // 转圈提示隐藏
     public removeLoadingLayer()
     {
-        // this._panelHolder.removeLoadingLayer();
+        let connectingLayer = this.TipLayer.getChildByName("connectingLayer");
+        var connect:Connect = connectingLayer.getComponent("Connect");
+        connect.showConnect(false);
     }
 
     /**
