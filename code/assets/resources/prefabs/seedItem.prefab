@@ -552,8 +552,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 120,
-      "height": 24
+      "width": 132,
+      "height": 30
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -563,7 +563,7 @@
     "_position": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": -68,
+      "y": -70,
       "z": 0
     },
     "_scale": {
@@ -600,8 +600,8 @@
     "_useOriginalSize": false,
     "_string": "水果大王解锁",
     "_N$string": "水果大王解锁",
-    "_fontSize": 20,
-    "_lineHeight": 24,
+    "_fontSize": 22,
+    "_lineHeight": 30,
     "_enableWrapText": true,
     "_N$file": null,
     "_isSystemFontUsed": true,

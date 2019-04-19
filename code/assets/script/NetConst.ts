@@ -25,6 +25,6 @@ export default class NetConst{
     public static Share:number = 22005;
 
     //更新地块解锁
-    public static UpdateUnlock:number = 100002;
+    public static UpdateUnlock:number = 22006;
 
 }

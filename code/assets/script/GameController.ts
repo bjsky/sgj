@@ -3,6 +3,7 @@ import { Global } from "./GlobalData";
 import { UI } from "./core/UIManager";
 import { EVENT } from "./core/EventController";
 import GameEvent from "./GameEvent";
+import { Wechat } from "./WeChatInterface";
 
 export default class GameController {
     private static _instance: GameController = null;
@@ -19,7 +20,8 @@ export default class GameController {
         UI.registerLayer(root);
         Global.initGame();
         Loading.startLoading(this.onLoadingComplete.bind(this));
-
+        //广告位
+        Wechat.showBannerAd("adunit-de632cdf5e658b47");
     }
     
     private _loadingComplete:boolean = false;

@@ -72,8 +72,8 @@ export default class SeedItem extends DListItem{
             this.lblSeedCost.string = this._cost.toString();
         }else{
             this.nodeLock.active = true;
-            var title:string = CFG.getCfgDataById(ConfigConst.Level,this._unlockLv).title;
-            this.lblLockLv.string =title +"\n解锁";
+            // var title:string = CFG.getCfgDataById(ConfigConst.Level,this._unlockLv).title;
+            this.lblLockLv.string ="Lv."+this._unlockLv+" 解锁";
         }
     }
 

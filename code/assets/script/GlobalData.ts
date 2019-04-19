@@ -40,11 +40,11 @@ export default class GlobalData{
         return GlobalData._instance;
     }
 
-    public serverType:number = ServerType.Client;
+    public serverType:number = ServerType.Publish;
     public version:string = "1.0.10";
     
-    public testAccount:string ="test004"//"test027";
-    public serverUrl:string = "wss://www.xh52.top:8580/websocket";
+    public testAccount:string ="test011"//"test027";
+    public serverUrl:string =  "wss://wz.1233k.com:8580/websocket"//"wss://www.xh52.top:8580/websocket";
 
     public isIPhoneX:boolean =false;
     public statusBarHeight:number = 0;
