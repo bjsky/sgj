@@ -3,12 +3,20 @@ import MsgPlant from "../../message/MsgPlant";
 import { Common } from "../../CommonData";
 import { EVENT } from "../../core/EventController";
 import GameEvent from "../../GameEvent";
-import { SFarmlandInfo } from "../../message/MsgLogin";
+import { SFarmlandInfo, SUnlockFarmland } from "../../message/MsgLogin";
 import FarmlandInfo from "../../FarmlandInfo";
 import MsgPick from "../../message/MsgPick";
 import { CFG } from "../../core/ConfigManager";
 import { ConfigConst } from "../../GlobalData";
+import MsgUpdateUnlock from "../../message/MsgUpdateUnlock";
 
+export class UnlockFarmlandInfo extends FarmlandInfo{
+    //下一个解锁
+    public nextUnlock:boolean = false;
+    public treeName:string ="";
+    public treeCount:number = 0;
+    public treeTotalCount:number = 0;
+}
 export default class FarmController{
 
     private static _instance: FarmController = null;
@@ -20,6 +28,7 @@ export default class FarmController{
         return FarmController._instance;
     }
     public _farmlandCount:number = 9;
+
 
     private _farmlandsDic:any = {};
     public initFromServer(farmlands:SFarmlandInfo[]){
@@ -33,7 +42,8 @@ export default class FarmController{
 
     public getIdleFarmlandIndex():number{
         for(var i:number = 0;i<this._farmlandCount;i++){
-            if(this._farmlandsDic[i]==undefined){
+            if(this._farmlandsDic[i]==undefined &&
+                this.getUnlockFarmlandInfo(i)== null){
                 return i;
             }
         }
@@ -98,6 +108,7 @@ export default class FarmController{
                 EVENT.emit(GameEvent.Plant_Tree,{index:index,seedId:seedId});
             }
         },this)
+        this.updateUnlockFarmland(seedId);
     }
 
     private updateFarmland(index:number,farmland:FarmlandInfo){
@@ -151,6 +162,80 @@ export default class FarmController{
     private _prevPickTime:number = 0;
     public canPicImmediatly():boolean{
         return Common.getServerTime()-this._prevPickTime >10*1000;
+    }
+    ////////////////////////////
+    //  unlock
+    //////////////////////
+
+    private _unlockDic:any = null;
+    private _unlockFarmland:SUnlockFarmland = null;
+    public initUnlock(unlockFarmland:SUnlockFarmland){
+        this._unlockFarmland =unlockFarmland;
+        if(this._unlockFarmland == null){
+            this._unlockFarmland = new SUnlockFarmland();
+            this._unlockFarmland.index = 1;
+            this._unlockFarmland.treeCount = 0;
+        }
+        if(this._unlockDic == null){        //cfg init
+            var cfgs:any = CFG.getCfgByKey(ConfigConst.Constant,"key","farmlandlock")
+            var unlockcfgArr:Array<string> = cfgs[0].value.split("|");
+            this._unlockDic ={};
+            for(var i:number =0 ;i<unlockcfgArr.length;i++){
+                var unlockTreeId:number = Number(unlockcfgArr[i].split(";")[0]);
+                var unlockTreeCount:number = Number(unlockcfgArr[i].split(";")[1]);
+                this._unlockDic[i] = {id:unlockTreeId,count:unlockTreeCount}
+            }
+        }
+    }
+    private updateUnlock(unlockFarmland:SUnlockFarmland){
+        var preIndex = this._unlockFarmland.index;
+        this._unlockFarmland = unlockFarmland;
+        var removeIndex = (unlockFarmland.index == preIndex)?-1:preIndex;
+        EVENT.emit(GameEvent.Update_Unlock_Farmland,{removeIndex:removeIndex,updateIndex:this._unlockFarmland.index});
+    }
+
+    //客户端更新解锁
+    public updateUnlockFarmland(seeId:number){
+
+        var curUnlockCfg = this._unlockDic[this._unlockFarmland.index];
+        var unlockSeedId:number = Number(curUnlockCfg.id);
+        if(seeId== unlockSeedId){
+            var index  = this._unlockFarmland.index;
+            var treeCount = this._unlockFarmland.treeCount;
+            treeCount+=1;
+            if(treeCount>=curUnlockCfg.count){
+                index +=1;
+                treeCount = 0;
+            }
+            NET.send(MsgUpdateUnlock.create(index,treeCount),(msg:MsgUpdateUnlock)=>{
+                if(msg && msg.resp){
+                    this.updateUnlock(msg.resp.unlockFarmland);
+                }
+            },this)
+        }
+    }
+
+    public getCurrentUnlockSeedId(){
+        var curUnlockCfg = this._unlockDic[this._unlockFarmland.index];
+        return Number(curUnlockCfg.id)
+    }
+
+
+    public getUnlockFarmlandInfo(index:number):UnlockFarmlandInfo{
+        var unlock:UnlockFarmlandInfo = null;
+        var unlockCfg = this._unlockDic[index];
+        if(unlockCfg.count>0 && index>=this._unlockFarmland.index){ //需要解锁未解锁
+            unlock = new UnlockFarmlandInfo();
+            unlock.index = index;
+            unlock.treeName = CFG.getCfgDataById(ConfigConst.Plant,unlockCfg.id).name;
+            unlock.treeTotalCount = unlockCfg.count;
+            unlock.treeCount = this._unlockFarmland.treeCount;
+            if(index == this._unlockFarmland.index){
+                unlock.nextUnlock = true;
+            } //当前解锁
+        }
+
+        return unlock;
     }
 }
 

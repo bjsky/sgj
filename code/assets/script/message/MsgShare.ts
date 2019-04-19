@@ -43,7 +43,7 @@ export default class MsgShare extends MessageBase{
         var resInfo:SResInfo = Common.resInfo.cloneServerInfo();
         resInfo.energy= this.param.energy;
         resInfo.energyStartTime= this.param.energyStartTime;
-        resInfo.gold= this.param.addGold;
+        resInfo.gold+= this.param.addGold;
         var json:any = resInfo;
         return this.parse(json);
     }

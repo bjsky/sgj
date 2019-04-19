@@ -23,4 +23,8 @@ export default class NetConst{
     public static Pick:number = 22004;
     //分享增加
     public static Share:number = 22005;
+
+    //更新地块解锁
+    public static UpdateUnlock:number = 100002;
+
 }

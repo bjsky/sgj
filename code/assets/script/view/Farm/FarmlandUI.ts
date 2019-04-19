@@ -3,7 +3,7 @@ import UIBase from "../../component/UIBase";
 import { CFG } from "../../core/ConfigManager";
 import { ConfigConst } from "../../GlobalData";
 import { Drag, CDragEvent } from "../../core/DragManager";
-import { Farm } from "../../game/farm/FarmController";
+import { Farm, UnlockFarmlandInfo } from "../../game/farm/FarmController";
 import { UI } from "../../core/UIManager";
 import { Common } from "../../CommonData";
 import StringUtil from "../../utils/StringUtil";
@@ -23,7 +23,8 @@ import PathUtil from "../../utils/PathUtil";
 const {ccclass, property} = cc._decorator;
 
 export enum FarmlandState{
-    Planting =1,
+    Lock = 1,
+    Planting =2,
     Planed
 }
 @ccclass
@@ -33,6 +34,10 @@ export default class FarmlandUI extends UIBase {
     @property(cc.Node) nodeProgress: cc.Node = null;
     @property(cc.ProgressBar) plantProgress: cc.ProgressBar = null;
     @property(cc.Label) lblProgress: cc.Label = null;
+    @property(cc.Node) nodeLock: cc.Node = null;
+    @property(cc.Node) nodeOpen: cc.Node = null;
+    @property(cc.Label) lockCondi: cc.Label = null;
+    @property(cc.Node) nodeSuo: cc.Node = null;
     
 
     private _farmland:FarmlandInfo = null;
@@ -50,12 +55,17 @@ export default class FarmlandUI extends UIBase {
     public setData(data:any){
         super.setData(data);
         this._farmland = data.farmland;
-        this._growthStartTime = this._farmland.growthStartTime;
-        // this._pickTimes = this._farmland.pickTimes;
-        var cfg:any = CFG.getCfgDataById(ConfigConst.Plant,this._farmland.treeType);
-        this._growthTotalTime = Number(cfg.growthTime);
-        this._addExp = Number(cfg.addExpPer);
-        this._treeIcon = cfg.icon;
+        if(this._farmland instanceof UnlockFarmlandInfo){
+            this._state = FarmlandState.Lock;
+        }else{
+            this._growthStartTime = this._farmland.growthStartTime;
+            // this._pickTimes = this._farmland.pickTimes;
+            var cfg:any = CFG.getCfgDataById(ConfigConst.Plant,this._farmland.treeType);
+            this._growthTotalTime = Number(cfg.growthTime);
+            this._addExp = Number(cfg.addExpPer);
+            this._treeIcon = cfg.icon;
+            this._state = this.growthTime>=this._growthTotalTime?FarmlandState.Planed:FarmlandState.Planting;
+        }
     }
     // LIFE-CYCLE CALLBACKS:
 
@@ -64,18 +74,34 @@ export default class FarmlandUI extends UIBase {
     onEnable(){
         Drag.addDragMove(this.node);
         this.node.on(CDragEvent.DRAG_MOVE,this.onDragMove,this);
-        this._state = this.growthTime>=this._growthTotalTime?FarmlandState.Planed:FarmlandState.Planting;
         this.onStateChange();
         // this.pickCount.string = this._pickTimes.toString();
         // this.nodePick.active = this._pickTimes>0;
     }
     private onStateChange(){
-        if(this._state == FarmlandState.Planed){
-            this.nodeProgress.active = false;
-            this.sprTree.load(this._treeIcon)
-        }else if(this._state == FarmlandState.Planting){
-            this.nodeProgress.active = true;
-            this.sprTree.load(this._treeIcon+'_g')
+        this.nodeLock.active = false;
+        this.nodeOpen.active = false;
+        if(this._state == FarmlandState.Lock){
+            this.nodeLock.active = true;
+            var unlock:UnlockFarmlandInfo = this._farmland as UnlockFarmlandInfo;
+            if(unlock.nextUnlock){
+                this.lockCondi.node.active = true;
+                this.nodeSuo.setPosition(cc.v2(0,25));
+                var str = "种植"+unlock.treeName+"解锁\n  "+unlock.treeCount+"/"+unlock.treeTotalCount;
+                this.lockCondi.string = str;
+            }else{
+                this.lockCondi.node.active = false;
+                this.nodeSuo.setPosition(cc.v2(0,0));
+            }
+        }else{
+            this.nodeOpen.active = true;
+            if(this._state == FarmlandState.Planed){
+                this.nodeProgress.active = false;
+                this.sprTree.load(this._treeIcon)
+            }else if(this._state == FarmlandState.Planting){
+                this.nodeProgress.active = true;
+                this.sprTree.load(this._treeIcon+'_g')
+            }
         }
     }
 
@@ -93,6 +119,14 @@ export default class FarmlandUI extends UIBase {
         this.onStateChange();
         // this.pickCount.string = this._pickTimes.toString();
         // this.nodePick.active = this._pickTimes>0;
+    }
+
+    public onUpdateLock(){
+        var farmland = Farm.getUnlockFarmlandInfo(this.index);
+        this._farmland = farmland;
+        // this._pickTimes = this._farmland.pickTimes;
+        this._state = FarmlandState.Lock;
+        this.onStateChange();
     }
 
     public onRemoveView(cb:Function){

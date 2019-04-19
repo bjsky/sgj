@@ -45,4 +45,6 @@ export default class GameEvent {
     public static Gold_UI_Update:string = 'Gold_UI_Update';
     //能量立即更新显示
     public static Energy_UI_Update:string ="Energy_UI_Update";
+    //更新解锁
+    public static Update_Unlock_Farmland:string ="Update_Unlock_Farmland";
 }

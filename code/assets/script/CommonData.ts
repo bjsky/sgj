@@ -48,6 +48,7 @@ export default class CommonData {
         this.userInfo.initFromServer(data.userInfo);
         this.resInfo.initFormServer(data.resInfo);
         Farm.initFromServer(data.farmlands);
+        Farm.initUnlock(data.unlockFarmland);
     }
 
     public getCostArr():Array<number>{

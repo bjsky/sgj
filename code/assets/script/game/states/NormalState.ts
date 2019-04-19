@@ -64,9 +64,11 @@ export default class NormalState extends SlotState{
                     result = this.getWinResult(SlotFruit.xigua,startIn.cost);
                 }else if(Slot.excuteCount == 2){
                     result = this.getBigWinResult(startIn.cost);
-                }else if(Slot.excuteCount == 3){
-                    result = this.getPlantResult();
-                }else if(Slot.excuteCount == 4){
+                }
+                // else if(Slot.excuteCount == 3){
+                //     result = this.getPlantResult();
+                // }
+                else if(Slot.excuteCount == 3){
                     result = this.getShareResult(startIn.cost);
                 }else{
                     result = this.getConditionResult(startIn.cost);
@@ -149,15 +151,15 @@ export default class NormalState extends SlotState{
                 randomFruitArr.push(this._shareFruit);
             }
 
-            if(this.isGoldMore()){
-                var idleIndex = Farm.getIdleFarmlandIndex();
-                if(idleIndex>-1){ //可以种植
-                    randomFruitArr.push(this._plantFruit);
-                }
-                if(Farm.canPicImmediatly() && Farm.getPlantFarmlandCount()>0){//可以采摘
-                    randomFruitArr.push(this._pickFruit);
-                }
-            }
+            // if(this.isGoldMore()){
+            //     var idleIndex = Farm.getIdleFarmlandIndex();
+            //     if(idleIndex>-1){ //可以种植
+            //         randomFruitArr.push(this._plantFruit);
+            //     }
+            //     if(Farm.canPicImmediatly() && Farm.getPlantFarmlandCount()>0){//可以采摘
+            //         randomFruitArr.push(this._pickFruit);
+            //     }
+            // }
         }
         var winFruitId:number = NumUtil.getRandomFruit(randomFruitArr);
         switch(winFruitId){

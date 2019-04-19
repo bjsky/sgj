@@ -73,6 +73,7 @@ export default class FarmScene extends cc.Component {
         EVENT.on(GameEvent.Remove_Tree,this.onRemoveTree,this);
         EVENT.on(GameEvent.UpgreadUI_Closed,this.onUpgradeUIClose,this);
         EVENT.on(GameEvent.Scene_To_Slot,this.onGoSlot,this);
+        EVENT.on(GameEvent.Update_Unlock_Farmland,this.updateUnlockFarmland,this);
     }
 
 
@@ -82,6 +83,7 @@ export default class FarmScene extends cc.Component {
         EVENT.off(GameEvent.Update_Tree,this.onUpdateTree,this);
         EVENT.off(GameEvent.Remove_Tree,this.onRemoveTree,this);
         EVENT.off(GameEvent.Scene_To_Slot,this.onGoSlot,this);
+        EVENT.off(GameEvent.Update_Unlock_Farmland,this.updateUnlockFarmland,this);
         this.clearScene();
     }
 
@@ -148,15 +150,26 @@ export default class FarmScene extends cc.Component {
             var levelcfg = plantUnlockCfg[0];
             var seedItem :SeedItem= this.seedList.getItemAt(this._listData.indexOf(levelcfg)) as SeedItem;
             seedItem.updateUnlock();
+            this.initSeedList();
         }
     }
 
     private _listData:any[] = [];
     private initSeedList(){
         var group:any = CFG.getCfgGroup(ConfigConst.Plant);
+        var lockArr:Array<any> = [];
+        var openArr:Array<any> = [];
         for(var key in group){
-            this._listData.push(group[key]);
+            if(Number(group[key].unlocklv)>Common.userInfo.level){
+                lockArr.push(group[key]);
+            }else{
+                openArr.unshift(group[key]);
+            }
         }
+        if(openArr.length>0){
+            lockArr.unshift(openArr.shift())
+        }
+        this._listData = lockArr.concat(openArr);
         this.seedList.direction = DListDirection.Vertical;
         this.seedList.setListData(this._listData);
     }
@@ -169,7 +182,14 @@ export default class FarmScene extends cc.Component {
             farmlandNode = this.farmlandNodes[i];
             farmland = Farm.getFarmlandAtIndex(i);
             if(farmland == null){
-                continue;
+                farmland = Farm.getUnlockFarmlandInfo(i);
+                if(farmland){
+                    UI.loadUI(ResConst.FarmlandUI,{farmland:farmland},farmlandNode,(farmland:FarmlandUI)=>{
+                        this._farmlandNodeDic[farmland.index] = farmland;
+                    });
+                }else{
+                    continue;
+                }
             }else{
                 UI.loadUI(ResConst.FarmlandUI,{farmland:farmland},farmlandNode,(farmland:FarmlandUI)=>{
                     this._farmlandNodeDic[farmland.index] = farmland;
@@ -190,6 +210,22 @@ export default class FarmScene extends cc.Component {
             });
         }
     }   
+
+    private updateUnlockFarmland(e){
+        var reIndex:number = e.removeIndex;
+        var upIndex:number = e.updateIndex;
+        if(reIndex>=0){
+            var farmland:FarmlandUI = this.getFarmlandUIWithIdx(reIndex);
+            farmland.onRemoveView(()=>{
+                delete this._farmlandNodeDic[farmland.index];
+                UI.removeUI(farmland.node)
+            });
+        }
+        var updateFarmland = this.getFarmlandUIWithIdx(upIndex);
+        if(updateFarmland){
+            updateFarmland.onUpdateLock();
+        }
+    }
 
     private onDragStart(e){
         this.btnPick.node.on(CDragEvent.DRAG_END,this.onDragEnd,this);

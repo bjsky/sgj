@@ -36,6 +36,7 @@ export default class MsgPlant extends MessageBase {
         msg.param.treeType = treeType;
         msg.param.index = index;
         msg.param.costGold = cost;
+
         return msg;
     }
 
@@ -45,6 +46,7 @@ export default class MsgPlant extends MessageBase {
         var farmland:SFarmlandInfo = new SFarmlandInfo();
         farmland.index = this.param.index;
         farmland.treeType = this.param.treeType;
+
         // farmland.pickTimes = Number(seedCfg.growthCount);
         farmland.growthStartTime = Common.getServerTime();
         var json:any = {

@@ -36,6 +36,8 @@ export class SCLoginData {
     public resInfo:SResInfo = null;
     //地格信息
     public farmlands:SFarmlandInfo[] = null;
+    //地格解锁信息
+    public unlockFarmland:SUnlockFarmland = null;
 
     public static parse(obj:any):SCLoginData{
         var data:SCLoginData = new SCLoginData();
@@ -49,6 +51,9 @@ export class SCLoginData {
         obj.farmlands.forEach((treeObj) => {
             data.farmlands.push(SFarmlandInfo.parse(treeObj));
         });
+        if(obj.unlockFarmland!=undefined){
+            data.unlockFarmland = SUnlockFarmland.parse(obj.unlockFarmland);
+        }
         return data;
     }
 }
@@ -111,6 +116,20 @@ export class SFarmlandInfo{
         info.treeType = obj.treeType;
         // info.pickTimes = obj.pickTimes;
         info.growthStartTime = obj.growthStartTime;
+        return info;
+    }
+}
+
+export class SUnlockFarmland{
+    //当前解锁index
+    public index:number = 0;
+    //当前解锁果树数量
+    public treeCount:number =0 ;
+
+    public static parse(obj:any):SUnlockFarmland{
+        var info:SUnlockFarmland = new SUnlockFarmland();
+        info.index = obj.index;
+        info.treeCount = obj.treeCount;
         return info;
     }
 }
