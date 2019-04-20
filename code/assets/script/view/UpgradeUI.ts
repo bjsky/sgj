@@ -42,25 +42,31 @@ export default class UpgradeUI extends PopUpBase{
         if(levelCfg){
             this.lblLv.string = level.toString();
             
-            var unlcokStr:string = 
-                // "每分钟精力恢复：<color= #00ff00><b>"+levelCfg.lifeReturn+"</b></c><br />"+
-                // "精力恢复上限：<color= #00ff00><b>"+levelCfg.lifeMax+"</b></c><br />"+
-                "种植精力解锁：<color= #00ff00><b>"+levelCfg.cost+"</b></c>";
+            var unlcokStr:string = "";
+            //     // "每分钟精力恢复：<color= #00ff00><b>"+levelCfg.lifeReturn+"</b></c><br />"+
+            //     // "精力恢复上限：<color= #00ff00><b>"+levelCfg.lifeMax+"</b></c><br />"+
+            //     "种植精力解锁：<color= #00ff00><b>"+levelCfg.cost+"</b></c>";
 
-            var unlockPlant:string ="";
-            var plantUnlockCfg:any[] = CFG.getCfgByKey(ConfigConst.Plant,"unlocklv",level);
-            if(plantUnlockCfg.length>0){
-                unlockPlant = "解锁植物：<color = #00ff00><b>"+plantUnlockCfg[0].name+"</b></c>";
-            }
-            if(unlockPlant!=""){
-                unlcokStr = unlcokStr +"<br />"+ unlockPlant;
-            }
+            // var unlockPlant:string ="";
+            // var plantUnlockCfg:any[] = CFG.getCfgByKey(ConfigConst.Plant,"unlocklv",level);
+            // if(plantUnlockCfg.length>0){
+            //     unlockPlant = "解锁植物：<color = #00ff00><b>"+plantUnlockCfg[0].name+"</b></c>";
+            // }
+            // if(unlockPlant!=""){
+            //     unlcokStr = unlcokStr +"<br />"+ unlockPlant;
+            // }
             var unlocktitle:string ="";
             if(Number(levelCfg.unlcokTitle)==1){
                 unlocktitle = "获得职位：<color = #00ff00><b>"+levelCfg.title+"</b></c>";
             }
-            if(unlocktitle!=""){
-                unlcokStr = unlcokStr +"<br />"+ unlocktitle;
+            unlcokStr = unlocktitle;
+            var unlockPlant:string ="";
+            var plantUnlockCfg:any[] = CFG.getCfgByKey(ConfigConst.Plant,"unlocklv",level);
+            if(plantUnlockCfg.length>0){
+                unlockPlant = "解锁果树：<color = #00ff00><b>"+plantUnlockCfg[0].name+"</b></c>";
+            }
+            if(unlockPlant!=""){
+                unlcokStr = unlcokStr +"<br />"+ unlockPlant;
             }
             this.lblUnlock.string = "<color=#00FFF6>"+unlcokStr+"</c>";
         }

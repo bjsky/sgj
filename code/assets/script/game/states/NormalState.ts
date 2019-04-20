@@ -81,10 +81,10 @@ export default class NormalState extends SlotState{
             EVENT.emit(GameEvent.Play_Slot,result);
     
 
-            NET.send(MsgSlot.create(startIn.cost,startIn.cost),(msg:MsgSlot)=>{
+            NET.send(MsgSlot.create(startIn.cost,0),(msg:MsgSlot)=>{
                 if(msg && msg.resp){
                     Common.updateUserInfo(msg.resp.userInfo);
-                    EVENT.emit(GameEvent.Show_Exp_Fly);
+                    // EVENT.emit(GameEvent.Show_Exp_Fly);
                 }
             },this);
         }

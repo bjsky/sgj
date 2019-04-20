@@ -208,7 +208,7 @@ export default class GameScene extends cc.Component {
         if(levelCfg){
             this._curLifeReturn = levelCfg.lifeReturn;
             this._curLifeReturnMax = levelCfg.lifeMax;
-            this.lblLifeDesc.string = "精力每分钟恢复："+this._curLifeReturn+"\n恢复上限："+this._curLifeReturnMax;
+            this.lblLifeDesc.string = "每分钟恢复 "+this._curLifeReturn+"\n恢复上限 "+this._curLifeReturnMax;
             this._curPlantCost = Number(levelCfg.cost);
             this.lblcostLife.string = this.CurCost.toString();
             this.lblAddExp.string ="获得种植经验："+this.CurCost;

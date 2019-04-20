@@ -120,7 +120,6 @@ export default class MainUI extends UIBase {
 
     public playExpBounce(){
         this.expBounceEffect.play();
-        SOUND.playStarBounceSound();
     }
 
     public playGoldBounce(){
