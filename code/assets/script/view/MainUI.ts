@@ -82,7 +82,7 @@ export default class MainUI extends UIBase {
     }
 
     private initView(e){
-        this.lblLevelEx.string ="Lv.";
+        this.lblLevelEx.string ="果园等级：";
         this.explevelEffect.initProgress(Common.userInfo.exp,Common.userInfo.levelExp,Common.userInfo.level);
         this.lblName.string = Common.userInfo.name;
         this.lblTitle.string = Common.userInfo.title;

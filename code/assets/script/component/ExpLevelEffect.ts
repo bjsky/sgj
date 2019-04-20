@@ -16,6 +16,7 @@ export default class ExpLevelEffect extends cc.Component {
     @property(cc.ProgressBar) expProgress: cc.ProgressBar = null;
     @property(cc.Label) levelLabel: cc.Label = null;
     @property(cc.Label) expLabel: cc.Label = null;
+    @property(String) levelStr:string ='';
 
     // LIFE-CYCLE CALLBACKS:
 
@@ -47,7 +48,7 @@ export default class ExpLevelEffect extends cc.Component {
             this.expLabel.string = (this._initExp.toFixed(0)) + " / "+ (this._initLevelExp.toFixed(0));
             this.expProgress.progress = this._initExp / this._initLevelExp;
         }
-        this.levelLabel.string = this._initLevel.toString();
+        this.levelLabel.string = this.levelStr!=""?this.levelStr.replace("#",this._initLevel.toString()) :this._initLevel.toString();
     }
 
     public playProgressAnim(exp,levelExp,level){

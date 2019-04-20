@@ -57,7 +57,7 @@ export default class UpgradeUI extends PopUpBase{
             // }
             var unlocktitle:string ="";
             if(Number(levelCfg.unlcokTitle)==1){
-                unlocktitle = "获得职位：<color = #00ff00><b>"+levelCfg.title+"</b></c>";
+                unlocktitle = "<color = #00ff00><b>果园"+level+"级</b></c>";
             }
             unlcokStr = unlocktitle;
             var unlockPlant:string ="";
@@ -66,7 +66,7 @@ export default class UpgradeUI extends PopUpBase{
                 unlockPlant = "解锁果树：<color = #00ff00><b>"+plantUnlockCfg[0].name+"</b></c>";
             }
             if(unlockPlant!=""){
-                unlcokStr = unlcokStr +"<br />"+ unlockPlant;
+                unlcokStr =unlcokStr +"<br />"+unlockPlant;
             }
             this.lblUnlock.string = "<color=#00FFF6>"+unlcokStr+"</c>";
         }
