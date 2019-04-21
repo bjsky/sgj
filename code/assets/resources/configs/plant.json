@@ -1,8 +1,8 @@
 [
-    {"id":"1","name":"橙子","icon":"ui/tree/cz","unlocklv":"0","plantcost":"500","addExpPer":"300","growthCount":"1","growthTime":"2"},
-    {"id":"2","name":"西瓜","icon":"ui/tree/xg","unlocklv":"5","plantcost":"750","addExpPer":"450","growthCount":"1","growthTime":"3"},
-    {"id":"3","name":"香蕉","icon":"ui/tree/xj","unlocklv":"10","plantcost":"1000","addExpPer":"600","growthCount":"1","growthTime":"4"},
-    {"id":"4","name":"柠檬","icon":"ui/tree/nm","unlocklv":"20","plantcost":"1500","addExpPer":"900","growthCount":"1","growthTime":"5"},
-    {"id":"5","name":"蓝莓","icon":"ui/tree/lm","unlocklv":"30","plantcost":"2000","addExpPer":"1200","growthCount":"1","growthTime":"6"},
-    {"id":"6","name":"樱桃","icon":"ui/tree/yt","unlocklv":"40","plantcost":"2500","addExpPer":"1500","growthCount":"1","growthTime":"7"}
+    {"id":"1","name":"橙子","icon":"ui/tree/cz","unlocklv":"0","plantcost":"500","addExpPer":"200","growthCount":"1","growthTime":"2"},
+    {"id":"2","name":"西瓜","icon":"ui/tree/xg","unlocklv":"5","plantcost":"750","addExpPer":"300","growthCount":"1","growthTime":"3"},
+    {"id":"3","name":"香蕉","icon":"ui/tree/xj","unlocklv":"10","plantcost":"1000","addExpPer":"400","growthCount":"1","growthTime":"4"},
+    {"id":"4","name":"柠檬","icon":"ui/tree/nm","unlocklv":"20","plantcost":"1500","addExpPer":"600","growthCount":"1","growthTime":"5"},
+    {"id":"5","name":"蓝莓","icon":"ui/tree/lm","unlocklv":"30","plantcost":"2000","addExpPer":"800","growthCount":"1","growthTime":"6"},
+    {"id":"6","name":"樱桃","icon":"ui/tree/yt","unlocklv":"40","plantcost":"2500","addExpPer":"1000","growthCount":"1","growthTime":"7"}
     ]

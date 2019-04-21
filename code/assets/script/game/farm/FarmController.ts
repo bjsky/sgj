@@ -171,7 +171,7 @@ export default class FarmController{
     private _unlockFarmland:SUnlockFarmland = null;
     public initUnlock(unlockFarmland:SUnlockFarmland){
         this._unlockFarmland =unlockFarmland;
-        if(this._unlockFarmland == null || this._unlockFarmland.index==0){
+        if(this._unlockFarmland == null){
             this._unlockFarmland = new SUnlockFarmland();
             this._unlockFarmland.index = 1;
             this._unlockFarmland.treeCount = 0;

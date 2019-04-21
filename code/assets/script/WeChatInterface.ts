@@ -90,13 +90,6 @@ export default class WeChatInterface{
     //         cb && cb();
     //     }
     // }
-
-    public showBannerAd(adId:string){
-        if(Global.serverType == ServerType.Publish){
-            var func= window["showBannerAd"];
-            func(adId);
-        }
-    }
 }
 
 export var Wechat:WeChatInterface = WeChatInterface.getInstance();
