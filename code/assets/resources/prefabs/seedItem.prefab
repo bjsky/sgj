@@ -552,7 +552,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 120,
+      "width": 97.75,
       "height": 24
     },
     "_anchorPoint": {
@@ -598,9 +598,9 @@
     "_srcBlendFactor": 1,
     "_dstBlendFactor": 771,
     "_useOriginalSize": false,
-    "_string": "水果大王解锁",
-    "_N$string": "水果大王解锁",
-    "_fontSize": 20,
+    "_string": "lv.1 解锁",
+    "_N$string": "lv.1 解锁",
+    "_fontSize": 26,
     "_lineHeight": 24,
     "_enableWrapText": true,
     "_N$file": null,
@@ -650,7 +650,7 @@
         "__id__": 29
       }
     ],
-    "_active": true,
+    "_active": false,
     "_level": 3,
     "_components": [],
     "_prefab": {

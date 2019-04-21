@@ -41,8 +41,8 @@
     },
     "_scale": {
       "__type__": "cc.Vec3",
-      "x": 0.3426791277258567,
-      "y": 0.3426791277258567,
+      "x": 0.5644549028002055,
+      "y": 0.5644549028002055,
       "z": 1
     },
     "_quat": {
@@ -79,10 +79,10 @@
     "_level": 1,
     "_components": [
       {
-        "__id__": 96
+        "__id__": 95
       },
       {
-        "__id__": 97
+        "__id__": 96
       }
     ],
     "_prefab": null,
@@ -342,7 +342,7 @@
         "__id__": 85
       },
       {
-        "__id__": 88
+        "__id__": 87
       }
     ],
     "_active": true,
@@ -3868,34 +3868,31 @@
     "_components": [
       {
         "__id__": 86
-      },
-      {
-        "__id__": 87
       }
     ],
     "_prefab": null,
     "_opacity": 255,
     "_color": {
       "__type__": "cc.Color",
-      "r": 248,
-      "g": 241,
-      "b": 222,
+      "r": 255,
+      "g": 227,
+      "b": 206,
       "a": 255
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 240.92,
+      "width": 184.92,
       "height": 80
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
-      "x": 0.5,
+      "x": 0,
       "y": 0.5
     },
     "_position": {
       "__type__": "cc.Vec3",
-      "x": 178,
-      "y": 192,
+      "x": -301,
+      "y": 414,
       "z": 0
     },
     "_scale": {
@@ -3930,8 +3927,8 @@
     "_srcBlendFactor": 1,
     "_dstBlendFactor": 771,
     "_useOriginalSize": false,
-    "_string": "精力每分钟恢复：60\n恢复上限：600",
-    "_N$string": "精力每分钟恢复：60\n恢复上限：600",
+    "_string": "每分钟恢复：60\n恢复上限：600",
+    "_N$string": "每分钟恢复：60\n恢复上限：600",
     "_fontSize": 26,
     "_lineHeight": 40,
     "_enableWrapText": true,
@@ -3939,29 +3936,11 @@
     "_isSystemFontUsed": true,
     "_spacingX": 0,
     "_batchAsBitmap": false,
-    "_N$horizontalAlign": 2,
+    "_N$horizontalAlign": 0,
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
     "_N$overflow": 0,
     "_id": "c7MK/k14NMIo+LdUT+6qHT"
-  },
-  {
-    "__type__": "cc.LabelOutline",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 85
-    },
-    "_enabled": true,
-    "_color": {
-      "__type__": "cc.Color",
-      "r": 131,
-      "g": 58,
-      "b": 0,
-      "a": 255
-    },
-    "_width": 2,
-    "_id": "b8ChMW7L1Ab66LFM4rq/3V"
   },
   {
     "__type__": "cc.Node",
@@ -3972,17 +3951,17 @@
     },
     "_children": [
       {
-        "__id__": 89
+        "__id__": 88
       },
       {
-        "__id__": 93
+        "__id__": 92
       }
     ],
     "_active": true,
     "_level": 3,
     "_components": [
       {
-        "__id__": 95
+        "__id__": 94
       }
     ],
     "_prefab": null,
@@ -4036,20 +4015,20 @@
     "_name": "toFarm",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 88
+      "__id__": 87
     },
     "_children": [],
     "_active": true,
     "_level": 4,
     "_components": [
       {
+        "__id__": 89
+      },
+      {
         "__id__": 90
       },
       {
         "__id__": 91
-      },
-      {
-        "__id__": 92
       }
     ],
     "_prefab": null,
@@ -4103,7 +4082,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 89
+      "__id__": 88
     },
     "_enabled": true,
     "_srcBlendFactor": 770,
@@ -4131,7 +4110,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 89
+      "__id__": 88
     },
     "_enabled": true,
     "duration": 0.1,
@@ -4190,7 +4169,7 @@
     "hoverSprite": null,
     "_N$disabledSprite": null,
     "_N$target": {
-      "__id__": 89
+      "__id__": 88
     },
     "_id": "ecsyWZwdVDu6T9FUT8DWSw"
   },
@@ -4199,7 +4178,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 89
+      "__id__": 88
     },
     "_enabled": true,
     "originalScale": 1,
@@ -4211,14 +4190,14 @@
     "_name": "lbl_nc",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 88
+      "__id__": 87
     },
     "_children": [],
     "_active": true,
     "_level": 4,
     "_components": [
       {
-        "__id__": 94
+        "__id__": 93
       }
     ],
     "_prefab": null,
@@ -4272,7 +4251,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 93
+      "__id__": 92
     },
     "_enabled": true,
     "_srcBlendFactor": 770,
@@ -4300,7 +4279,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 88
+      "__id__": 87
     },
     "_enabled": false,
     "_srcBlendFactor": 770,
@@ -4388,7 +4367,7 @@
       "__id__": 79
     },
     "btnToFarm": {
-      "__id__": 91
+      "__id__": 90
     },
     "sceneNode": {
       "__id__": 7

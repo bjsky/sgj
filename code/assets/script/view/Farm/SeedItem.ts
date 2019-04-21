@@ -73,7 +73,7 @@ export default class SeedItem extends DListItem{
         }else{
             this.nodeLock.active = true;
             var title:string = CFG.getCfgDataById(ConfigConst.Level,this._unlockLv).title;
-            this.lblLockLv.string =title +"\n解锁";
+            this.lblLockLv.string ="lv."+this._unlockLv +" 解锁";
         }
     }
 

@@ -170,12 +170,8 @@ export default class FarmController{
     private _unlockDic:any = null;
     private _unlockFarmland:SUnlockFarmland = null;
     public initUnlock(unlockFarmland:SUnlockFarmland){
-        this._unlockFarmland =unlockFarmland;
-        if(this._unlockFarmland == null){
-            this._unlockFarmland = new SUnlockFarmland();
-            this._unlockFarmland.index = 1;
-            this._unlockFarmland.treeCount = 0;
-        }
+        
+        var firstLock:number = 0;
         if(this._unlockDic == null){        //cfg init
             var cfgs:any = CFG.getCfgByKey(ConfigConst.Constant,"key","farmlandlock")
             var unlockcfgArr:Array<string> = cfgs[0].value.split("|");
@@ -184,8 +180,18 @@ export default class FarmController{
                 var unlockTreeId:number = Number(unlockcfgArr[i].split(";")[0]);
                 var unlockTreeCount:number = Number(unlockcfgArr[i].split(";")[1]);
                 this._unlockDic[i] = {id:unlockTreeId,count:unlockTreeCount}
+                if(unlockTreeCount>0 && firstLock ==0){
+                    firstLock = i;
+                }
             }
         }
+        this._unlockFarmland =unlockFarmland;
+        if(this._unlockFarmland == null){
+            this._unlockFarmland = new SUnlockFarmland();
+            this._unlockFarmland.index = firstLock;
+            this._unlockFarmland.treeCount = 0;
+        }
+        
     }
     private updateUnlock(unlockFarmland:SUnlockFarmland){
         var preIndex = this._unlockFarmland.index;
