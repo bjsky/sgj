@@ -187,7 +187,7 @@ export default class FarmController{
             }
         }
         this._unlockFarmland =unlockFarmland;
-        if(this._unlockFarmland == null){
+        if(this._unlockFarmland == null || this._unlockFarmland.index==0){
             this._unlockFarmland = new SUnlockFarmland();
             this._unlockFarmland.index = firstLock;
             this._unlockFarmland.treeCount = 0;

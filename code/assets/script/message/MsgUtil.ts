@@ -7,6 +7,7 @@ import MsgSlotWin from "./MsgSlotWin";
 import MsgPlant from "./MsgPlant";
 import MsgPick from "./MsgPick";
 import MsgShare from "./MsgShare";
+import MsgUpdateUnlock from "./MsgUpdateUnlock";
 
 /**
  * 太特么坑了，父类中还不能导入子类
@@ -38,6 +39,10 @@ export default class MsgUtil{
             case NetConst.Share:
                 message = new MsgShare();
             break;
+            case NetConst.UpdateUnlock:
+            message = new MsgUpdateUnlock();
+            break;
+
             default:
             message = null;
             break;

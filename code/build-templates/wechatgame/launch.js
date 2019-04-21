@@ -173,6 +173,38 @@ window.showVideoAd = function (cb, VideoAd_type) {
 
   }
 }
+window.showBannerAd = function(adId){
+  var system = wx.getSystemInfoSync();
+  console.log("创建banner广告：",adId);
+  window.bannerAd = wx.createBannerAd({
+    adUnitId: adId,
+    style: {
+      width: 300,
+      //height:40,
+      top: 0,
+      left: 0
+    }
+  });
+  window.bannerAd.onLoad(() => {
+    console.log('banner广告加载成功');
+    window.bannerAd.offLoad();
+
+  })
+  window.bannerAd.onError(err => {
+    console.log(err, "banner广告加载失败");
+    window.bannerAd.offError();
+    cb(2);
+
+  })
+  window.bannerAd.onResize(res => {
+    window.bannerAd.style.left = system.screenWidth / 2 - res.width / 2;
+    window.bannerAd.style.top = system.screenHeight - res.height ;
+    console.log("RealSize = ",res);
+  });
+  window.bannerAd.show().then(() => console.log('banner 广告显示')).catch(err => console.log(err));
+  return window.bannerAd;
+}
+
 
 let shareCallbackFunc = function(){
   return {

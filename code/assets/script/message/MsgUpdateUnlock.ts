@@ -14,7 +14,7 @@ export class SCUpdateUnlock{
 
     public static parse(obj:any):SCUpdateUnlock{
         var info:SCUpdateUnlock = new SCUpdateUnlock();
-        info.unlockFarmland = SUnlockFarmland.parse(obj.unlockFarmland);
+        info.unlockFarmland = SUnlockFarmland.parse(obj);
         return info;
     }
 }
@@ -40,9 +40,7 @@ export default class MsgUpdateUnlock extends MessageBase {
         var farmlandInfo:SUnlockFarmland = new SUnlockFarmland();
         farmlandInfo.index = this.param.unlockIndex;
         farmlandInfo.treeCount = this.param.unlockTreeCount;
-        var json:any = {
-            unlockFarmland:farmlandInfo
-        };
+        var json:any = farmlandInfo;
         return this.parse(json);
     }
 
