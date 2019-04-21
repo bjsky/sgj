@@ -89,12 +89,15 @@ export class SResInfo{
     public energy:number = 0;
     //精力开始时间，首次取服务器时间，之后取存储的时间
     public energyStartTime:number = 0;
+    //水滴
+    public water:number = 0;
 
     public static parse(obj:any):SResInfo{
         var info:SResInfo = new SResInfo();
         info.gold = obj.gold;
         info.energy = obj.energy;
         info.energyStartTime = obj.energyStartTime;
+        info.water = obj.water;
         return info;
     }
 }
@@ -163,12 +166,13 @@ export default class MsgLogin
     public respFromLocal(){
         var firstenergy:number = Number(CFG.getCfgByKey(ConfigConst.Constant,"key","firstEnergy")[0].value);
         var firstGold:number = Number(CFG.getCfgByKey(ConfigConst.Constant,"key","firstGold")[0].value)
+        var firstWater:number = Number(CFG.getCfgByKey(ConfigConst.Constant,"key","firstWater")[0].value)
         var json:any = {firstLogin:true,
             accountId:StringUtil.getUUidClient(),
             newUser:1,
             serverTime:new Date().getTime(),
             userInfo:{name:"开心农场",icon:"",gender:1,exp:0,totalExp:0,level:1},
-            resInfo:{gold:firstGold,energy:firstenergy,energyStartTime:Common.getServerTime()},
+            resInfo:{gold:firstGold,energy:firstenergy,energyStartTime:Common.getServerTime(),water:firstWater},
             farmlands:[
                 // {index:0,treeType:1,growthStartTime:0},
                 // {index:1,treeType:1,growthStartTime:0},

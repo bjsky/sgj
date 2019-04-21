@@ -23,11 +23,12 @@ export default class FarmlandInfo{
     //     this.growthTime = 0;
     // }
 
-    // public cloneServerInfo():SFarmlandInfo{
-    //     var info:SFarmlandInfo = new SFarmlandInfo();
-    //     info.index = this.index;
-    //     info.treeType = this.treeType;
-    //     info.pickTimes = this.pickTimes;
-    //     return info;
-    // }
+    public cloneServerInfo():SFarmlandInfo{
+        var info:SFarmlandInfo = new SFarmlandInfo();
+        info.index = this.index;
+        info.treeType = this.treeType;
+        // info.pickTimes = this.pickTimes;
+        info.growthStartTime = this.growthStartTime;
+        return info;
+    }
 }

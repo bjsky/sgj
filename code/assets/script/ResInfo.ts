@@ -10,11 +10,14 @@ export default class ResInfo {
     public energyStartTime:number = 0;
     //当前经验
     public gold:number = 0;
+    //水滴
+    public water:number = 0;
 
     public initFormServer(sInfo:SResInfo){
         this.energy = sInfo.energy;
         this.energyStartTime = sInfo.energyStartTime;
         this.gold = sInfo.gold;
+        this.water = sInfo.water;
     }
 
     public updateInfo(sInfo:SResInfo){
@@ -26,6 +29,7 @@ export default class ResInfo {
         sInfo.energy = this.energy;
         sInfo.energyStartTime = this.energyStartTime;
         sInfo.gold = this.gold;
+        sInfo.water = this.water;
         return sInfo;
     }
 

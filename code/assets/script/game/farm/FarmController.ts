@@ -9,6 +9,7 @@ import MsgPick from "../../message/MsgPick";
 import { CFG } from "../../core/ConfigManager";
 import { ConfigConst } from "../../GlobalData";
 import MsgUpdateUnlock from "../../message/MsgUpdateUnlock";
+import MsgWaterTree from "../../message/MsgWaterTree";
 
 export class UnlockFarmlandInfo extends FarmlandInfo{
     //下一个解锁
@@ -242,6 +243,16 @@ export default class FarmController{
         }
 
         return unlock;
+    }
+
+    public speedUp(index:number,cost:number,startTime:number){
+        NET.send(MsgWaterTree.create(cost,index,startTime),(msg:MsgWaterTree)=>{
+            if(msg && msg.resp){
+                var farmland:FarmlandInfo = new FarmlandInfo();
+                farmland.initFromServer(msg.resp.farmland);
+                this.updateFarmland(index,farmland);
+            }
+        },this)
     }
 }
 

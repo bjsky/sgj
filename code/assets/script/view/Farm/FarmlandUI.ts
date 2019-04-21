@@ -38,6 +38,11 @@ export default class FarmlandUI extends UIBase {
     @property(cc.Node) nodeOpen: cc.Node = null;
     @property(cc.Label) lockCondi: cc.Label = null;
     @property(cc.Node) nodeSuo: cc.Node = null;
+    // @property(cc.Node) nodeWater: cc.Node = null;
+    @property(cc.Button) waterIcon: cc.Button = null;
+    @property(cc.Label) waterSaveTime: cc.Label = null;
+    @property(cc.Node) waterSaveTimeNode:cc.Node = null;
+
     
 
     private _farmland:FarmlandInfo = null;
@@ -72,6 +77,8 @@ export default class FarmlandUI extends UIBase {
     // onLoad () {}
 
     onEnable(){
+
+        this._waterShow = false;
         Drag.addDragMove(this.node);
         this.node.on(CDragEvent.DRAG_MOVE,this.onDragMove,this);
         this.onStateChange();
@@ -81,6 +88,7 @@ export default class FarmlandUI extends UIBase {
     private onStateChange(){
         this.nodeLock.active = false;
         this.nodeOpen.active = false;
+        this.waterIcon.node.active = this.waterSaveTime.node.active = false;
         if(this._state == FarmlandState.Lock){
             this.nodeLock.active = true;
             var unlock:UnlockFarmlandInfo = this._farmland as UnlockFarmlandInfo;
@@ -115,7 +123,7 @@ export default class FarmlandUI extends UIBase {
         this._farmland = farmland;
         // this._pickTimes = this._farmland.pickTimes;
         this._growthStartTime = this._farmland.growthStartTime;
-        this._state = FarmlandState.Planting;
+        this._state = (this.growthTime>=this._growthTotalTime)?FarmlandState.Planed:FarmlandState.Planting;
         this.onStateChange();
         // this.pickCount.string = this._pickTimes.toString();
         // this.nodePick.active = this._pickTimes>0;
@@ -143,7 +151,6 @@ export default class FarmlandUI extends UIBase {
     update (dt) {
         if(this._state == FarmlandState.Planting){
             var growTime = this.growthTime;
-            
             if(growTime>= this._growthTotalTime){
                 this._state = FarmlandState.Planed;
                 this.onStateChange();
@@ -152,6 +159,8 @@ export default class FarmlandUI extends UIBase {
                 this.lblProgress.string = StringUtil.formatTimeHMS(levelTime,2);
                 var pro:number = (this._growthTotalTime - growTime)/this._growthTotalTime;
                 this.plantProgress.progress = pro;    
+
+                this.showWater();
             }
         }
     }
@@ -161,5 +170,62 @@ export default class FarmlandUI extends UIBase {
             ||Farm.pickImmediatly){
             Farm.pickOnce(this._farmland.index,this._addExp);
         }
+    }
+
+    private _iconOrgPos:cc.Vec2 = cc.v2(0,130);
+    private _txtOrgPos:cc.Vec2 = cc.v2(0,110);
+    private _waterShow:boolean = false;
+    private showWater(){
+        if(!this._waterShow && Math.ceil(this._growthTotalTime - this.growthTime)>5){
+            this._waterShow = true;
+            this.waterSaveTime.node.active = false;
+            this.waterIcon.node.active = true;
+            this.waterIcon.node.setPosition(this._iconOrgPos);
+            this.waterIcon.node.opacity = 255;
+            this.waterIcon.node.on(cc.Node.EventType.TOUCH_START,this.onWaterTouch,this);
+        }
+    }
+
+    private onWaterTouch(e){
+        this.waterIcon.node.stopAllActions();
+        this.waterSaveTimeNode.stopAllActions();
+        this.waterSaveTimeNode.setPosition(cc.v2(0,0));
+        this.waterIcon.node.off(cc.Node.EventType.TOUCH_START,this.onWaterTouch,this);
+        var seq = cc.sequence(cc.spawn(
+            cc.moveBy(0.3,cc.v2(0,-30))
+            ,cc.fadeOut(0.3)
+        ),cc.callFunc(()=>{
+
+            this.waterSaveTime.node.setPosition(this.getRandomPos());
+            this.waterSaveTime.node.active = true;
+            var farmland = Farm.getFarmlandAtIndex(this.index);
+            var seedCfg:any = CFG.getCfgDataById(ConfigConst.Plant,farmland.treeType);
+            var cost:number = Number(seedCfg.waterCost);
+            var levelTime:number = Math.ceil(this._growthTotalTime - this.growthTime);
+            var saveTime:number = Number(seedCfg.waterSaveTime)* levelTime;
+            saveTime = Number(saveTime.toFixed(0));
+            var startTime:number = farmland.growthStartTime - saveTime*1000;
+            this.waterSaveTime.string = "+"+saveTime+"秒";
+        
+            this.waterIcon.node.active = false;
+            var seq2 = cc.sequence(
+                cc.moveBy(0.15,cc.v2(0,10)).easing(cc.easeBackOut()),
+                cc.delayTime(0.3),
+                cc.callFunc(()=>{
+                    Farm.speedUp(this.index,cost,startTime);
+                    this.waterSaveTime.node.active = false;
+                }),
+                cc.delayTime(3),
+                cc.callFunc(()=>{
+                    this._waterShow = false;
+                })
+            )
+            this.waterSaveTimeNode.runAction(seq2);
+        }))
+        this.waterIcon.node.runAction(seq);
+    }
+
+    private getRandomPos():cc.Vec2{
+        return cc.v2(60* Math.random()-30,20* Math.random()-10).add(this._txtOrgPos);
     }
 }
