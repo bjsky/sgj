@@ -46,7 +46,7 @@ export default class LoadSprite extends cc.Sprite{
 
     // update (dt) {}
     private _callback:Function = null;
-
+    private _prevUrl:string = "";
     /**
      * 加载图片
      * @param path 
@@ -64,6 +64,10 @@ export default class LoadSprite extends cc.Sprite{
             type = this.resType;
         }
         this._callback = cb;
+        if(path!=this._prevUrl){
+            this.spriteFrame = null;
+        }
+        this._prevUrl = path;
         let self = this;
         // console.log("LoadSprite.load: ","url:"+path,",type:"+type);
         if (path.indexOf("http://") >= 0|| path.indexOf("https://")>=0) {

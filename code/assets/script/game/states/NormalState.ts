@@ -31,6 +31,9 @@ export default class NormalState extends SlotState{
                 if(fruit.isBig == "1"){
                     this._bigwinFruitArr.push(fruit);
                 }
+                if(Number(fruit.getResCount)>0){
+                    this._getResFruitArr.push(fruit);
+                }
                 if(fruit.id == SlotFruit.share){
                     this._shareFruit = fruit;
                 }else if(fruit.id == SlotFruit.plant){
@@ -50,6 +53,7 @@ export default class NormalState extends SlotState{
     private _plantFruit:any = null;
     private _pickFruit:any = null;
     private _repeatFruit:any = null;
+    private _getResFruitArr:Array<any> = [];
 
     public excute(input:SlotInput){
         if(input.type == SlotInputEnum.startPlay){
@@ -137,13 +141,19 @@ export default class NormalState extends SlotState{
         return result;
     }
 
+    private getResResult(fruitId:number):SlotWin{
+        var reslut:SlotWin = new SlotWin(SlotWinEnum.GetRes);
+        reslut.slotArr = [fruitId,fruitId,fruitId];
+        return reslut;
+    }
+
     private getConditionResult(cost:number,noRepeat:boolean=false):SlotWin{
         var result:SlotWin;
         var randomFruitArr;
         if(Slot.excuteCount-Slot.prevShareCount>20){ //超过20次必定分享
             randomFruitArr = [this._shareFruit];
         }else{
-            randomFruitArr = this._normalFruitArr.slice();
+            randomFruitArr = this._normalFruitArr.slice().concat(this._getResFruitArr.slice());
             if(!noRepeat){
                 randomFruitArr.push(this._repeatFruit); //先加个重复
             }
@@ -178,6 +188,9 @@ export default class NormalState extends SlotState{
             }break;
             case SlotFruit.pick:{
                 result = this.getPickResult();
+            }break;
+            case SlotFruit.water:{
+                result = this.getResResult(winFruitId);
             }break;
             default:{
                 result = this.getWinResult(winFruitId,cost);

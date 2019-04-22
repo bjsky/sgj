@@ -8,7 +8,8 @@ import GameEvent from "../GameEvent";
 import LoadSprite from "../component/LoadSprite";
 import PathUtil from "../utils/PathUtil";
 import { SOUND } from "../core/SoundManager";
-import { ResType } from "../message/MsgAddRes";
+import MsgAddRes, { ResType } from "../message/MsgAddRes";
+import { Game } from "../GameController";
 
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
@@ -133,7 +134,7 @@ export default class AnimUi extends UIBase {
             var moveFrom:cc.Vec2 = this.nodeRes.parent.convertToNodeSpaceAR(anim.starFrom);
             var moveTo:cc.Vec2 = this.nodeRes.parent.convertToNodeSpaceAR(anim.starTo);
 
-            var moveCenter:cc.Vec2 = cc.v2(moveFrom.x-200,moveFrom.y+50);
+            var moveCenter:cc.Vec2 = cc.v2(moveFrom.x+(moveTo.x - moveFrom.x)/2,moveFrom.y-(moveTo.y - moveFrom.y)/8);
             this.sprRes.load(PathUtil.getRESIcon(anim.resType));
             this.msResCount.string = " ";//+anim.addResCount;
             this.nodeRes.position = moveFrom;

@@ -1,10 +1,15 @@
-import { Global, ServerType } from "./GlobalData";
+import { Global, ServerType, ConfigConst } from "./GlobalData";
 import { Common } from "./CommonData";
 import { Wechat } from "./WeChatInterface";
 import { NET } from "./core/net/NetController";
 import MsgShare from "./message/MsgShare";
 import { EVENT } from "./core/EventController";
 import GameEvent from "./GameEvent";
+import MsgAddRes, { ResType } from "./message/MsgAddRes";
+import { UI } from "./core/UIManager";
+import { SlotResultAnim, SlotResultAniEnum } from "./view/AnimUi";
+import { CFG } from "./core/ConfigManager";
+import { SlotFruit } from "./game/SlotController";
 
 export default class ShareController{
 
@@ -67,17 +72,41 @@ export default class ShareController{
         NET.send(MsgShare.create(addGold,Common.resInfo.energy,Common.resInfo.energyStartTime),(msg:MsgShare)=>{
             if(msg && msg.resp){
                 Common.resInfo.updateInfo(msg.resp.resInfo);
-                EVENT.emit(GameEvent.Gold_UI_Update);
+                var anim:SlotResultAnim = new SlotResultAnim(SlotResultAniEnum.GoldFly);
+                var fruitCfg:any = CFG.getCfgDataById(ConfigConst.Fruit,SlotFruit.share);
+                // anim.muti = Number(fruitCfg.winMuti);
+                anim.flyCoin = Number(fruitCfg.flyCoin);
+                // anim.addGold = anim.muti * result.cost;
+                anim.coinTo = UI.main.coinIcon.parent.convertToWorldSpaceAR(UI.main.coinIcon.position);
+                UI.showWinAnim(anim);
             }
         },this)
     }
-    public shareGetEnergy(addEnergy:number){
+    public shareGetEnergy(addEnergy:number,from:cc.Vec2,to:cc.Vec2){
         Common.resInfo.energy+= addEnergy;
         Common.resInfo.updateEnergy();
         NET.send(MsgShare.create(0,Common.resInfo.energy,Common.resInfo.energyStartTime),(msg:MsgShare)=>{
             if(msg && msg.resp){
                 Common.resInfo.updateInfo(msg.resp.resInfo);
-                EVENT.emit(GameEvent.Energy_UI_Update);
+                var anim:SlotResultAnim = new SlotResultAnim(SlotResultAniEnum.GetResFly);
+                anim.resType = ResType.Energy;
+                anim.addResCount = addEnergy;
+                anim.starFrom = from;
+                anim.starTo = to;
+                UI.showWinAnim(anim);
+            }
+        },this)
+    }
+    public shareGetWater(addWater:number,from:cc.Vec2,to:cc.Vec2){
+        NET.send(MsgAddRes.create(ResType.Water, addWater),(msg:MsgAddRes)=>{
+            if(msg && msg.resp){
+                Common.resInfo.updateInfo(msg.resp.resInfo);
+                var anim:SlotResultAnim = new SlotResultAnim(SlotResultAniEnum.GetResFly);
+                anim.resType = ResType.Water;
+                anim.addResCount = addWater;
+                anim.starFrom = from;
+                anim.starTo = to;
+                UI.showWinAnim(anim);
             }
         },this)
     }

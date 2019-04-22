@@ -14,6 +14,7 @@ export enum SlotFruit{
     plant=10,      //种植
     pick =11,            //采摘
     steal =12,              //偷取
+    water = 13,             //水滴10
 }
 export default class SlotContoller {
     private static _instance: SlotContoller = null;

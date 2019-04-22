@@ -12,6 +12,9 @@ import { EVENT } from "../core/EventController";
 import { ShareType } from "../view/SharePanel";
 import { MessagePanelType } from "../view/MessagePanel";
 import { SOUND } from "../core/SoundManager";
+import MsgAddRes, { ResType } from "../message/MsgAddRes";
+import { NET } from "../core/net/NetController";
+import { Common } from "../CommonData";
 
 export default class GameSlot{
 
@@ -68,6 +71,8 @@ export default class GameSlot{
             this.playSlotViewPlant(result,cb);
         }else if(result.type == SlotWinEnum.Pick){
             this.playSlotViewPick(result,cb);
+        }else if(result.type == SlotWinEnum.GetRes){
+            this.playSlotViewGetRes(result.slotArr,cb);
         }
         else{
             cb && cb();
@@ -104,6 +109,32 @@ export default class GameSlot{
                     cb && cb();
                 },2)
         }
+    }
+    public playSlotViewGetRes(slotArr:Array<number>,cb:Function){
+        var id:number = slotArr[0];
+        this._slot.play(id,()=>{
+            
+            var anim = new SlotResultAnim(SlotResultAniEnum.GetResFly);
+            var resType:ResType ;
+            var fruitCfg:any = CFG.getCfgDataById(ConfigConst.Fruit,slotArr[0]);
+            var resCount = Number(fruitCfg.getResCount);
+            if(fruitCfg.id == SlotFruit.water){
+                resType = ResType.Water;
+            }
+            anim.resType = resType; 
+            anim.addResCount = resCount;
+            anim.starFrom = this._slot.getFruitPos(SlotFruit.water);
+            anim.starTo = this._scene.btnToFarm.node.parent.convertToWorldSpaceAR(this._scene.btnToFarm.node.position);
+            NET.send(MsgAddRes.create(resType,resCount),(msg:MsgAddRes)=>{
+                if(msg && msg.resp){
+                    Common.resInfo.updateInfo(msg.resp.resInfo);
+                    UI.showWinAnim(anim);
+                }
+            },this)
+            this._scene.scheduleOnce(()=>{
+                cb && cb();
+            },0.5)
+        });
     }
 
     public playSlotViewShare(result:SlotWin,cb:Function){

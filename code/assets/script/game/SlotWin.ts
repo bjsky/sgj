@@ -8,6 +8,7 @@ export enum SlotWinEnum{
     Share,          //分享
     Plant,          //种植
     Pick,           //采摘
+    GetRes,         //获得资源
 }
 export default class SlotWin{
     constructor(type:SlotWinEnum){
