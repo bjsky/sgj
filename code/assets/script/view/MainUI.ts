@@ -57,7 +57,6 @@ export default class MainUI extends UIBase {
         EVENT.on(GameEvent.UpgreadUI_Closed,this.onUpgradeUIClose,this);
         EVENT.on(GameEvent.Plant_Tree,this.onPlantTree,this);
         EVENT.on(GameEvent.Pick_Tree_Fly_End,this.onPickTreeFlyEnd,this);
-        EVENT.on(GameEvent.Gold_UI_Update,this.onGoldUIUpdate,this);
     }
 
     onDisable(){
@@ -68,7 +67,6 @@ export default class MainUI extends UIBase {
         EVENT.off(GameEvent.UpgreadUI_Closed,this.onUpgradeUIClose,this);
         EVENT.off(GameEvent.Plant_Tree,this.onPlantTree,this);
         EVENT.off(GameEvent.Pick_Tree_Fly_End,this.onPickTreeFlyEnd,this);
-        EVENT.off(GameEvent.Gold_UI_Update,this.onGoldUIUpdate,this);
     }
 
     private hideAll(){
@@ -109,9 +107,6 @@ export default class MainUI extends UIBase {
         this.goldEffect.setValue(Common.resInfo.gold);
     }
     private onPlantTree(e){
-        this.goldEffect.setValue(Common.resInfo.gold);
-    }
-    private onGoldUIUpdate(e){
         this.goldEffect.setValue(Common.resInfo.gold);
     }
     start () {

@@ -14,6 +14,8 @@ import { SlotResultAnim, SlotResultAniEnum } from "../view/AnimUi";
 import SeedItem from "../view/Farm/SeedItem";
 import { Game } from "../GameController";
 import { SOUND } from "../core/SoundManager";
+import { ResType } from "../message/MsgAddRes";
+import SceneBase, { SceneEnum } from "./SceneBase";
 
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
@@ -28,7 +30,7 @@ import { SOUND } from "../core/SoundManager";
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class FarmScene extends cc.Component {
+export default class FarmScene extends SceneBase{
 
 
     @property(cc.Node) uicanvas: cc.Node = null;
@@ -45,7 +47,15 @@ export default class FarmScene extends cc.Component {
 
     @property(DList) seedList: DList = null;
     @property([cc.Node]) farmlandNodes: cc.Node[] = [];
+
+
+    @property(cc.Label) lblWater: cc.Label = null;
+    @property(cc.Node) iconWater: cc.Node = null;
     
+    constructor(){
+        super();
+        this.sceneName = SceneEnum.Farm;
+    }
     // LIFE-CYCLE CALLBACKS:
 
     // onLoad () {}
@@ -74,6 +84,9 @@ export default class FarmScene extends cc.Component {
         EVENT.on(GameEvent.UpgreadUI_Closed,this.onUpgradeUIClose,this);
         EVENT.on(GameEvent.Scene_To_Slot,this.onGoSlot,this);
         EVENT.on(GameEvent.Update_Unlock_Farmland,this.updateUnlockFarmland,this);
+        EVENT.on(GameEvent.Get_Res_Finish,this.onGetRes,this);
+
+        this.lblWater.string = "";
     }
 
 
@@ -84,7 +97,15 @@ export default class FarmScene extends cc.Component {
         EVENT.off(GameEvent.Remove_Tree,this.onRemoveTree,this);
         EVENT.off(GameEvent.Scene_To_Slot,this.onGoSlot,this);
         EVENT.off(GameEvent.Update_Unlock_Farmland,this.updateUnlockFarmland,this);
+        EVENT.on(GameEvent.Get_Res_Finish,this.onGetRes,this);
+
         this.clearScene();
+    }
+
+    private onGetRes(e){
+        if(e.type == ResType.Water){
+            this.lblWater.string = Common.resInfo.water.toString();
+        }
     }
 
     private onLoadingComplete(e){
@@ -110,8 +131,9 @@ export default class FarmScene extends cc.Component {
         this.initSeedList();
         this.initFarmland();
         this.pickImmediatley = Farm.pickImmediatly;
-    }
 
+        this.lblWater.string = Common.resInfo.water.toString();
+    }
     private clearScene(){
 
         this.btnToSlot.node.off(ButtonEffect.CLICK_END,this.onGoSlot,this);
@@ -260,11 +282,13 @@ export default class FarmScene extends cc.Component {
     }
 
     private onUpdateTree(e){
-        var index:number = e.index;
-        var farmland:FarmlandUI = this.getFarmlandUIWithIdx(index);
-        if(farmland){
-            farmland.onUpdateView();
-        }
+
+        this.lblWater.string = Common.resInfo.water.toString();
+        // var index:number = e.index;
+        // var farmland:FarmlandUI = this.getFarmlandUIWithIdx(index);
+        // if(farmland){
+        //     farmland.onUpdateView();
+        // }
     }
     private onRemoveTree(e){
         var index:number = e.index;

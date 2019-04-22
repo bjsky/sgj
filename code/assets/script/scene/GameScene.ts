@@ -16,6 +16,8 @@ import { ResConst, ConfigConst, SceneCont } from "../GlobalData";
 import { CFG } from "../core/ConfigManager";
 import SlotNode from "../game/SlotNode";
 import { ShareType } from "../view/SharePanel";
+import { ResType } from "../message/MsgAddRes";
+import SceneBase, { SceneEnum } from "./SceneBase";
 
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
@@ -30,7 +32,7 @@ import { ShareType } from "../view/SharePanel";
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class GameScene extends cc.Component {
+export default class GameScene extends SceneBase {
 
     @property(SlotView) slot1: SlotView = null;
     @property(SlotView) slot2: SlotView = null;
@@ -41,6 +43,7 @@ export default class GameScene extends cc.Component {
 
     @property(cc.Node) houseNode:cc.Node = null;
 
+    @property(cc.Node) iconEnergy: cc.Node = null;
     @property(cc.Label) lblcostLife: cc.Label = null;
     @property(cc.Label) lblTotalLife: cc.Label = null;
     @property(cc.Label) lblLifeDesc: cc.Label = null;
@@ -63,6 +66,10 @@ export default class GameScene extends cc.Component {
         this.showNothing();
     }
 
+    constructor(){
+        super();
+        this.sceneName = SceneEnum.Game;
+    }
 
     start () {
 
@@ -81,7 +88,7 @@ export default class GameScene extends cc.Component {
         EVENT.on(GameEvent.BigWin_updateTurn,this.onBigwinTurn,this);
         EVENT.on(GameEvent.BigWin_End,this.onBigwinEnd,this);
         EVENT.on(GameEvent.Scene_To_Farm,this.onGoFarm,this);
-        EVENT.on(GameEvent.Energy_UI_Update,this.onEnergyUIUpdate,this);
+        EVENT.on(GameEvent.Get_Res_Finish,this.onGetRes,this);
         this.initScene();
     }
 
@@ -94,7 +101,7 @@ export default class GameScene extends cc.Component {
         EVENT.off(GameEvent.BigWin_updateTurn,this.onBigwinTurn,this);
         EVENT.off(GameEvent.BigWin_End,this.onBigwinEnd,this);
         EVENT.off(GameEvent.Scene_To_Farm,this.onGoFarm,this);
-        EVENT.off(GameEvent.Energy_UI_Update,this.onEnergyUIUpdate,this);
+        EVENT.off(GameEvent.Get_Res_Finish,this.onGetRes,this);
     }
 
     private _gameSlot:GameSlot;
@@ -114,6 +121,11 @@ export default class GameScene extends cc.Component {
     private onEnergyUIUpdate(e){
         Common.resInfo.updateEnergy();
         this.lblTotalLife.string = Common.resInfo.energy.toString();
+    }
+    private onGetRes(e){
+        if(e.type == ResType.Energy){
+            this.onEnergyUIUpdate(e);
+        }
     }
 
     private clearScene(){

@@ -248,6 +248,7 @@ export default class FarmController{
     public speedUp(index:number,cost:number,startTime:number){
         NET.send(MsgWaterTree.create(cost,index,startTime),(msg:MsgWaterTree)=>{
             if(msg && msg.resp){
+                Common.resInfo.updateInfo(msg.resp.resInfo);
                 var farmland:FarmlandInfo = new FarmlandInfo();
                 farmland.initFromServer(msg.resp.farmland);
                 this.updateFarmland(index,farmland);

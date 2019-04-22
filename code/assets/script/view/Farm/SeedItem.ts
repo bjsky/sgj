@@ -107,9 +107,9 @@ export default class SeedItem extends DListItem{
         var index:number = Farm.getIdleFarmlandIndex();
         if(index<0){
             if(Farm.getPlantedFarmlandCount()>0){
-                UI.showTip("没有空闲土地，滑动采摘");
+                UI.showTip("没有空闲土地，滑动果树采摘");
             }else{
-                UI.showTip("没有空闲土地，等会再来");
+                UI.showTip("没有空闲土地，点击果树浇水");
             }
             return;
         }else{
@@ -121,9 +121,9 @@ export default class SeedItem extends DListItem{
         var index:number = Farm.getIdleFarmlandIndex();
         if(index<0){
             if(Farm.getPlantedFarmlandCount()>0){
-                UI.showTip("没有空闲土地，滑动采摘");
+                UI.showTip("没有空闲土地，滑动果树采摘");
             }else{
-                UI.showTip("没有空闲土地，等会再来");
+                UI.showTip("没有空闲土地，点击果树浇水");
             }
             return;
         }else{

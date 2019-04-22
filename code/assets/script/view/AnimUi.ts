@@ -8,6 +8,7 @@ import GameEvent from "../GameEvent";
 import LoadSprite from "../component/LoadSprite";
 import PathUtil from "../utils/PathUtil";
 import { SOUND } from "../core/SoundManager";
+import { ResType } from "../message/MsgAddRes";
 
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
@@ -32,6 +33,9 @@ export enum SlotResultAniEnum{
     PickTreefly,
     Plant,
     Pick,
+    GoldFly,
+    GetResFly,
+    SlotGetRes,     //转盘抽资源
 }
 export class SlotResultAnim{
 
@@ -46,6 +50,8 @@ export class SlotResultAnim{
     public starTo:cc.Vec2 = null;
     public starFrom:cc.Vec2 = null;
     public coinTo:cc.Vec2 = null;
+    public resType:ResType = 0;
+    public addResCount:number = 0;
 }
 @ccclass
 export default class AnimUi extends UIBase {
@@ -63,6 +69,9 @@ export default class AnimUi extends UIBase {
     @property(cc.Node)  msStar: cc.Node = null;
     @property(cc.Node)  coinNode: cc.Node = null;
     @property(cc.Node)  starNode: cc.Node = null;
+    @property(cc.Node)  nodeRes: cc.Node = null;
+    @property(LoadSprite)  sprRes: LoadSprite = null;
+    @property(cc.Label)  msResCount: cc.Label = null;
 
     // LIFE-CYCLE CALLBACKS:
 
@@ -119,6 +128,23 @@ export default class AnimUi extends UIBase {
             this.addStar(anim.starFrom);
         }else if(anim.type == SlotResultAniEnum.PickTreefly){
             this.flyStar(anim.starTo);
+        }else if(anim.type == SlotResultAniEnum.GetResFly){
+            this.nodeRes.active = true;
+            var moveFrom:cc.Vec2 = this.nodeRes.parent.convertToNodeSpaceAR(anim.starFrom);
+            var moveTo:cc.Vec2 = this.nodeRes.parent.convertToNodeSpaceAR(anim.starTo);
+
+            var moveCenter:cc.Vec2 = cc.v2(moveFrom.x-200,moveFrom.y+50);
+            this.sprRes.load(PathUtil.getRESIcon(anim.resType));
+            this.msResCount.string = " ";//+anim.addResCount;
+            this.nodeRes.position = moveFrom;
+            var move = cc.sequence(cc.bezierTo(0.6,[moveFrom,moveCenter,moveTo]).easing(cc.easeIn(1.5)),
+                cc.callFunc(()=>{
+                    EVENT.emit(GameEvent.Get_Res_Finish,{type:anim.resType});
+                    this.nodeRes.active = false;
+                }));
+            this.nodeRes.runAction(move);
+        }else if(anim.type == SlotResultAniEnum.GoldFly){
+            this.showCoinFly(anim);
         }
     }
     private hideAll(){
@@ -130,6 +156,7 @@ export default class AnimUi extends UIBase {
         this.sprPlant.node.active = false;
         this.sprPick.node.active = false;
         this.nodeMuti.active = false;
+        this.nodeRes.active = false;
     }
 
     private showNotice(spr:cc.Node,anim:SlotResultAnim){

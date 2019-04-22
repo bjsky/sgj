@@ -1,11 +1,13 @@
 import MessageBase from "../core/net/MessageBase";
 import NetConst from "../NetConst";
 import { SResInfo } from "./MsgLogin";
+import { Common } from "../CommonData";
 
 //资源类型
 export enum ResType{
     Gold = 1,       //金币
     Water = 2,      //水滴
+    Energy = 3,     //能量，后端不用
 }
 export class CSAddRes{
     //增加资源
@@ -34,16 +36,22 @@ export default class MsgAddRes extends MessageBase {
         // this.isLocal = true;
     }
 
-    public static create(add:number){
+    public static create(type:ResType, add:number){
         var msg = new MsgAddRes();
         msg.param = new CSAddRes();
-        msg.param.addType = ResType.Water;
+        msg.param.addType = type;
         msg.param.addNum = add;
         return msg;
     }
 
     public respFromLocal(){
-        var json:any = {};
+        var resInfo:SResInfo = Common.resInfo.cloneServerInfo();
+        switch(this.param.addType){
+            case ResType.Water:
+            resInfo.water+= this.param.addNum;
+            break;
+        }
+        var json:any = {resInfo:resInfo};
         return this.parse(json);
     }
 

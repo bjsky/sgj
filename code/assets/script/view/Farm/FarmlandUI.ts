@@ -1,7 +1,7 @@
 import FarmlandInfo from "../../FarmlandInfo";
 import UIBase from "../../component/UIBase";
 import { CFG } from "../../core/ConfigManager";
-import { ConfigConst } from "../../GlobalData";
+import { ConfigConst, ResConst } from "../../GlobalData";
 import { Drag, CDragEvent } from "../../core/DragManager";
 import { Farm, UnlockFarmlandInfo } from "../../game/farm/FarmController";
 import { UI } from "../../core/UIManager";
@@ -9,6 +9,8 @@ import { Common } from "../../CommonData";
 import StringUtil from "../../utils/StringUtil";
 import LoadSprite from "../../component/LoadSprite";
 import PathUtil from "../../utils/PathUtil";
+import { MessagePanelType } from "../MessagePanel";
+import { ShareType } from "../SharePanel";
 
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
@@ -187,6 +189,20 @@ export default class FarmlandUI extends UIBase {
     }
 
     private onWaterTouch(e){
+        if(Common.resInfo.water<=0){
+            UI.createPopUp(ResConst.SharePanel,{type:ShareType.shareGetWater});
+            return;
+        }
+
+        var farmland = Farm.getFarmlandAtIndex(this.index);
+        var seedCfg:any = CFG.getCfgDataById(ConfigConst.Plant,farmland.treeType);
+        var cost:number = Number(seedCfg.waterCost);
+        var levelTime:number = Math.ceil(this._growthTotalTime - this.growthTime);
+        var saveTime:number = Number(seedCfg.waterSaveTime)* levelTime;
+        saveTime = Number(saveTime.toFixed(0));
+        var startTime:number = farmland.growthStartTime - saveTime*1000;
+        Farm.speedUp(this.index,cost,startTime);
+        
         this.waterIcon.node.stopAllActions();
         this.waterSaveTimeNode.stopAllActions();
         this.waterSaveTimeNode.setPosition(cc.v2(0,0));
@@ -198,13 +214,6 @@ export default class FarmlandUI extends UIBase {
 
             this.waterSaveTime.node.setPosition(this.getRandomPos());
             this.waterSaveTime.node.active = true;
-            var farmland = Farm.getFarmlandAtIndex(this.index);
-            var seedCfg:any = CFG.getCfgDataById(ConfigConst.Plant,farmland.treeType);
-            var cost:number = Number(seedCfg.waterCost);
-            var levelTime:number = Math.ceil(this._growthTotalTime - this.growthTime);
-            var saveTime:number = Number(seedCfg.waterSaveTime)* levelTime;
-            saveTime = Number(saveTime.toFixed(0));
-            var startTime:number = farmland.growthStartTime - saveTime*1000;
             this.waterSaveTime.string = "+"+saveTime+"秒";
         
             this.waterIcon.node.active = false;
@@ -212,8 +221,8 @@ export default class FarmlandUI extends UIBase {
                 cc.moveBy(0.15,cc.v2(0,10)).easing(cc.easeBackOut()),
                 cc.delayTime(0.3),
                 cc.callFunc(()=>{
-                    Farm.speedUp(this.index,cost,startTime);
                     this.waterSaveTime.node.active = false;
+                    this.onUpdateView();
                 }),
                 cc.delayTime(3),
                 cc.callFunc(()=>{
