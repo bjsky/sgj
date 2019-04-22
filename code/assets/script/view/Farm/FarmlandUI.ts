@@ -11,6 +11,7 @@ import LoadSprite from "../../component/LoadSprite";
 import PathUtil from "../../utils/PathUtil";
 import { MessagePanelType } from "../MessagePanel";
 import { ShareType } from "../SharePanel";
+import { SOUND } from "../../core/SoundManager";
 
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
@@ -191,8 +192,10 @@ export default class FarmlandUI extends UIBase {
     private onWaterTouch(e){
         if(Common.resInfo.water<=0){
             UI.createPopUp(ResConst.SharePanel,{type:ShareType.shareGetWater});
+            SOUND.playBtnSound();
             return;
         }
+        SOUND.playWaterSound();
 
         var farmland = Farm.getFarmlandAtIndex(this.index);
         var seedCfg:any = CFG.getCfgDataById(ConfigConst.Plant,farmland.treeType);

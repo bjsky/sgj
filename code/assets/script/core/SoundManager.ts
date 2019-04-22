@@ -133,6 +133,10 @@ export default class SoundManager{
     public playStarBounceSound(){
         this.playEffectSound(SoundConst.Star_Bounce_sound);
     }
+
+    public playWaterSound(){
+        this.playEffectSound(SoundConst.Water_sound);
+    }
 }
 
 export class SoundConst {
@@ -148,6 +152,7 @@ export class SoundConst {
     public static Farm_Bg_sound:string ="sounds/farm";
     public static Plant_sound:string ="sounds/plant";
     public static Star_Bounce_sound:string ="sounds/star";
+    public static Water_sound:string ="sounds/water";
 }
 
 export var SOUND = SoundManager.getInstance();

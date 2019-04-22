@@ -877,14 +877,14 @@
       "y": 1,
       "z": 1
     },
-    "_rotationX": 75,
-    "_rotationY": 75,
+    "_rotationX": 0,
+    "_rotationY": 0,
     "_quat": {
       "__type__": "cc.Quat",
       "x": 0,
       "y": 0,
-      "z": -0.6087614290087207,
-      "w": 0.7933533402912352
+      "z": 0,
+      "w": 1
     },
     "_skewX": 0,
     "_skewY": 0,

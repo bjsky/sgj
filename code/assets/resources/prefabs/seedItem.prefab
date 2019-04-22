@@ -1084,7 +1084,7 @@
     },
     "_enabled": true,
     "originalScale": 1,
-    "effectSound": true,
+    "effectSound": false,
     "_id": ""
   },
   {

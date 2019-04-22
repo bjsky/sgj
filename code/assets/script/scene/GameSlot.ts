@@ -112,9 +112,10 @@ export default class GameSlot{
     }
     public playSlotViewGetRes(slotArr:Array<number>,cb:Function){
         var id:number = slotArr[0];
-        this._slot.play(id,()=>{
-            
-            var anim = new SlotResultAnim(SlotResultAniEnum.GetResFly);
+        this._slot.play(id);
+        var anim:SlotResultAnim;
+        this._scene.scheduleOnce(()=>{
+            anim = new SlotResultAnim(SlotResultAniEnum.SlotGetRes);
             var resType:ResType ;
             var fruitCfg:any = CFG.getCfgDataById(ConfigConst.Fruit,slotArr[0]);
             var resCount = Number(fruitCfg.getResCount);
@@ -125,16 +126,21 @@ export default class GameSlot{
             anim.addResCount = resCount;
             anim.starFrom = this._slot.getFruitPos(SlotFruit.water);
             anim.starTo = this._scene.btnToFarm.node.parent.convertToWorldSpaceAR(this._scene.btnToFarm.node.position);
-            NET.send(MsgAddRes.create(resType,resCount),(msg:MsgAddRes)=>{
+            UI.showWinAnim(anim);
+        },2);
+        this._scene.scheduleOnce(()=>{
+            NET.send(MsgAddRes.create(anim.resType,anim.addResCount),(msg:MsgAddRes)=>{
                 if(msg && msg.resp){
                     Common.resInfo.updateInfo(msg.resp.resInfo);
+                    anim.type = SlotResultAniEnum.GetResFly;
                     UI.showWinAnim(anim);
                 }
             },this)
-            this._scene.scheduleOnce(()=>{
-                cb && cb();
-            },0.5)
-        });
+        },2.5)
+        
+        this._scene.scheduleOnce(()=>{
+            cb && cb();
+        },3)
     }
 
     public playSlotViewShare(result:SlotWin,cb:Function){

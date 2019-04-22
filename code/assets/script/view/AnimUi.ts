@@ -73,6 +73,7 @@ export default class AnimUi extends UIBase {
     @property(cc.Node)  nodeRes: cc.Node = null;
     @property(LoadSprite)  sprRes: LoadSprite = null;
     @property(cc.Label)  msResCount: cc.Label = null;
+    @property(cc.Sprite)  sprWater: cc.Sprite = null;
 
     // LIFE-CYCLE CALLBACKS:
 
@@ -146,6 +147,10 @@ export default class AnimUi extends UIBase {
             this.nodeRes.runAction(move);
         }else if(anim.type == SlotResultAniEnum.GoldFly){
             this.showCoinFly(anim);
+        }else if(anim.type == SlotResultAniEnum.SlotGetRes){
+            if(anim.resType == ResType.Water){
+                this.showNotice(this.sprWater.node,anim);
+            }
         }
     }
     private hideAll(){
@@ -158,6 +163,7 @@ export default class AnimUi extends UIBase {
         this.sprPick.node.active = false;
         this.nodeMuti.active = false;
         this.nodeRes.active = false;
+        this.sprWater.node.active = false;
     }
 
     private showNotice(spr:cc.Node,anim:SlotResultAnim){

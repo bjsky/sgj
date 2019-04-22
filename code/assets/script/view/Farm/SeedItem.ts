@@ -11,6 +11,7 @@ import { UI } from "../../core/UIManager";
 import { MessagePanelType } from "../MessagePanel";
 import { EVENT } from "../../core/EventController";
 import GameEvent from "../../GameEvent";
+import { SOUND } from "../../core/SoundManager";
 
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
@@ -102,6 +103,7 @@ export default class SeedItem extends DListItem{
         }
         if(Common.resInfo.gold<this._cost){
             UI.createPopUp(ResConst.MessgaePanel,{type:MessagePanelType.gotoSlot})
+            SOUND.playBtnSound();
             return;
         }
         var index:number = Farm.getIdleFarmlandIndex();
@@ -111,8 +113,10 @@ export default class SeedItem extends DListItem{
             }else{
                 UI.showTip("没有空闲土地，点击果树浇水");
             }
+            SOUND.playBtnSound();
             return;
         }else{
+            SOUND.playPlantSound();
             Farm.plantOnce(this._seedId,index);
         }
     }
