@@ -23,7 +23,7 @@ export class SCAddRes{
     
     public static parse(obj:any):SCAddRes{
         var info:SCAddRes = new SCAddRes();
-        info.resInfo = SResInfo.parse(obj.resInfo);
+        info.resInfo = SResInfo.parse(obj);
         return info;
     }
 }
@@ -32,7 +32,7 @@ export default class MsgAddRes extends MessageBase {
     public resp:SCAddRes;
 
     constructor(){
-        super(NetConst.ShareWater);
+        super(NetConst.AddRes);
         // this.isLocal = true;
     }
 
@@ -51,7 +51,7 @@ export default class MsgAddRes extends MessageBase {
             resInfo.water+= this.param.addNum;
             break;
         }
-        var json:any = {resInfo:resInfo};
+        var json:any = resInfo;
         return this.parse(json);
     }
 

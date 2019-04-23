@@ -51,7 +51,6 @@ export default class FarmScene extends SceneBase{
 
     @property(cc.Label) lblWater: cc.Label = null;
     @property(cc.Node) iconWater: cc.Node = null;
-    
     constructor(){
         super();
         this.sceneName = SceneEnum.Farm;
@@ -259,21 +258,21 @@ export default class FarmScene extends SceneBase{
     }
     private onDragEnd(e){
         this.btnPick.node.off(CDragEvent.DRAG_END,this.onDragEnd,this);
-        Farm.pickServer(()=>{
-            var anim:SlotResultAnim = new SlotResultAnim(SlotResultAniEnum.PickTreefly);
-            anim.starTo = UI.main.sprStar.node.parent.convertToWorldSpaceAR(UI.main.sprStar.node.position);
-            UI.showWinAnim(anim);
-        });
+        // Farm.pickServer(()=>{
+        //     var anim:SlotResultAnim = new SlotResultAnim(SlotResultAniEnum.PickTreefly);
+        //     anim.starTo = UI.main.sprStar.node.parent.convertToWorldSpaceAR(UI.main.sprStar.node.position);
+        //     UI.showWinAnim(anim);
+        // });
     }
     private onPickImeDragEnd(e){
         this.btnPickIme.node.off(CDragEvent.DRAG_END,this.onPickImeDragEnd,this);
         this.pickImmediatley = false;
         Farm.pickImmediatly = false;
-        Farm.pickServer(()=>{
-            var anim:SlotResultAnim = new SlotResultAnim(SlotResultAniEnum.PickTreefly);
-            anim.starTo = UI.main.sprStar.node.parent.convertToWorldSpaceAR(UI.main.sprStar.node.position);
-            UI.showWinAnim(anim);
-        });
+        // Farm.pickServer(()=>{
+        //     var anim:SlotResultAnim = new SlotResultAnim(SlotResultAniEnum.PickTreefly);
+        //     anim.starTo = UI.main.sprStar.node.parent.convertToWorldSpaceAR(UI.main.sprStar.node.position);
+        //     UI.showWinAnim(anim);
+        // });
     }
 
     public set pickImmediatley(bool:boolean){
@@ -284,20 +283,25 @@ export default class FarmScene extends SceneBase{
     private onUpdateTree(e){
 
         this.lblWater.string = Common.resInfo.water.toString();
-        // var index:number = e.index;
-        // var farmland:FarmlandUI = this.getFarmlandUIWithIdx(index);
-        // if(farmland){
-        //     farmland.onUpdateView();
-        // }
+        
+        var index:number = e.index;
+        var farmland:FarmlandUI = this.getFarmlandUIWithIdx(index);
+        if(farmland){
+            var anim:SlotResultAnim = new SlotResultAnim(SlotResultAniEnum.Expfly);
+            anim.starFrom = farmland.waterIcon.node.parent.convertToWorldSpaceAR(farmland.waterIcon.node.position).sub(cc.v2(0,80));
+            anim.starTo = UI.main.expAddIcon.parent.convertToWorldSpaceAR(UI.main.expAddIcon.position);
+            UI.showWinAnim(anim);
+        }
     }
     private onRemoveTree(e){
         var index:number = e.index;
         var farmland:FarmlandUI = this.getFarmlandUIWithIdx(index);
         if(farmland){
-            var anim:SlotResultAnim = new SlotResultAnim(SlotResultAniEnum.PickTreeStand);
-            // anim.starTo = UI.main.sprStar.node.parent.convertToWorldSpaceAR(UI.main.sprStar.node.position);
-            anim.starFrom = farmland.node.parent.convertToWorldSpaceAR(farmland.node.position).add(cc.v2(0,10));
+            var anim:SlotResultAnim = new SlotResultAnim(SlotResultAniEnum.PickTreefly);
+            anim.starFrom = farmland.plantedStar.parent.convertToWorldSpaceAR(farmland.plantedStar.position);;
+            anim.starTo = UI.main.expAddIcon.parent.convertToWorldSpaceAR(UI.main.expAddIcon.position);
             UI.showWinAnim(anim);
+            
             farmland.onRemoveView(()=>{
                 delete this._farmlandNodeDic[farmland.index];
                 UI.removeUI(farmland.node)

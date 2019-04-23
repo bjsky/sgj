@@ -46,6 +46,10 @@ export default class FarmlandUI extends UIBase {
     @property(cc.Label) waterSaveTime: cc.Label = null;
     @property(cc.Node) waterSaveTimeNode:cc.Node = null;
 
+    @property(cc.Node) planted:cc.Node = null;
+    @property(cc.Node) plantedStar:cc.Node = null;
+    @property(cc.Label) plantedExp:cc.Label = null;
+
     
 
     private _farmland:FarmlandInfo = null;
@@ -92,6 +96,7 @@ export default class FarmlandUI extends UIBase {
         this.nodeLock.active = false;
         this.nodeOpen.active = false;
         this.waterIcon.node.active = this.waterSaveTime.node.active = false;
+        this.planted.active = false;
         if(this._state == FarmlandState.Lock){
             this.nodeLock.active = true;
             var unlock:UnlockFarmlandInfo = this._farmland as UnlockFarmlandInfo;
@@ -109,6 +114,7 @@ export default class FarmlandUI extends UIBase {
             if(this._state == FarmlandState.Planed){
                 this.nodeProgress.active = false;
                 this.sprTree.load(this._treeIcon)
+                this.showPlanted();
             }else if(this._state == FarmlandState.Planting){
                 this.nodeProgress.active = true;
                 this.sprTree.load(this._treeIcon+'_g')
@@ -144,6 +150,18 @@ export default class FarmlandUI extends UIBase {
         cb && cb();
     }
 
+    private showPlanted(){
+        this.planted.active = true;
+        this.plantedExp.string = this._addExp.toString();
+        // this.plantedStar.stopAllActions();
+        // this.plantedStar.setPosition(cc.v2(0,0));
+        // this.plantedStar.runAction(cc.sequence(
+        //     cc.moveTo(0.1,cc.v2(0,10)),
+        //     cc.moveTo(0.3,cc.v2(0,0)).easing(cc.easeBounceOut()),
+        //     cc.delayTime(0.5)
+        // ).repeatForever())
+    }
+
     start () {
 
     }
@@ -171,6 +189,7 @@ export default class FarmlandUI extends UIBase {
     private onDragMove(e){
         if(this._state == FarmlandState.Planed
             ||Farm.pickImmediatly){
+            SOUND.playPickSound();
             Farm.pickOnce(this._farmland.index,this._addExp);
         }
     }
@@ -204,7 +223,8 @@ export default class FarmlandUI extends UIBase {
         var saveTime:number = Number(seedCfg.waterSaveTime)* levelTime;
         saveTime = Number(saveTime.toFixed(0));
         var startTime:number = farmland.growthStartTime - saveTime*1000;
-        Farm.speedUp(this.index,cost,startTime);
+        var addExp:number = Number(seedCfg.waterAddExp);
+        Farm.speedUp(this.index,cost,addExp,startTime);
         
         this.waterIcon.node.stopAllActions();
         this.waterSaveTimeNode.stopAllActions();

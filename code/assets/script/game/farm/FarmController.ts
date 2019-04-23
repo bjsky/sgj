@@ -129,14 +129,7 @@ export default class FarmController{
         if(this._pickIndex.indexOf(index)<0){
             this._pickIndex.push(index);
             this._addExp += addExp;
-            // var farmland:FarmlandInfo = this.getFarmlandAtIndex(index);
-            // if(farmland.pickTimes>0){
-            //     farmland.pickTimes --;
-            //     farmland.growthStartTime = Common.getServerTime();
-            //     this.updateFarmland(index,farmland);
-            // }else{
-                this.removeFarmland(index);
-            // }
+            this.removeFarmland(index);
         }
     }
 
@@ -147,6 +140,7 @@ export default class FarmController{
             var addExp:number = this._addExp;
             this._pickIndex= [];
             this._addExp = 0;
+            console.log(pickstr);
             NET.send(MsgPick.create(pickstr,addExp),(msg:MsgPick)=>{
                 if(msg && msg.resp){
                     Common.updateUserInfo(msg.resp.userInfo);
@@ -245,13 +239,14 @@ export default class FarmController{
         return unlock;
     }
 
-    public speedUp(index:number,cost:number,startTime:number){
-        NET.send(MsgWaterTree.create(cost,index,startTime),(msg:MsgWaterTree)=>{
+    public speedUp(index:number,cost:number,addExp:number,startTime:number){
+        NET.send(MsgWaterTree.create(cost,addExp,index,startTime),(msg:MsgWaterTree)=>{
             if(msg && msg.resp){
+                Common.updateUserInfo(msg.resp.userInfo);
                 Common.resInfo.updateInfo(msg.resp.resInfo);
                 var farmland:FarmlandInfo = new FarmlandInfo();
                 farmland.initFromServer(msg.resp.farmland);
-                this.updateFarmland(index,farmland);
+                this.updateFarmland(farmland.index,farmland);
             }
         },this)
     }

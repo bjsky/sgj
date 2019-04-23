@@ -43,13 +43,16 @@ export default class SoundManager{
 
     private _currentOnceId:number = NaN;
     private _loadingEffect:boolean = false;
-    private playEffectSound(path:string){
+    private playEffectSound(path:string,single:boolean =false){
         if (this._bgMusicSwitch == false ||this._loadingEffect){
             return;
         }
-        // if(!isNaN(this._currentOnceId)){
-        //     cc.audioEngine.stop(this._currentOnceId);
-        // }
+
+        if(!isNaN(this._currentOnceId) && single){
+            if(cc.audioEngine.getState(this._currentOnceId) == cc.audioEngine.AudioState.PLAYING){
+                return;
+            }
+        }
         if(this._clipMaps[path]){
             this._currentOnceId = cc.audioEngine.play(this._clipMaps[path],false,this._volume);
         }else{
@@ -137,6 +140,9 @@ export default class SoundManager{
     public playWaterSound(){
         this.playEffectSound(SoundConst.Water_sound);
     }
+    public playPickSound(){
+        this.playEffectSound(SoundConst.Pick_sound,true);
+    }
 }
 
 export class SoundConst {
@@ -153,6 +159,7 @@ export class SoundConst {
     public static Plant_sound:string ="sounds/plant";
     public static Star_Bounce_sound:string ="sounds/star";
     public static Water_sound:string ="sounds/water";
+    public static Pick_sound:string ="sounds/pick";
 }
 
 export var SOUND = SoundManager.getInstance();

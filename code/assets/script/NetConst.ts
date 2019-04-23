@@ -27,8 +27,8 @@ export default class NetConst{
     //更新地块解锁
     public static UpdateUnlock:number = 22006;
     //浇水
-    public static WaterTree:number = 10005;
+    public static WaterTree:number = 22007;
     //分享加水
-    public static ShareWater:number = 100006;
+    public static AddRes:number = 22008;
 
 }

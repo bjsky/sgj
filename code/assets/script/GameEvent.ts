@@ -34,8 +34,6 @@ export default class GameEvent {
     public static Update_Tree:string ="Update_Tree";
     //移除树
     public static Remove_Tree:string ="Remove_Tree";
-    //采摘动画完成
-    public static Pick_Tree_Fly_End:string ="Pick_Tree_Fly_End";
     //场景切换
     public static Scene_To_Slot:string ="Scene_To_Slot";
     public static Scene_To_Farm:string ="Scene_To_Farm";

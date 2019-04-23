@@ -191,7 +191,6 @@ export default class GameScene extends SceneBase {
     private playEnd(){
         this._isSlotLocked = false;
         this.enableButtons(true);
-        Common.checkShowLevelup();
     }
 
     private enableButtons(bool:boolean){

@@ -6,6 +6,7 @@ import GameEvent from "../GameEvent";
 import { Common } from "../CommonData";
 import ResBounceEffect from "../component/ResBounceEffect";
 import { SOUND } from "../core/SoundManager";
+import { Farm } from "../game/farm/FarmController";
 
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
@@ -42,6 +43,11 @@ export default class MainUI extends UIBase {
     @property(cc.Sprite) sprStar: cc.Sprite = null;
     @property(cc.Node) coinIcon:cc.Node = null;
 
+    @property(cc.Label) lblExpAdd: cc.Label = null;
+    @property(cc.Node) nodeExpAdd: cc.Node = null;
+    @property(cc.Node) expAddIcon: cc.Node = null;
+    
+
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
@@ -56,7 +62,6 @@ export default class MainUI extends UIBase {
         EVENT.on(GameEvent.Show_Gold_Fly,this.onShowGoldfly,this);
         EVENT.on(GameEvent.UpgreadUI_Closed,this.onUpgradeUIClose,this);
         EVENT.on(GameEvent.Plant_Tree,this.onPlantTree,this);
-        EVENT.on(GameEvent.Pick_Tree_Fly_End,this.onPickTreeFlyEnd,this);
     }
 
     onDisable(){
@@ -66,7 +71,6 @@ export default class MainUI extends UIBase {
         EVENT.off(GameEvent.Show_Gold_Fly,this.onShowGoldfly,this);
         EVENT.off(GameEvent.UpgreadUI_Closed,this.onUpgradeUIClose,this);
         EVENT.off(GameEvent.Plant_Tree,this.onPlantTree,this);
-        EVENT.off(GameEvent.Pick_Tree_Fly_End,this.onPickTreeFlyEnd,this);
     }
 
     private hideAll(){
@@ -77,6 +81,8 @@ export default class MainUI extends UIBase {
         this.lblScore.string ="";
         this.proExp.progress =0;
         this.lblTitle.string ="";
+        this.nodeExpAdd.active = false;
+        this.lblExpAdd.string ="";
     }
 
     private initView(e){
@@ -95,13 +101,30 @@ export default class MainUI extends UIBase {
 
 
     private onShowExpflyEnd(e){
+        this.playExpBounce();
+        this.scheduleOnce(this.checkLevelup,0.4)
+        this.refreshExp();
+        Farm.pickServer(()=>{
+            this.refreshExp();
+        })
+    }
+
+    private checkLevelup(){
+        Common.checkShowLevelup();
+    }
+
+    private refreshExp(){
         this.lblScore.string = "种植经验："+Common.userInfo.totalExp;
         this.explevelEffect.playProgressAnim(Common.userInfo.exp,Common.userInfo.levelExp,Common.userInfo.level);
     }
-    private onPickTreeFlyEnd(e){
-        this.lblScore.string = "种植经验："+Common.userInfo.totalExp;
-        this.explevelEffect.playProgressAnim(Common.userInfo.exp,Common.userInfo.levelExp,Common.userInfo.level);
-    }
+
+
+    // private _expAddShowed:boolean =false;
+    // private showExpAdd(num:number){
+    //     if(this._expAddShowed){
+
+    //     }
+    // }
 
     private onShowGoldfly(e){
         this.goldEffect.setValue(Common.resInfo.gold);

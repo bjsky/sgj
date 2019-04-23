@@ -113,23 +113,11 @@ export default class AnimUi extends UIBase {
                 }
             },this)
         }else if(anim.type == SlotResultAniEnum.Expfly){
-            this.msStar.active = true;
-            var moveFrom:cc.Vec2 = this.msStar.parent.convertToNodeSpaceAR(anim.starFrom);
-            var moveTo:cc.Vec2 = this.msStar.parent.convertToNodeSpaceAR(anim.starTo);
-
-            var moveCenter:cc.Vec2 = cc.v2(moveFrom.x-200,moveFrom.y+50);
-            this.msStar.position = moveFrom;
-            var move = cc.sequence(cc.bezierTo(0.6,[moveFrom,moveCenter,moveTo]).easing(cc.easeIn(1.5)),
-                cc.callFunc(()=>{
-                    this.msStar.active = false;
-                    UI.main.playExpBounce();
-                    EVENT.emit(GameEvent.Show_Exp_FlyEnd);
-                }));
-            this.msStar.runAction(move);
+            this.flyStar(anim.starFrom,anim.starTo);
         }else if(anim.type == SlotResultAniEnum.PickTreeStand){
-            this.addStar(anim.starFrom);
+            // this.addStar(anim.starFrom);
         }else if(anim.type == SlotResultAniEnum.PickTreefly){
-            this.flyStar(anim.starTo);
+            this.flyStar(anim.starFrom,anim.starTo);
         }else if(anim.type == SlotResultAniEnum.GetResFly){
             this.nodeRes.active = true;
             var moveFrom:cc.Vec2 = this.nodeRes.parent.convertToNodeSpaceAR(anim.starFrom);
@@ -266,54 +254,58 @@ export default class AnimUi extends UIBase {
     }
 
     private _starPool:cc.NodePool = new cc.NodePool();
-    private _stars:cc.Node[] = [];
-    private addStar(pos:cc.Vec2){
+    // private _stars:cc.Node[] = [];
+    // private addStar(pos:cc.Vec2){
+    //     var star:cc.Node = this._starPool.get();
+    //     if(!star){
+    //         star = new cc.Node();
+    //         var spr:LoadSprite = star.addComponent(LoadSprite);
+    //         spr.load(PathUtil.getStarUrl());
+    //     }
+    //     star.parent = this.starNode;
+    //     star.position = this.starNode.convertToNodeSpaceAR(pos);
+    //     star.opacity = 0;
+        
+    //     star.runAction(cc.sequence(cc.fadeIn(0.2),cc.rotateBy(2,360).repeatForever()));
+    //     this._stars.push(star);
+    // }
+
+    private _starDelay:number = 0.07;
+    private _starCount:number =0;
+    private flyStar(fromPos:cc.Vec2,toPos:cc.Vec2){
+
         var star:cc.Node = this._starPool.get();
         if(!star){
             star = new cc.Node();
             var spr:LoadSprite = star.addComponent(LoadSprite);
             spr.load(PathUtil.getStarUrl());
         }
+        this._starCount++;
         star.parent = this.starNode;
-        star.position = this.starNode.convertToNodeSpaceAR(pos);
-        star.opacity = 0;
+        var moveFrom = this.starNode.convertToNodeSpaceAR(fromPos);
+        star.position = moveFrom;
+        console.log(star.position);
         
-        star.runAction(cc.sequence(cc.fadeIn(0.2),cc.rotateBy(2,360).repeatForever()));
-        this._stars.push(star);
+        var moveTo = this.starNode.convertToNodeSpaceAR(toPos);
+        var moveCenter:cc.Vec2 = cc.v2(moveFrom.x+(moveTo.x - moveFrom.x)/2,moveFrom.y-(moveTo.y - moveFrom.y)/8);
+            // var moveCenter = cc.v2(fromPos.x+200,fromPos.y+100);
+        var move = cc.bezierTo(0.6,[moveFrom,moveCenter,moveTo]).easing(cc.easeIn(1.5))
+        var seq = cc.sequence(
+            cc.delayTime(this._starDelay*this._starCount),
+            move//c.moveTo(0.4,this.starNode.convertToNodeSpaceAR(toPos))
+            ,cc.callFunc(()=>{
+                this._starCount--;
+                this._starPool.put(star);
+                EVENT.emit(GameEvent.Show_Exp_FlyEnd);
+            }))
+        star.runAction(seq);
     }
-
-    private _starDelay:number = 0.12;
-    private flyStar(toPos:cc.Vec2){
-        var starNode:cc.Node;
-        for(var i:number = 0;i<this._stars.length;i++){
-            starNode = this._stars[i];
-            var moveFrom = starNode.position;
-            var moveTo = this.starNode.convertToNodeSpaceAR(toPos);
-            var moveCenter = cc.v2(moveFrom.x+200,moveFrom.y+100);
-            var move = cc.bezierTo(0.6,[moveFrom,moveCenter,moveTo]).easing(cc.easeIn(1.5))
-            var seq = cc.sequence(
-                cc.delayTime(this._starDelay*i),
-                move//cc.moveTo(0.4,this.starNode.convertToNodeSpaceAR(toPos))
-                ,cc.fadeOut(0.01),cc.callFunc(()=>{
-                    UI.main.playExpBounce();
-                }))
-            starNode.runAction(seq);
-        }
-        this.scheduleOnce(()=>{
-            EVENT.emit(GameEvent.Show_Exp_FlyEnd);
-            
-        },0.6)
-        this.scheduleOnce(()=>{
-            this.clearStars();
-            Common.checkShowLevelup();
-        },this._stars.length*this._starDelay+0.6)
-    }
-    private clearStars(){
-        while(this._stars.length>0){
-            var star:cc.Node = this._stars.shift();
-            star.stopAllActions();
-            this._starPool.put(star);
-        }
-    }
+    // private clearStars(){
+    //     while(this._stars.length>0){
+    //         var star:cc.Node = this._stars.shift();
+    //         star.stopAllActions();
+    //         this._starPool.put(star);
+    //     }
+    // }
     // update (dt) {}
 }

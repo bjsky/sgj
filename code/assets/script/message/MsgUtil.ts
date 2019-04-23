@@ -8,6 +8,8 @@ import MsgPlant from "./MsgPlant";
 import MsgPick from "./MsgPick";
 import MsgShare from "./MsgShare";
 import MsgUpdateUnlock from "./MsgUpdateUnlock";
+import MsgWaterTree from "./MsgWaterTree";
+import MsgAddRes from "./MsgAddRes";
 
 /**
  * 太特么坑了，父类中还不能导入子类
@@ -41,6 +43,12 @@ export default class MsgUtil{
             break;
             case NetConst.UpdateUnlock:
             message = new MsgUpdateUnlock();
+            break;
+            case NetConst.WaterTree:
+            message = new MsgWaterTree();
+            break;
+            case NetConst.AddRes:
+            message = new MsgAddRes();
             break;
 
             default:
