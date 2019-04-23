@@ -197,22 +197,23 @@ export default class FarmController{
 
     //客户端更新解锁
     public updateUnlockFarmland(seeId:number){
-
         var curUnlockCfg = this._unlockDic[this._unlockFarmland.index];
-        var unlockSeedId:number = Number(curUnlockCfg.id);
-        if(seeId== unlockSeedId){
-            var index  = this._unlockFarmland.index;
-            var treeCount = this._unlockFarmland.treeCount;
-            treeCount+=1;
-            if(treeCount>=curUnlockCfg.count){
-                index +=1;
-                treeCount = 0;
-            }
-            NET.send(MsgUpdateUnlock.create(index,treeCount),(msg:MsgUpdateUnlock)=>{
-                if(msg && msg.resp){
-                    this.updateUnlock(msg.resp.unlockFarmland);
+        if(curUnlockCfg){
+            var unlockSeedId:number = Number(curUnlockCfg.id);
+            if(seeId== unlockSeedId){
+                var index  = this._unlockFarmland.index;
+                var treeCount = this._unlockFarmland.treeCount;
+                treeCount+=1;
+                if(treeCount>=curUnlockCfg.count){
+                    index +=1;
+                    treeCount = 0;
                 }
-            },this)
+                NET.send(MsgUpdateUnlock.create(index,treeCount),(msg:MsgUpdateUnlock)=>{
+                    if(msg && msg.resp){
+                        this.updateUnlock(msg.resp.unlockFarmland);
+                    }
+                },this)
+            }
         }
     }
 

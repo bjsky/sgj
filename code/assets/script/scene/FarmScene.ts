@@ -205,15 +205,15 @@ export default class FarmScene extends SceneBase{
             if(farmland == null){
                 farmland = Farm.getUnlockFarmlandInfo(i);
                 if(farmland){
-                    UI.loadUI(ResConst.FarmlandUI,{farmland:farmland},farmlandNode,(farmland:FarmlandUI)=>{
-                        this._farmlandNodeDic[farmland.index] = farmland;
+                    UI.loadUI(ResConst.FarmlandUI,{farmland:farmland},farmlandNode,(farmlandUI:FarmlandUI)=>{
+                        this._farmlandNodeDic[farmlandUI.index] = farmland;
                     });
                 }else{
                     continue;
                 }
             }else{
-                UI.loadUI(ResConst.FarmlandUI,{farmland:farmland},farmlandNode,(farmland:FarmlandUI)=>{
-                    this._farmlandNodeDic[farmland.index] = farmland;
+                UI.loadUI(ResConst.FarmlandUI,{farmland:farmland},farmlandNode,(farmlandUI:FarmlandUI)=>{
+                    this._farmlandNodeDic[farmlandUI.index] = farmlandUI;
                 });
             }
         }
@@ -226,8 +226,8 @@ export default class FarmScene extends SceneBase{
         var farmlandNode:cc.Node = this.farmlandNodes[index];
         var farmland:FarmlandInfo = Farm.getFarmlandAtIndex(index);
         if(farmland!=null){
-            UI.loadUI(ResConst.FarmlandUI,{farmland:farmland},farmlandNode,(farmland:FarmlandUI)=>{
-                this._farmlandNodeDic[farmland.index] = farmland;
+            UI.loadUI(ResConst.FarmlandUI,{farmland:farmland},farmlandNode,(farmlandUI:FarmlandUI)=>{
+                this._farmlandNodeDic[farmlandUI.index] = farmlandUI;
             });
         }
     }   
@@ -236,10 +236,10 @@ export default class FarmScene extends SceneBase{
         var reIndex:number = e.removeIndex;
         var upIndex:number = e.updateIndex;
         if(reIndex>=0){
-            var farmland:FarmlandUI = this.getFarmlandUIWithIdx(reIndex);
-            farmland.onRemoveView(()=>{
-                delete this._farmlandNodeDic[farmland.index];
-                UI.removeUI(farmland.node)
+            var farmlandUI:FarmlandUI = this.getFarmlandUIWithIdx(reIndex);
+            farmlandUI.onRemoveView(()=>{
+                delete this._farmlandNodeDic[farmlandUI.index];
+                UI.removeUI(farmlandUI.node)
             });
         }
         var updateFarmland = this.getFarmlandUIWithIdx(upIndex);
@@ -285,26 +285,27 @@ export default class FarmScene extends SceneBase{
         this.lblWater.string = Common.resInfo.water.toString();
         
         var index:number = e.index;
-        var farmland:FarmlandUI = this.getFarmlandUIWithIdx(index);
-        if(farmland){
+        var farmlandUI:FarmlandUI = this.getFarmlandUIWithIdx(index);
+        if(farmlandUI){
             var anim:SlotResultAnim = new SlotResultAnim(SlotResultAniEnum.Expfly);
-            anim.starFrom = farmland.waterIcon.node.parent.convertToWorldSpaceAR(farmland.waterIcon.node.position).sub(cc.v2(0,80));
+            console.log(anim.starFrom)
+            anim.starFrom = farmlandUI.waterIcon.node.parent.convertToWorldSpaceAR(farmlandUI.waterIcon.node.position).sub(cc.v2(0,80));;
             anim.starTo = UI.main.expAddIcon.parent.convertToWorldSpaceAR(UI.main.expAddIcon.position);
             UI.showWinAnim(anim);
         }
     }
     private onRemoveTree(e){
         var index:number = e.index;
-        var farmland:FarmlandUI = this.getFarmlandUIWithIdx(index);
-        if(farmland){
+        var farmlandUI:FarmlandUI = this.getFarmlandUIWithIdx(index);
+        if(farmlandUI){
             var anim:SlotResultAnim = new SlotResultAnim(SlotResultAniEnum.PickTreefly);
-            anim.starFrom = farmland.plantedStar.parent.convertToWorldSpaceAR(farmland.plantedStar.position);;
+            anim.starFrom = farmlandUI.plantedStar.parent.convertToWorldSpaceAR(farmlandUI.plantedStar.position);;
             anim.starTo = UI.main.expAddIcon.parent.convertToWorldSpaceAR(UI.main.expAddIcon.position);
             UI.showWinAnim(anim);
             
-            farmland.onRemoveView(()=>{
-                delete this._farmlandNodeDic[farmland.index];
-                UI.removeUI(farmland.node)
+            farmlandUI.onRemoveView(()=>{
+                delete this._farmlandNodeDic[farmlandUI.index];
+                UI.removeUI(farmlandUI.node)
             });
         }
     }

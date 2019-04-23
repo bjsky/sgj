@@ -97,6 +97,9 @@ export default class FarmlandUI extends UIBase {
         this.nodeOpen.active = false;
         this.waterIcon.node.active = this.waterSaveTime.node.active = false;
         this.planted.active = false;
+
+        this.waterIcon.node.off(cc.Node.EventType.TOUCH_START,this.onWaterTouch,this);
+        this.sprTree.node.off(cc.Node.EventType.TOUCH_START,this.onWaterTouch,this);
         if(this._state == FarmlandState.Lock){
             this.nodeLock.active = true;
             var unlock:UnlockFarmlandInfo = this._farmland as UnlockFarmlandInfo;
@@ -205,6 +208,7 @@ export default class FarmlandUI extends UIBase {
             this.waterIcon.node.setPosition(this._iconOrgPos);
             this.waterIcon.node.opacity = 255;
             this.waterIcon.node.on(cc.Node.EventType.TOUCH_START,this.onWaterTouch,this);
+            this.sprTree.node.on(cc.Node.EventType.TOUCH_START,this.onWaterTouch,this);
         }
     }
 
@@ -214,6 +218,9 @@ export default class FarmlandUI extends UIBase {
             SOUND.playBtnSound();
             return;
         }
+
+        this.waterIcon.node.off(cc.Node.EventType.TOUCH_START,this.onWaterTouch,this);
+        this.sprTree.node.off(cc.Node.EventType.TOUCH_START,this.onWaterTouch,this);
         SOUND.playWaterSound();
 
         var farmland = Farm.getFarmlandAtIndex(this.index);

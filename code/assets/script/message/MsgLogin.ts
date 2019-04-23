@@ -171,8 +171,8 @@ export default class MsgLogin
             accountId:StringUtil.getUUidClient(),
             newUser:0,
             serverTime:new Date().getTime(),
-            userInfo:{name:"开心农场",icon:"",gender:1,exp:0,totalExp:0,level:1},
-            resInfo:{gold:firstGold,energy:firstenergy,energyStartTime:Common.getServerTime(),water:firstWater},
+            userInfo:{name:"开心农场",icon:"",gender:1,exp:0,totalExp:0,level:41},
+            resInfo:{gold:100000,energy:firstenergy,energyStartTime:Common.getServerTime(),water:firstWater},
             farmlands:[
                 // {index:0,treeType:1,growthStartTime:0},
                 // {index:1,treeType:1,growthStartTime:0},
@@ -184,6 +184,7 @@ export default class MsgLogin
                 // {index:7,treeType:1,growthStartTime:0},
                 // {index:8,treeType:1,growthStartTime:0},
             ],
+            unlockFarmland:{index:9,treeCount:0}
         };
         return this.parse(json);
     }

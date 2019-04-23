@@ -198,7 +198,7 @@ window.showBannerAd = function(adId){
   })
   window.bannerAd.onResize(res => {
     window.bannerAd.style.left = system.screenWidth / 2 - res.width / 2;
-    window.bannerAd.style.top = system.screenHeight - res.height ;
+    window.bannerAd.style.top = system.screenHeight - res.height+10;
     console.log("RealSize = ",res);
   });
   window.bannerAd.show().then(() => console.log('banner 广告显示')).catch(err => console.log(err));
