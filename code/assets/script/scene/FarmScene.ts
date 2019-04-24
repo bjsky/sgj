@@ -206,7 +206,7 @@ export default class FarmScene extends SceneBase{
                 farmland = Farm.getUnlockFarmlandInfo(i);
                 if(farmland){
                     UI.loadUI(ResConst.FarmlandUI,{farmland:farmland},farmlandNode,(farmlandUI:FarmlandUI)=>{
-                        this._farmlandNodeDic[farmlandUI.index] = farmland;
+                        this._farmlandNodeDic[farmlandUI.index] = farmlandUI;
                     });
                 }else{
                     continue;

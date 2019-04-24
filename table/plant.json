@@ -1,8 +1,8 @@
 [
-    {"id":"1","name":"橙子","icon":"ui/tree/cz","unlocklv":"0","plantcost":"400","addExpPer":"200","growthCount":"1","growthTime":"10","waterCost":"1","waterSaveTime":"0.5","waterAddExp":"100"},
-    {"id":"2","name":"西瓜","icon":"ui/tree/xg","unlocklv":"5","plantcost":"600","addExpPer":"300","growthCount":"1","growthTime":"15","waterCost":"1","waterSaveTime":"0.5","waterAddExp":"150"},
-    {"id":"3","name":"香蕉","icon":"ui/tree/xj","unlocklv":"10","plantcost":"800","addExpPer":"400","growthCount":"1","growthTime":"20","waterCost":"1","waterSaveTime":"0.5","waterAddExp":"200"},
-    {"id":"4","name":"柠檬","icon":"ui/tree/nm","unlocklv":"20","plantcost":"1000","addExpPer":"500","growthCount":"1","growthTime":"30","waterCost":"1","waterSaveTime":"0.5","waterAddExp":"250"},
-    {"id":"5","name":"蓝莓","icon":"ui/tree/lm","unlocklv":"30","plantcost":"1200","addExpPer":"600","growthCount":"1","growthTime":"40","waterCost":"1","waterSaveTime":"0.5","waterAddExp":"300"},
-    {"id":"6","name":"樱桃","icon":"ui/tree/yt","unlocklv":"40","plantcost":"1400","addExpPer":"700","growthCount":"1","growthTime":"50","waterCost":"1","waterSaveTime":"0.5","waterAddExp":"350"}
+    {"id":"1","name":"橙子","icon":"ui/tree/cz","unlocklv":"0","plantcost":"400","addExpPer":"200","growthCount":"1","growthTime":"10","waterCost":"1","waterSaveTime":"0.5","waterAddExp":"100","stealExp":"50","stealWater":"1"},
+    {"id":"2","name":"西瓜","icon":"ui/tree/xg","unlocklv":"5","plantcost":"600","addExpPer":"300","growthCount":"1","growthTime":"15","waterCost":"1","waterSaveTime":"0.5","waterAddExp":"150","stealExp":"75","stealWater":"1"},
+    {"id":"3","name":"香蕉","icon":"ui/tree/xj","unlocklv":"10","plantcost":"800","addExpPer":"400","growthCount":"1","growthTime":"20","waterCost":"1","waterSaveTime":"0.5","waterAddExp":"200","stealExp":"100","stealWater":"2"},
+    {"id":"4","name":"柠檬","icon":"ui/tree/nm","unlocklv":"20","plantcost":"1000","addExpPer":"500","growthCount":"1","growthTime":"30","waterCost":"1","waterSaveTime":"0.5","waterAddExp":"250","stealExp":"125","stealWater":"2"},
+    {"id":"5","name":"蓝莓","icon":"ui/tree/lm","unlocklv":"30","plantcost":"1200","addExpPer":"600","growthCount":"1","growthTime":"40","waterCost":"1","waterSaveTime":"0.5","waterAddExp":"300","stealExp":"150","stealWater":"3"},
+    {"id":"6","name":"樱桃","icon":"ui/tree/yt","unlocklv":"40","plantcost":"1400","addExpPer":"700","growthCount":"1","growthTime":"50","waterCost":"1","waterSaveTime":"0.5","waterAddExp":"350","stealExp":"175","stealWater":"3"}
     ]
