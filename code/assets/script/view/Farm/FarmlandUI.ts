@@ -214,7 +214,7 @@ export default class FarmlandUI extends UIBase {
 
     private onWaterTouch(e){
         if(Common.resInfo.water<=0){
-            UI.createPopUp(ResConst.SharePanel,{type:ShareType.shareGetWater});
+            UI.createPopUp(ResConst.SharePanel,{type:ShareType.seeVideoGetWater});
             SOUND.playBtnSound();
             return;
         }
@@ -252,7 +252,9 @@ export default class FarmlandUI extends UIBase {
                 cc.delayTime(0.3),
                 cc.callFunc(()=>{
                     this.waterSaveTime.node.active = false;
-                    this.onUpdateView();
+                    if(this.isValid){
+                        this.onUpdateView();
+                    }
                 }),
                 cc.delayTime(3),
                 cc.callFunc(()=>{

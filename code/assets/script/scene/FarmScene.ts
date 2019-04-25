@@ -1,5 +1,5 @@
 import ButtonEffect from "../component/ButtonEffect";
-import { SceneCont, ConfigConst, ResConst } from "../GlobalData";
+import { SceneCont, ConfigConst, ResConst, Global, ServerType } from "../GlobalData";
 import DList, { DListDirection } from "../component/DList";
 import { CFG } from "../core/ConfigManager";
 import { Farm } from "../game/farm/FarmController";
@@ -16,6 +16,9 @@ import { Game } from "../GameController";
 import { SOUND } from "../core/SoundManager";
 import { ResType } from "../message/MsgAddRes";
 import SceneBase, { SceneEnum } from "./SceneBase";
+import { Wechat } from "../WeChatInterface";
+import { MessagePanelType } from "../view/MessagePanel";
+import UIBase from "../component/UIBase";
 
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
@@ -47,6 +50,7 @@ export default class FarmScene extends SceneBase{
 
     @property(DList) seedList: DList = null;
     @property([cc.Node]) farmlandNodes: cc.Node[] = [];
+    @property(cc.Button) btnRank: cc.Button = null;
 
 
     @property(cc.Label) lblWater: cc.Label = null;
@@ -126,7 +130,7 @@ export default class FarmScene extends SceneBase{
         this.btnToSlot.node.on(ButtonEffect.CLICK_END,this.onGoSlot,this);
         this.btnPick.node.on(cc.Node.EventType.TOUCH_START,this.onDragStart,this);
         this.btnPickIme.node.on(cc.Node.EventType.TOUCH_START,this.onPickImeDragStart,this);
-
+        this.btnRank.node.on(ButtonEffect.CLICK_END,this.onRankClick,this);
         this.initSeedList();
         this.initFarmland();
         this.pickImmediatley = Farm.pickImmediatly;
@@ -138,8 +142,59 @@ export default class FarmScene extends SceneBase{
         this.btnToSlot.node.off(ButtonEffect.CLICK_END,this.onGoSlot,this);
         this.btnPick.node.off(cc.Node.EventType.TOUCH_START,this.onDragStart,this);
         this.btnPickIme.node.off(cc.Node.EventType.TOUCH_START,this.onPickImeDragStart,this);
+        this.btnRank.node.off(ButtonEffect.CLICK_END,this.onRankClick,this);
         this._farmlandNodeDic = {};
         this.hideGuide();
+    }
+    private onRankClick(e){
+        
+        if(Global.serverType == ServerType.Publish){
+            if(Common.userInfo.level<3){
+                UI.showTip("排行榜3级开放");
+                return;
+            }
+            this.onInitUserInfo(null);
+            // Wechat.getUserInfo((userInfo)=>{
+            //     if(userInfo==null){
+            //         this.showUserInfoButton();
+            //     }else{
+            //         this.onInitUserInfo(userInfo);
+            //     }
+            // })
+        }else {
+            UI.createPopUp(ResConst.RankPanel,{});
+        }
+    }
+    private _message:cc.Node = null;
+    private showUserInfoButton(){
+        let systemInfo = Wechat.getSystemInfo();
+        let w = systemInfo.windowWidth;
+        let h = systemInfo.windowHeight;
+        let left = 0;
+        let top = 0;
+        let width = w;
+        let height = h;
+        Wechat.createUserInfoButton(left,top,width,height,(userInfo)=>{
+            if(userInfo){
+                this.onInitUserInfo(userInfo);
+            }
+            if(this._message!=null){
+                UI.closePopUp(this._message);
+                this._message = null;
+            }
+        });
+        UI.createPopUp(ResConst.MessgaePanel,{type:MessagePanelType.userInfo},(ui:UIBase)=>{
+            this._message = ui.node;
+        });
+    }
+
+    private onInitUserInfo(userInfo){
+        Global.initUserInfo(userInfo);
+        Wechat.opendata.postMessage({
+            messageId:1
+        })
+
+        UI.createPopUp(ResConst.RankPanel,{});
     }
 
     private onGoSlot(e){
@@ -237,10 +292,12 @@ export default class FarmScene extends SceneBase{
         var upIndex:number = e.updateIndex;
         if(reIndex>=0){
             var farmlandUI:FarmlandUI = this.getFarmlandUIWithIdx(reIndex);
-            farmlandUI.onRemoveView(()=>{
-                delete this._farmlandNodeDic[farmlandUI.index];
-                UI.removeUI(farmlandUI.node)
-            });
+            if(farmlandUI){
+                farmlandUI.onRemoveView(()=>{
+                    delete this._farmlandNodeDic[farmlandUI.index];
+                    UI.removeUI(farmlandUI.node)
+                });
+            }
         }
         var updateFarmland = this.getFarmlandUIWithIdx(upIndex);
         if(updateFarmland){

@@ -9,6 +9,7 @@ import { Scene } from "../scene/SceneController";
 import { SceneEnum } from "../scene/SceneBase";
 import FarmScene from "../scene/FarmScene";
 import GameScene from "../scene/GameScene";
+import { Wechat } from "../WeChatInterface";
 
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
@@ -25,6 +26,16 @@ export enum ShareType{
     shareGetGold,       //分享得金币
     shareGetEnergy,     //分享得精力
     shareGetWater,      //分享得水滴
+    seeVideoGetWater,   //看视频得水滴
+}
+
+export enum SeeVideoType{
+    AddWater = 1,       //得水滴
+}
+export enum SeeVideoResult{
+    NotComplete = 0,    //未看完
+    Complete ,          //正常看我
+    LoadError           //加载失败
 }
 @ccclass
 export default class SharePanel extends PopUpBase{
@@ -36,6 +47,8 @@ export default class SharePanel extends PopUpBase{
     @property(cc.Node) iconCoin:cc.Node = null;
     @property(cc.Node) iconStar:cc.Node = null;
     @property(cc.Node) iconWater:cc.Node = null;
+
+    @property(cc.Button) btnSeeVideo:cc.Button = null;
     
     // onLoad () {}
 
@@ -52,7 +65,8 @@ export default class SharePanel extends PopUpBase{
             this._addGold = data.addGold;
         }else if(this._type == ShareType.shareGetEnergy){
             this._addEnergy = Number(CFG.getCfgByKey(ConfigConst.Constant,"key","shareEnergy")[0].value)
-        }else if(this._type == ShareType.shareGetWater){
+        }else if(this._type == ShareType.shareGetWater
+            ||this._type == ShareType.seeVideoGetWater){
             this._addWater = Number(CFG.getCfgByKey(ConfigConst.Constant,"key","shareWater")[0].value)
         }
     }
@@ -61,18 +75,27 @@ export default class SharePanel extends PopUpBase{
     {
         super.onEnable();
         this.btnShare.node.on(ButtonEffect.CLICK_END,this.onShare,this);
+        this.btnSeeVideo.node.on(ButtonEffect.CLICK_END,this.onSeeVideo,this);
         this.initView();
     }
 
     onDisable(){
         super.onDisable();
         this.btnShare.node.off(ButtonEffect.CLICK_END,this.onShare,this);
+        this.btnSeeVideo.node.off(ButtonEffect.CLICK_END,this.onSeeVideo,this);
     }
 
     private initView(){
         this.iconCoin.active = (this._type == ShareType.shareGetGold);
         this.iconStar.active = (this._type == ShareType.shareGetEnergy);
-        this.iconWater.active = (this._type == ShareType.shareGetWater);
+        this.iconWater.active = (this._type == ShareType.seeVideoGetWater||this._type == ShareType.shareGetWater);
+        if(this._type == ShareType.seeVideoGetWater){
+            this.btnSeeVideo.node.active = true;
+            this.btnShare.node.active = false;
+        }else{
+            this.btnSeeVideo.node.active = false;
+            this.btnShare.node.active = true;
+        }
         if(this._type == ShareType.shareGetGold){
             this.lblCoin.string = "<color=#f6ff00><b>"+this._addGold+"</c>";
             this.lblDesc.string = "分享好友立即获得\n"+this._muti+"倍奖励！";
@@ -81,6 +104,10 @@ export default class SharePanel extends PopUpBase{
             this.lblCoin.string = "<color=#f6ff00><b>"+this._addEnergy+"</c>";
         }else if(this._type == ShareType.shareGetWater){
             this.lblDesc.string = "分享好友立即获得水滴:";
+            this.lblCoin.string = "<color=#f6ff00><b>"+this._addWater+"</c>";
+        }
+        else if(this._type == ShareType.seeVideoGetWater){
+            this.lblDesc.string = "观看视频立即获得水滴:";
             this.lblCoin.string = "<color=#f6ff00><b>"+this._addWater+"</c>";
         }
     }
@@ -104,7 +131,8 @@ export default class SharePanel extends PopUpBase{
                 Share.shareGetGold(this._addGold);
             }else if(this._type == ShareType.shareGetEnergy){
                 Share.shareGetEnergy(this._addEnergy,btnFrom,btnTo);
-            }else if(this._type == ShareType.shareGetWater){
+            }
+            else if(this._type == ShareType.shareGetWater){
                 Share.shareGetWater(this._addWater,btnFrom,btnTo);
             }
             this.onClose(e);
@@ -112,6 +140,28 @@ export default class SharePanel extends PopUpBase{
             UI.showTip("分享失败!");
             this.onClose(e);
         });
+    }
+
+    private onSeeVideo(e){
+        var btnFrom:cc.Vec2 = this.btnShare.node.parent.convertToWorldSpaceAR(this.btnShare.node.position);
+        var scene = Scene.getCurScene();
+        var btnTo:cc.Vec2;
+        if(scene.sceneName == SceneEnum.Farm){
+            var iconWater = (scene as FarmScene).iconWater;
+            btnTo = iconWater.parent.convertToWorldSpaceAR(iconWater.position);
+        }
+        if(this._type == ShareType.seeVideoGetWater){
+            Wechat.showVideoAd((result:SeeVideoResult)=>{
+                if(result == SeeVideoResult.Complete){
+                    Share.seeVideoGetWater(this._addWater,btnFrom,btnTo);
+                    this.onClose(e);
+                }else if(result == SeeVideoResult.LoadError){
+                    UI.showTip("视频加载失败！请稍候再来");
+                }else if(result == SeeVideoResult.NotComplete){
+                    UI.showTip("观看视频完成才能领取奖励");
+                }
+            },SeeVideoType.AddWater)
+        }
     }
 
     // update (dt) {}

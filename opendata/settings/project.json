@@ -1,0 +1,64 @@
+{
+  "collision-matrix": [
+    [
+      true
+    ]
+  ],
+  "design-resolution-height": 330,
+  "design-resolution-width": 500,
+  "excluded-modules": [
+    "WebGL Renderer",
+    "Renderer Texture",
+    "Dynamic Atlas",
+    "LabelOutline",
+    "ParticleSystem",
+    "TiledMap",
+    "Spine Skeleton",
+    "DragonBones",
+    "RichText",
+    "MotionStreak",
+    "Widget",
+    "Button",
+    "ProgressBar",
+    "ScrollBar",
+    "Toggle",
+    "PageView",
+    "PageViewIndicator",
+    "Slider",
+    "EditBox",
+    "VideoPlayer",
+    "WebView",
+    "Audio",
+    "AudioSource",
+    "Animation",
+    "Collider",
+    "Action",
+    "Physics",
+    "StudioComponent",
+    "Intersection",
+    "Native NetWork"
+  ],
+  "facebook": {
+    "appID": "",
+    "audience": {
+      "enable": false
+    },
+    "enable": false,
+    "live": {
+      "enable": false
+    }
+  },
+  "fit-height": false,
+  "fit-width": true,
+  "group-list": [
+    "default"
+  ],
+  "last-module-event-record-time": 1556106815826,
+  "simulator-orientation": false,
+  "simulator-resolution": {
+    "height": 640,
+    "width": 960
+  },
+  "use-customize-simulator": false,
+  "use-project-simulator-setting": false
+}

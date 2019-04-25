@@ -21,7 +21,9 @@ export enum MessagePanelType{
     gotoSlot = 1,
     plantFree, //免费种植
     pickImmediatly, //立即收获
+    userInfo,       //用户授权
 }
+
 
 @ccclass
 export default class MessagePanel extends PopUpBase {
@@ -30,10 +32,12 @@ export default class MessagePanel extends PopUpBase {
     @property(cc.Button) btnToSlot: cc.Button = null;
     @property(cc.Button) btnPlantFree: cc.Button = null;
     @property(cc.Button) btnPickImme: cc.Button = null;
+    @property(cc.Button) btnUserInfo: cc.Button = null;
     
     @property(cc.Node) toSlotNode: cc.Node = null;
     @property(cc.Node) plantFreeNode: cc.Node = null;
     @property(cc.Node) pickImmeNode: cc.Node = null;
+    @property(cc.Node) shouquanNode: cc.Node = null;
 
     // LIFE-CYCLE CALLBACKS:
 
@@ -60,6 +64,7 @@ export default class MessagePanel extends PopUpBase {
         this.btnPickImme.node.off(ButtonEffect.CLICK_END,this.toSureTouch,this);
     }
     protected onShowComplete(){
+        this.closeBtn.node.active = true;
         if(this._type == MessagePanelType.gotoSlot){
             this.toSlotNode.active = true;
             this.content.string = "<color=#ffffff>金币不足！\n<color= #f6ff00>去转盘试试运气</c></c>";
@@ -75,6 +80,10 @@ export default class MessagePanel extends PopUpBase {
             this.content.string = "<color=#ffffff>获得一次立即收获机会\n<color= #f6ff00>去农场收获吧</c></c>";
             this.content.fontSize = 40;
             this.content.lineHeight = 50;
+        }else if(this._type == MessagePanelType.userInfo){
+            this.shouquanNode.active = true;
+            this.content.string = "<color=#ffffff>查看排行榜需要您的\n<color= #f6ff00>授权用户信息</c></c>";
+            this.closeBtn.node.active = false;
         }
     }
 
@@ -83,6 +92,7 @@ export default class MessagePanel extends PopUpBase {
         this.toSlotNode.active = false;
         this.plantFreeNode.active = false;
         this.pickImmeNode.active = false;
+        this.shouquanNode.active = false;
     }
     private _sure:boolean = false;
     private toSureTouch(e){

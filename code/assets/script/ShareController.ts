@@ -110,6 +110,20 @@ export default class ShareController{
             }
         },this)
     }
+
+    public seeVideoGetWater(addWater:number,from:cc.Vec2,to:cc.Vec2){
+        NET.send(MsgAddRes.create(ResType.Water, addWater),(msg:MsgAddRes)=>{
+            if(msg && msg.resp){
+                Common.resInfo.updateInfo(msg.resp.resInfo);
+                var anim:SlotResultAnim = new SlotResultAnim(SlotResultAniEnum.GetResFly);
+                anim.resType = ResType.Water;
+                anim.addResCount = addWater;
+                anim.starFrom = from;
+                anim.starTo = to;
+                UI.showWinAnim(anim);
+            }
+        },this)
+    }
 }
 
 export var Share :ShareController = ShareController.getInstance();

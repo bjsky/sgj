@@ -7,6 +7,7 @@ import GameEvent from "./GameEvent";
 import { UI } from "./core/UIManager";
 import ResInfo from "./ResInfo";
 import { Farm } from "./game/farm/FarmController";
+import { Wechat } from "./WeChatInterface";
 
 export default class CommonData {
     private static _instance: CommonData = null;
@@ -80,6 +81,8 @@ export default class CommonData {
     public updateUserInfo(data:SUserInfo){
         var levelPrev = this.userInfo.level;
         this.userInfo.updateInfo(data);
+        Wechat.setUserCloudStorage("level",this.userInfo.level.toString());
+        Wechat.setUserCloudStorage("duty",this.userInfo.title.toString());
         var levelup = this.userInfo.level - levelPrev>0;
         if(levelup){
             this.onUserLevelUp();

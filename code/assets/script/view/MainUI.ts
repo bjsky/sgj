@@ -46,6 +46,8 @@ export default class MainUI extends UIBase {
     @property(cc.Label) lblExpAdd: cc.Label = null;
     @property(cc.Node) nodeExpAdd: cc.Node = null;
     @property(cc.Node) expAddIcon: cc.Node = null;
+
+    @property(cc.Node) subContent: cc.Node = null;
     
 
     // LIFE-CYCLE CALLBACKS:
@@ -62,6 +64,8 @@ export default class MainUI extends UIBase {
         EVENT.on(GameEvent.Show_Gold_Fly,this.onShowGoldfly,this);
         EVENT.on(GameEvent.UpgreadUI_Closed,this.onUpgradeUIClose,this);
         EVENT.on(GameEvent.Plant_Tree,this.onPlantTree,this);
+
+        this.subContent.active = false;
     }
 
     onDisable(){
