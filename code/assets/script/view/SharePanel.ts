@@ -64,7 +64,8 @@ export default class SharePanel extends PopUpBase{
             this._muti = data.muti;
             this._addGold = data.addGold;
         }else if(this._type == ShareType.shareGetEnergy){
-            this._addEnergy = Number(CFG.getCfgByKey(ConfigConst.Constant,"key","shareEnergy")[0].value)
+            var leveCfg:any = CFG.getCfgDataById(ConfigConst.Level,Common.userInfo.level);
+            this._addEnergy = Number(leveCfg.shareEnergy);
         }else if(this._type == ShareType.shareGetWater
             ||this._type == ShareType.seeVideoGetWater){
             this._addWater = Number(CFG.getCfgByKey(ConfigConst.Constant,"key","shareWater")[0].value)
