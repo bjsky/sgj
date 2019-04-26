@@ -41,7 +41,7 @@ export default class GlobalData{
         return GlobalData._instance;
     }
 
-    public serverType:number = ServerType.Client;
+    public serverType:number = ServerType.Publish;
     public version:string = "1.0.16";
     
     public testAccount:string ="test004"//"test027";

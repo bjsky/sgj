@@ -14,6 +14,9 @@ export default class FarmlandInfo{
 
     public initFromServer(stree:SFarmlandInfo){
         this.index = stree.index;
+        if(stree.treeType<1){   //不可能小于1
+            stree.treeType = 1;
+        }
         this.treeType = stree.treeType;
         // this.pickTimes = stree.pickTimes;
         this.growthStartTime = stree.growthStartTime;

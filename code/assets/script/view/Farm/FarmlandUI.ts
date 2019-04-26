@@ -67,6 +67,8 @@ export default class FarmlandUI extends UIBase {
     public setData(data:any){
         super.setData(data);
         this._farmland = data.farmland;
+
+        console.log("farmland:"+JSON.stringify( this._farmland));
         if(this._farmland instanceof UnlockFarmlandInfo){
             this._state = FarmlandState.Lock;
         }else{

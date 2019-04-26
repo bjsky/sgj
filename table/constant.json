@@ -13,6 +13,6 @@
     {"id":"12","key":"firstGold","name":"初试金币","value":"5000"},
     {"id":"13","key":"shareEnergy","name":"分享获得精力","value":"2000"},
     {"id":"14","key":"farmlandlock","name":"地格解锁条件","value":"0;0|0;0|0;0|1;5|2;10|3;15|4;20|5;25|6;30"},
-    {"id":"15","key":"firstWater","name":"初始水滴","value":"100"},
+    {"id":"15","key":"firstWater","name":"初始水滴","value":"50"},
     {"id":"16","key":"shareWater","name":"分享获得水滴","value":"100"}
     ]
