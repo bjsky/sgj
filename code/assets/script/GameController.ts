@@ -21,7 +21,8 @@ export default class GameController {
         Global.initGame();
         Loading.startLoading(this.onLoadingComplete.bind(this));
         //广告位
-        Wechat.showBannerAd("adunit-de632cdf5e658b47");
+        // Wechat.showBannerAd("adunit-de632cdf5e658b47");
+        Wechat.showBannerAd("adunit-6ef4fbb80452171c");
 
     }
     
